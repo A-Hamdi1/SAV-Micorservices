@@ -1,0 +1,43 @@
+using Microsoft.EntityFrameworkCore;
+using SAV.Articles.Domain.Entities;
+
+namespace SAV.Articles.Infrastructure.Data;
+
+public class ArticlesDbContext : DbContext
+{
+    public ArticlesDbContext(DbContextOptions<ArticlesDbContext> options) : base(options)
+    {
+    }
+
+    public DbSet<Article> Articles { get; set; }
+    public DbSet<PieceDetachee> PiecesDetachees { get; set; }
+
+    protected override void OnModelCreating(ModelBuilder builder)
+    {
+        base.OnModelCreating(builder);
+
+        builder.Entity<Article>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Reference).IsRequired().HasMaxLength(50);
+            entity.Property(e => e.Nom).IsRequired().HasMaxLength(200);
+            entity.Property(e => e.Categorie).IsRequired().HasMaxLength(100);
+            entity.Property(e => e.PrixVente).HasColumnType("decimal(18,2)");
+            entity.HasIndex(e => e.Reference).IsUnique();
+            
+            entity.HasMany(e => e.PiecesDetachees)
+                  .WithOne(p => p.Article)
+                  .HasForeignKey(p => p.ArticleId)
+                  .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        builder.Entity<PieceDetachee>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Nom).IsRequired().HasMaxLength(200);
+            entity.Property(e => e.Reference).IsRequired().HasMaxLength(50);
+            entity.Property(e => e.Prix).HasColumnType("decimal(18,2)");
+            entity.HasIndex(e => e.Reference);
+        });
+    }
+}
