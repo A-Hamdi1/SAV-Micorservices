@@ -11,24 +11,29 @@ namespace SAV.Interventions.API.Controllers;
 public class InterventionsController : ControllerBase
 {
     private readonly IInterventionService _interventionService;
+    private readonly ILogger<InterventionsController> _logger;
 
-    public InterventionsController(IInterventionService interventionService)
+    public InterventionsController(IInterventionService interventionService, ILogger<InterventionsController> logger)
     {
         _interventionService = interventionService;
+        _logger = logger;
     }
 
     [HttpPost]
     [Authorize(Roles = "ResponsableSAV")]
     public async Task<ActionResult<ApiResponse<InterventionDto>>> CreateIntervention([FromBody] CreateInterventionDto dto)
     {
+        _logger.LogInformation("Creating intervention for reclamation {ReclamationId}", dto.ReclamationId);
+        
         var intervention = await _interventionService.CreateInterventionAsync(dto);
 
         if (intervention == null)
         {
+            _logger.LogWarning("Failed to create intervention for reclamation {ReclamationId}", dto.ReclamationId);
             return BadRequest(new ApiResponse<InterventionDto>
             {
                 Success = false,
-                Message = "Impossible de créer l'intervention"
+                Message = "Impossible de créer l'intervention. Vérifiez que la réclamation existe."
             });
         }
 
@@ -134,14 +139,17 @@ public class InterventionsController : ControllerBase
         int id,
         [FromBody] AddPieceUtiliseeDto dto)
     {
+        _logger.LogInformation("Adding piece {PieceDetacheeId} to intervention {InterventionId}", dto.PieceDetacheeId, id);
+        
         var piece = await _interventionService.AddPieceUtiliseeAsync(id, dto);
 
         if (piece == null)
         {
+            _logger.LogWarning("Failed to add piece {PieceDetacheeId} to intervention {InterventionId}", dto.PieceDetacheeId, id);
             return BadRequest(new ApiResponse<PieceUtiliseeDto>
             {
                 Success = false,
-                Message = "Impossible d'ajouter la pièce détachée"
+                Message = "Impossible d'ajouter la pièce détachée. Vérifiez que l'intervention et la pièce existent."
             });
         }
 
