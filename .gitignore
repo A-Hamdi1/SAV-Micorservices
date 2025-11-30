@@ -1,0 +1,7 @@
+*.md
+*.bat
+SAV_Microservices.postman_collection.json
+.vs/
+*.log
+bin/
+obj/
