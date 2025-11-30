@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using SAV.Interventions.Application.Interfaces;
 using SAV.Interventions.Domain.Entities;
 using SAV.Interventions.Infrastructure.Data;
@@ -11,40 +12,62 @@ public class InterventionService : IInterventionService
     private readonly InterventionsDbContext _context;
     private readonly IClientsApiClient _clientsApiClient;
     private readonly IArticlesApiClient _articlesApiClient;
+    private readonly ILogger<InterventionService> _logger;
 
     public InterventionService(
         InterventionsDbContext context,
         IClientsApiClient clientsApiClient,
-        IArticlesApiClient articlesApiClient)
+        IArticlesApiClient articlesApiClient,
+        ILogger<InterventionService> logger)
     {
         _context = context;
         _clientsApiClient = clientsApiClient;
         _articlesApiClient = articlesApiClient;
+        _logger = logger;
     }
 
     public async Task<InterventionDto?> CreateInterventionAsync(CreateInterventionDto dto)
     {
-        var reclamation = await _clientsApiClient.GetReclamationByIdAsync(dto.ReclamationId);
-        if (reclamation == null)
-            return null;
-
-        var isUnderWarranty = await _clientsApiClient.IsArticleUnderWarrantyAsync(reclamation.ArticleAchatId);
-
-        var intervention = new Intervention
+        try
         {
-            ReclamationId = dto.ReclamationId,
-            TechnicienNom = dto.TechnicienNom,
-            DateIntervention = dto.DateIntervention,
-            MontantMainOeuvre = dto.MontantMainOeuvre,
-            Commentaire = dto.Commentaire,
-            EstGratuite = isUnderWarranty,
-            Statut = InterventionStatut.Planifiee
-        };
+            _logger.LogInformation("Attempting to create intervention for reclamation {ReclamationId}", dto.ReclamationId);
+            
+            var reclamation = await _clientsApiClient.GetReclamationByIdAsync(dto.ReclamationId);
+            if (reclamation == null)
+            {
+                _logger.LogWarning("Reclamation {ReclamationId} not found", dto.ReclamationId);
+                return null;
+            }
 
-        _context.Interventions.Add(intervention);
-        await _context.SaveChangesAsync();
+            _logger.LogInformation("Found reclamation {ReclamationId}, checking warranty for article achat {ArticleAchatId}", 
+                dto.ReclamationId, reclamation.ArticleAchatId);
+            
+            var isUnderWarranty = await _clientsApiClient.IsArticleUnderWarrantyAsync(reclamation.ArticleAchatId);
+            _logger.LogInformation("Article under warranty: {IsUnderWarranty}", isUnderWarranty);
 
-        return await MapToDto(intervention);
+            var intervention = new Intervention
+            {
+                ReclamationId = dto.ReclamationId,
+                TechnicienNom = dto.TechnicienNom,
+                DateIntervention = dto.DateIntervention,
+                MontantMainOeuvre = dto.MontantMainOeuvre,
+                Commentaire = dto.Commentaire,
+                EstGratuite = isUnderWarranty,
+                Statut = InterventionStatut.Planifiee
+            };
+
+            _context.Interventions.Add(intervention);
+            await _context.SaveChangesAsync();
+            
+            _logger.LogInformation("Successfully created intervention {InterventionId}", intervention.Id);
+
+            return await MapToDto(intervention);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error creating intervention for reclamation {ReclamationId}", dto.ReclamationId);
+            return null;
+        }
     }
 
     public async Task<InterventionListDto> GetAllInterventionsAsync(int page, int pageSize, string? statut = null)
@@ -151,39 +174,62 @@ public class InterventionService : IInterventionService
 
     public async Task<PieceUtiliseeDto?> AddPieceUtiliseeAsync(int interventionId, AddPieceUtiliseeDto dto)
     {
-        var intervention = await _context.Interventions
-            .Include(i => i.PiecesUtilisees)
-            .FirstOrDefaultAsync(i => i.Id == interventionId);
-
-        if (intervention == null)
-            return null;
-
-        var pieceInfo = await _articlesApiClient.GetPieceDetacheeByIdAsync(dto.PieceDetacheeId);
-        if (pieceInfo == null)
-            return null;
-
-        var pieceUtilisee = new PieceUtilisee
+        try
         {
-            InterventionId = interventionId,
-            PieceDetacheeId = dto.PieceDetacheeId,
-            Quantite = dto.Quantite,
-            PrixUnitaire = pieceInfo.Prix
-        };
+            _logger.LogInformation("Adding piece {PieceDetacheeId} to intervention {InterventionId}", 
+                dto.PieceDetacheeId, interventionId);
+            
+            var intervention = await _context.Interventions
+                .Include(i => i.PiecesUtilisees)
+                .FirstOrDefaultAsync(i => i.Id == interventionId);
 
-        _context.PiecesUtilisees.Add(pieceUtilisee);
-        await _context.SaveChangesAsync();
+            if (intervention == null)
+            {
+                _logger.LogWarning("Intervention {InterventionId} not found", interventionId);
+                return null;
+            }
 
-        return new PieceUtiliseeDto
+            _logger.LogInformation("Fetching piece detachee {PieceDetacheeId} from Articles API", dto.PieceDetacheeId);
+            
+            var pieceInfo = await _articlesApiClient.GetPieceDetacheeByIdAsync(dto.PieceDetacheeId);
+            if (pieceInfo == null)
+            {
+                _logger.LogWarning("Piece detachee {PieceDetacheeId} not found in Articles API", dto.PieceDetacheeId);
+                return null;
+            }
+
+            var pieceUtilisee = new PieceUtilisee
+            {
+                InterventionId = interventionId,
+                PieceDetacheeId = dto.PieceDetacheeId,
+                Quantite = dto.Quantite,
+                PrixUnitaire = pieceInfo.Prix
+            };
+
+            _context.PiecesUtilisees.Add(pieceUtilisee);
+            await _context.SaveChangesAsync();
+            
+            _logger.LogInformation("Successfully added piece {PieceUtiliseeId} to intervention {InterventionId}", 
+                pieceUtilisee.Id, interventionId);
+
+            return new PieceUtiliseeDto
+            {
+                Id = pieceUtilisee.Id,
+                InterventionId = pieceUtilisee.InterventionId,
+                PieceDetacheeId = pieceUtilisee.PieceDetacheeId,
+                PieceNom = pieceInfo.Nom,
+                PieceReference = pieceInfo.Reference,
+                Quantite = pieceUtilisee.Quantite,
+                PrixUnitaire = pieceUtilisee.PrixUnitaire,
+                SousTotal = pieceUtilisee.SousTotal
+            };
+        }
+        catch (Exception ex)
         {
-            Id = pieceUtilisee.Id,
-            InterventionId = pieceUtilisee.InterventionId,
-            PieceDetacheeId = pieceUtilisee.PieceDetacheeId,
-            PieceNom = pieceInfo.Nom,
-            PieceReference = pieceInfo.Reference,
-            Quantite = pieceUtilisee.Quantite,
-            PrixUnitaire = pieceUtilisee.PrixUnitaire,
-            SousTotal = pieceUtilisee.SousTotal
-        };
+            _logger.LogError(ex, "Error adding piece {PieceDetacheeId} to intervention {InterventionId}", 
+                dto.PieceDetacheeId, interventionId);
+            return null;
+        }
     }
 
     private async Task<InterventionDto?> MapToDto(Intervention intervention)

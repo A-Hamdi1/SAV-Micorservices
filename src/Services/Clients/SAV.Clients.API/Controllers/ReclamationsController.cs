@@ -91,7 +91,7 @@ public class ReclamationsController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    [Authorize]
+    [AllowAnonymous] // Allow inter-service communication
     public async Task<ActionResult<ApiResponse<ReclamationDto>>> GetReclamationById(int id)
     {
         var reclamation = await _reclamationService.GetReclamationByIdAsync(id);
