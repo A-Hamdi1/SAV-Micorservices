@@ -276,4 +276,23 @@ public class ReclamationService : IReclamationService
 
         return true;
     }
+
+    public async Task<ClientDto?> GetClientByUserIdAsync(string userId)
+    {
+        var client = await _context.Clients.FirstOrDefaultAsync(c => c.UserId == userId);
+        
+        if (client == null)
+            return null;
+
+        return new ClientDto
+        {
+            Id = client.Id,
+            UserId = client.UserId,
+            Nom = client.Nom,
+            Prenom = client.Prenom,
+            Telephone = client.Telephone,
+            Adresse = client.Adresse,
+            CreatedAt = client.CreatedAt
+        };
+    }
 }

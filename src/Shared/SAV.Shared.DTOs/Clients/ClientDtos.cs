@@ -60,6 +60,7 @@ public class UpdateArticleAchatDto
 {
     public DateTime DateAchat { get; set; }
     public string NumeroSerie { get; set; } = string.Empty;
+    public int DureeGarantieJours { get; set; }
 }
 
 public class ArticleAchatStatsDto

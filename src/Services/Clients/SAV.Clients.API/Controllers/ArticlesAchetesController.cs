@@ -38,7 +38,7 @@ public class ArticlesAchetesController : ControllerBase
         }
 
         var articles = await _articleAchatService.GetClientArticlesAsync(userId);
-        
+
         return Ok(new ApiResponse<List<ArticleAchatDto>>
         {
             Success = true,
@@ -61,7 +61,7 @@ public class ArticlesAchetesController : ControllerBase
         }
 
         var article = await _articleAchatService.CreateArticleAchatAsync(userId, dto);
-        
+
         if (article == null)
         {
             return BadRequest(new ApiResponse<ArticleAchatDto>
@@ -80,13 +80,13 @@ public class ArticlesAchetesController : ControllerBase
     }
 
     [HttpGet("{id}/garantie")]
-    [AllowApiKeyOrJwt]
+    [Authorize(Roles = "ResponsableSAV")]
     public async Task<ActionResult<ApiResponse<bool>>> CheckGarantie(int id)
     {
         try
         {
             var isUnderWarranty = await _articleAchatService.IsUnderWarrantyAsync(id);
-            
+
             return Ok(new ApiResponse<bool>
             {
                 Success = true,

@@ -92,7 +92,7 @@ public class ReclamationsController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    [AllowApiKeyOrJwt]
+    [Authorize(Roles = "ResponsableSAV,Client")]
     public async Task<ActionResult<ApiResponse<ReclamationDto>>> GetReclamationById(int id)
     {
         var reclamation = await _reclamationService.GetReclamationByIdAsync(id);
@@ -104,6 +104,18 @@ public class ReclamationsController : ControllerBase
                 Success = false,
                 Message = "Réclamation non trouvée"
             });
+        }
+
+        // Si c'est un client, vérifier qu'il accède à SA propre réclamation
+        if (User.IsInRole("Client"))
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var client = await _reclamationService.GetClientByUserIdAsync(userId);
+            
+            if (client == null || reclamation.ClientId != client.Id)
+            {
+                return Forbid();
+            }
         }
 
         return Ok(new ApiResponse<ReclamationDto>
