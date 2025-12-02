@@ -10,4 +10,5 @@ public class ArticleAchat
     public string NumeroSerie { get; set; } = string.Empty;
     public int DureeGarantieJours { get; set; }
     public bool SousGarantie => (DateTime.UtcNow - DateAchat).TotalDays < DureeGarantieJours;
+    public List<Reclamation> Reclamations { get; set; } = new();
 }

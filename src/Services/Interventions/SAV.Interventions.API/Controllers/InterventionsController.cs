@@ -11,11 +11,16 @@ namespace SAV.Interventions.API.Controllers;
 public class InterventionsController : ControllerBase
 {
     private readonly IInterventionService _interventionService;
+    private readonly IFacturationService _facturationService;
     private readonly ILogger<InterventionsController> _logger;
 
-    public InterventionsController(IInterventionService interventionService, ILogger<InterventionsController> logger)
+    public InterventionsController(
+        IInterventionService interventionService,
+        IFacturationService facturationService,
+        ILogger<InterventionsController> logger)
     {
         _interventionService = interventionService;
+        _facturationService = facturationService;
         _logger = logger;
     }
 
@@ -171,6 +176,145 @@ public class InterventionsController : ControllerBase
         {
             Success = true,
             Data = interventions
+        });
+    }
+
+    [HttpGet("{id}/facture")]
+    [Authorize(Roles = "ResponsableSAV")]
+    public async Task<ActionResult<ApiResponse<string>>> GenererFacture(int id)
+    {
+        try
+        {
+            var intervention = await _interventionService.GetInterventionByIdAsync(id);
+
+            if (intervention == null)
+            {
+                return NotFound(new ApiResponse<string>
+                {
+                    Success = false,
+                    Message = "Intervention non trouvée"
+                });
+            }
+
+            // Récupérer l'entité complète pour la facturation
+            var interventionEntity = await _interventionService.GetInterventionEntityByIdAsync(id);
+            
+            if (interventionEntity == null)
+            {
+                return NotFound(new ApiResponse<string>
+                {
+                    Success = false,
+                    Message = "Intervention non trouvée"
+                });
+            }
+
+            var facture = _facturationService.GenererResumeFacture(interventionEntity);
+
+            return Ok(new ApiResponse<string>
+            {
+                Success = true,
+                Data = facture,
+                Message = "Facture générée avec succès"
+            });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error generating invoice for intervention {Id}", id);
+            return StatusCode(500, new ApiResponse<string>
+            {
+                Success = false,
+                Message = "Une erreur s'est produite",
+                Errors = new List<string> { ex.Message }
+            });
+        }
+    }
+
+    [HttpGet("technicien/{technicienId}")]
+    [Authorize(Roles = "ResponsableSAV")]
+    public async Task<ActionResult<ApiResponse<List<InterventionDto>>>> GetInterventionsByTechnicien(int technicienId)
+    {
+        var interventions = await _interventionService.GetInterventionsByTechnicienAsync(technicienId);
+
+        return Ok(new ApiResponse<List<InterventionDto>>
+        {
+            Success = true,
+            Data = interventions,
+            Message = $"{interventions.Count} intervention(s) trouvée(s) pour le technicien"
+        });
+    }
+
+    [HttpGet("planifiees")]
+    [Authorize(Roles = "ResponsableSAV")]
+    public async Task<ActionResult<ApiResponse<List<InterventionDto>>>> GetInterventionsPlanifiees()
+    {
+        var interventions = await _interventionService.GetInterventionsPlanifieesAsync();
+
+        return Ok(new ApiResponse<List<InterventionDto>>
+        {
+            Success = true,
+            Data = interventions,
+            Message = $"{interventions.Count} intervention(s) planifiée(s) ou en cours"
+        });
+    }
+
+    [HttpPatch("{id}/technicien")]
+    [Authorize(Roles = "ResponsableSAV")]
+    public async Task<ActionResult<ApiResponse<InterventionDto>>> UpdateInterventionTechnicien(
+        int id,
+        [FromBody] UpdateInterventionTechnicienDto dto)
+    {
+        var intervention = await _interventionService.UpdateInterventionTechnicienAsync(id, dto.TechnicienId);
+
+        if (intervention == null)
+        {
+            return NotFound(new ApiResponse<InterventionDto>
+            {
+                Success = false,
+                Message = "Intervention ou technicien non trouvé"
+            });
+        }
+
+        return Ok(new ApiResponse<InterventionDto>
+        {
+            Success = true,
+            Data = intervention,
+            Message = "Technicien assigné avec succès"
+        });
+    }
+
+    [HttpDelete("{id}")]
+    [Authorize(Roles = "ResponsableSAV")]
+    public async Task<ActionResult<ApiResponse>> DeleteIntervention(int id)
+    {
+        var result = await _interventionService.DeleteInterventionAsync(id);
+
+        if (!result)
+        {
+            return BadRequest(new ApiResponse
+            {
+                Success = false,
+                Message = "Impossible de supprimer l'intervention. Elle est peut-être en cours ou terminée."
+            });
+        }
+
+        return Ok(new ApiResponse
+        {
+            Success = true,
+            Message = "Intervention supprimée avec succès"
+        });
+    }
+
+    [HttpGet("stats")]
+    [Authorize(Roles = "ResponsableSAV")]
+    public async Task<ActionResult<ApiResponse<InterventionStatsDto>>> GetInterventionsStats()
+    {
+        var stats = await _interventionService.GetInterventionsStatsAsync();
+
+        return Ok(new ApiResponse<InterventionStatsDto>
+        {
+            Success = true,
+            Data = stats,
+            Message = "Statistiques récupérées avec succès"
         });
     }
 }

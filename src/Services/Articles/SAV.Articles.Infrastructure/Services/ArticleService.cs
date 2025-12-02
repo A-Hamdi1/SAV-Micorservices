@@ -159,4 +159,52 @@ public class ArticleService : IArticleService
             })
             .ToListAsync();
     }
+
+    public async Task<ArticleStatsDto> GetArticlesStatsAsync()
+    {
+        var articles = await _context.Articles.ToListAsync();
+        var piecesDetachees = await _context.PiecesDetachees.ToListAsync();
+
+        var nombreTotalArticles = articles.Count;
+        var nombrePiecesDetachees = piecesDetachees.Count;
+        var valeurStockTotal = piecesDetachees.Sum(p => p.Prix * p.Stock);
+        var prixMoyenArticle = articles.Any() ? articles.Average(a => a.PrixVente) : 0;
+
+        // Stats par catégorie
+        var parCategorie = articles
+            .GroupBy(a => a.Categorie)
+            .Select(g => new ArticleCategoryStatsDto
+            {
+                Categorie = g.Key,
+                Nombre = g.Count(),
+                PrixMoyen = Math.Round(g.Average(a => a.PrixVente), 2)
+            })
+            .OrderByDescending(c => c.Nombre)
+            .ToList();
+
+        // Top articles (pour l'instant, on retourne simplement les plus récents)
+        // Dans une vraie implémentation, on irait chercher les données de ventes
+        var articlesLesPlusVendus = articles
+            .OrderByDescending(a => a.CreatedAt)
+            .Take(10)
+            .Select(a => new ArticleTopDto
+            {
+                Id = a.Id,
+                Nom = a.Nom,
+                Reference = a.Reference,
+                Categorie = a.Categorie,
+                NombreVentes = 0 // TODO: À implémenter avec les vraies données de ventes
+            })
+            .ToList();
+
+        return new ArticleStatsDto
+        {
+            NombreTotalArticles = nombreTotalArticles,
+            NombrePiecesDetachees = nombrePiecesDetachees,
+            ValeurStockTotal = valeurStockTotal,
+            PrixMoyenArticle = Math.Round(prixMoyenArticle, 2),
+            ParCategorie = parCategorie,
+            ArticlesLesPlusVendus = articlesLesPlusVendus
+        };
+    }
 }

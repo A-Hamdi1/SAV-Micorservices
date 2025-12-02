@@ -30,6 +30,13 @@ public class AuthService : IAuthService
             return null;
         }
 
+        // Validation du rôle
+        var validRoles = new[] { "Client", "ResponsableSAV", "Admin" };
+        if (!validRoles.Contains(registerDto.Role))
+        {
+            return null;
+        }
+
         var existingUser = await _userManager.FindByEmailAsync(registerDto.Email);
         if (existingUser != null)
         {
@@ -177,5 +184,21 @@ public class AuthService : IAuthService
             Email = user.Email!,
             Role = user.Role
         };
+    }
+
+    public async Task<bool> RevokeTokenAsync(string refreshToken)
+    {
+        var tokenEntity = await _context.RefreshTokens
+            .FirstOrDefaultAsync(rt => rt.Token == refreshToken);
+
+        if (tokenEntity == null)
+        {
+            return false;
+        }
+
+        _context.RefreshTokens.Remove(tokenEntity);
+        await _context.SaveChangesAsync();
+
+        return true;
     }
 }

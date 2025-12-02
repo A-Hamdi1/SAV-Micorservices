@@ -186,4 +186,40 @@ public class AuthController : ControllerBase
             });
         }
     }
+
+    [HttpPost("revoke-token")]
+    [Authorize]
+    public async Task<ActionResult<ApiResponse>> RevokeToken([FromBody] RefreshTokenDto refreshTokenDto)
+    {
+        try
+        {
+            var result = await _authService.RevokeTokenAsync(refreshTokenDto.RefreshToken);
+
+            if (!result)
+            {
+                return BadRequest(new ApiResponse
+                {
+                    Success = false,
+                    Message = "Token invalide ou déjà révoqué",
+                    Errors = new List<string> { "Invalid or already revoked token" }
+                });
+            }
+
+            return Ok(new ApiResponse
+            {
+                Success = true,
+                Message = "Token révoqué avec succès"
+            });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error revoking token");
+            return StatusCode(500, new ApiResponse
+            {
+                Success = false,
+                Message = "Une erreur s'est produite",
+                Errors = new List<string> { ex.Message }
+            });
+        }
+    }
 }

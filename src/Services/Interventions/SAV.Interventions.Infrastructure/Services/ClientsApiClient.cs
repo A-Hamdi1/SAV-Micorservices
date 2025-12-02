@@ -17,6 +17,13 @@ public class ClientsApiClient : IClientsApiClient
         _configuration = configuration;
         _logger = logger;
         _httpClient.BaseAddress = new Uri(_configuration["Services:ClientsApi"] ?? "https://localhost:5002");
+        
+        // Ajouter l'API Key pour la communication inter-services
+        var apiKey = _configuration["InterServiceApiKey"];
+        if (!string.IsNullOrEmpty(apiKey))
+        {
+            _httpClient.DefaultRequestHeaders.Add("X-API-Key", apiKey);
+        }
     }
 
     public async Task<ReclamationApiDto?> GetReclamationByIdAsync(int reclamationId)
@@ -49,8 +56,30 @@ public class ClientsApiClient : IClientsApiClient
 
     public async Task<bool> IsArticleUnderWarrantyAsync(int articleAchatId)
     {
-        // Cette logique est simplifiée - en production, il faudrait un endpoint dédié
-        return true;
+        try
+        {
+            var url = $"/api/articles-achetes/{articleAchatId}/garantie";
+            _logger.LogInformation("Calling Clients API: GET {Url}", url);
+            
+            var response = await _httpClient.GetAsync(url);
+            
+            _logger.LogInformation("Clients API response: {StatusCode}", response.StatusCode);
+            
+            if (!response.IsSuccessStatusCode)
+            {
+                var errorContent = await response.Content.ReadAsStringAsync();
+                _logger.LogWarning("Clients API returned {StatusCode}: {Content}", response.StatusCode, errorContent);
+                return false;
+            }
+
+            var apiResponse = await response.Content.ReadFromJsonAsync<ApiResponse<bool>>();
+            return apiResponse?.Data ?? false;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error checking warranty for article achat {ArticleAchatId}", articleAchatId);
+            return false;
+        }
     }
 
     private class ApiResponse<T>

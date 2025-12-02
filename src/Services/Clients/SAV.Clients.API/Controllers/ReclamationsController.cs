@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using SAV.Clients.API.Filters;
 using SAV.Clients.Application.Interfaces;
 using SAV.Shared.Common;
 using SAV.Shared.DTOs.Clients;
@@ -91,7 +92,7 @@ public class ReclamationsController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    [AllowAnonymous] // Allow inter-service communication
+    [AllowApiKeyOrJwt]
     public async Task<ActionResult<ApiResponse<ReclamationDto>>> GetReclamationById(int id)
     {
         var reclamation = await _reclamationService.GetReclamationByIdAsync(id);
@@ -134,6 +135,42 @@ public class ReclamationsController : ControllerBase
             Success = true,
             Data = reclamation,
             Message = "Statut de la réclamation mis à jour"
+        });
+    }
+
+    [HttpGet("client/{clientId}")]
+    [Authorize(Roles = "ResponsableSAV")]
+    public async Task<ActionResult<ApiResponse<List<ReclamationDto>>>> GetReclamationsByClientId(int clientId)
+    {
+        var reclamations = await _reclamationService.GetReclamationsByClientIdAsync(clientId);
+
+        return Ok(new ApiResponse<List<ReclamationDto>>
+        {
+            Success = true,
+            Data = reclamations,
+            Message = $"{reclamations.Count} réclamation(s) trouvée(s) pour ce client"
+        });
+    }
+
+    [HttpDelete("{id}")]
+    [Authorize(Roles = "ResponsableSAV")]
+    public async Task<ActionResult<ApiResponse>> DeleteReclamation(int id)
+    {
+        var result = await _reclamationService.DeleteReclamationAsync(id);
+
+        if (!result)
+        {
+            return BadRequest(new ApiResponse
+            {
+                Success = false,
+                Message = "Impossible de supprimer la réclamation. Elle doit être en statut 'En Attente'."
+            });
+        }
+
+        return Ok(new ApiResponse
+        {
+            Success = true,
+            Message = "Réclamation supprimée avec succès"
         });
     }
 }

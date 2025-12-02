@@ -10,4 +10,5 @@ public interface IArticleService
     Task<ArticleDto?> UpdateArticleAsync(int id, UpdateArticleDto dto);
     Task<bool> DeleteArticleAsync(int id);
     Task<List<PieceDetacheeDto>> GetPiecesDetacheesAsync(int articleId);
+    Task<ArticleStatsDto> GetArticlesStatsAsync();
 }

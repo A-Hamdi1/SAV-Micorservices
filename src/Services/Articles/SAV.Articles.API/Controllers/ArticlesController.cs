@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using SAV.Articles.API.Filters;
 using SAV.Articles.Application.Interfaces;
 using SAV.Shared.Common;
 using SAV.Shared.DTOs.Articles;
@@ -50,6 +51,7 @@ public class ArticlesController : ControllerBase
     }
 
     [HttpGet("{id}")]
+    [ApiKeyAuth] // Sécurisé pour la communication inter-services
     public async Task<ActionResult<ApiResponse<ArticleDto>>> GetArticle(int id)
     {
         try
@@ -200,6 +202,33 @@ public class ArticlesController : ControllerBase
         {
             _logger.LogError(ex, "Error getting pieces detachees for article {Id}", id);
             return StatusCode(500, new ApiResponse<List<PieceDetacheeDto>>
+            {
+                Success = false,
+                Message = "Une erreur s'est produite",
+                Errors = new List<string> { ex.Message }
+            });
+        }
+    }
+
+    [HttpGet("stats")]
+    [Authorize(Roles = "ResponsableSAV")]
+    public async Task<ActionResult<ApiResponse<ArticleStatsDto>>> GetArticlesStats()
+    {
+        try
+        {
+            var stats = await _articleService.GetArticlesStatsAsync();
+
+            return Ok(new ApiResponse<ArticleStatsDto>
+            {
+                Success = true,
+                Data = stats,
+                Message = "Statistiques des articles récupérées avec succès"
+            });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error getting articles stats");
+            return StatusCode(500, new ApiResponse<ArticleStatsDto>
             {
                 Success = false,
                 Message = "Une erreur s'est produite",

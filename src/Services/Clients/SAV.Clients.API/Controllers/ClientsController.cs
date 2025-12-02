@@ -118,7 +118,9 @@ public class ClientsController : ControllerBase
 
     [HttpGet]
     [Authorize(Roles = "ResponsableSAV")]
-    public async Task<ActionResult<ApiResponse<List<ClientDto>>>> GetAllClients()
+    public async Task<ActionResult<ApiResponse<List<ClientDto>>>> GetAllClients(
+        [FromQuery] int page = 1,
+        [FromQuery] int pageSize = 10)
     {
         var clients = await _clientService.GetAllClientsAsync();
         
@@ -148,6 +150,82 @@ public class ClientsController : ControllerBase
         {
             Success = true,
             Data = client
+        });
+    }
+
+    [HttpPost]
+    [Authorize(Roles = "ResponsableSAV")]
+    public async Task<ActionResult<ApiResponse<ClientDto>>> CreateClient([FromBody] CreateClientByResponsableDto dto)
+    {
+        var createDto = new CreateClientDto
+        {
+            Nom = dto.Nom,
+            Prenom = dto.Prenom,
+            Telephone = dto.Telephone,
+            Adresse = dto.Adresse
+        };
+
+        var client = await _clientService.CreateClientByResponsableAsync(dto.UserId, createDto);
+
+        if (client == null)
+        {
+            return BadRequest(new ApiResponse<ClientDto>
+            {
+                Success = false,
+                Message = "Un client existe déjà pour cet utilisateur"
+            });
+        }
+
+        return CreatedAtAction(nameof(GetClientById), new { id = client.Id }, new ApiResponse<ClientDto>
+        {
+            Success = true,
+            Data = client,
+            Message = "Client créé avec succès"
+        });
+    }
+
+    [HttpPut("{id}")]
+    [Authorize(Roles = "ResponsableSAV")]
+    public async Task<ActionResult<ApiResponse<ClientDto>>> UpdateClient(int id, [FromBody] UpdateClientDto dto)
+    {
+        var client = await _clientService.UpdateClientByIdAsync(id, dto);
+
+        if (client == null)
+        {
+            return NotFound(new ApiResponse<ClientDto>
+            {
+                Success = false,
+                Message = "Client non trouvé"
+            });
+        }
+
+        return Ok(new ApiResponse<ClientDto>
+        {
+            Success = true,
+            Data = client,
+            Message = "Client mis à jour avec succès"
+        });
+    }
+
+    [HttpDelete("{id}")]
+    [Authorize(Roles = "ResponsableSAV")]
+    public async Task<ActionResult<ApiResponse>> DeleteClient(int id)
+    {
+        var result = await _clientService.DeleteClientAsync(id);
+
+        if (!result)
+        {
+            return BadRequest(new ApiResponse
+            {
+                Success = false,
+                Message = "Impossible de supprimer le client. Il a peut-être des réclamations associées."
+            });
+        }
+
+        return Ok(new ApiResponse
+        {
+            Success = true,
+            Message = "Client supprimé avec succès"
         });
     }
 }

@@ -50,12 +50,14 @@ public class ClientsDbContext : DbContext
             entity.HasOne(e => e.Client)
                 .WithMany(c => c.Reclamations)
                 .HasForeignKey(e => e.ClientId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Cascade)
+                .IsRequired();
             
             entity.HasOne(e => e.ArticleAchat)
-                .WithMany()
+                .WithMany(a => a.Reclamations)
                 .HasForeignKey(e => e.ArticleAchatId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.Restrict)
+                .IsRequired();
         });
     }
 }

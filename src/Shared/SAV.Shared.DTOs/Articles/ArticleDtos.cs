@@ -54,3 +54,29 @@ public class ArticleListDto
     public int Page { get; set; }
     public int PageSize { get; set; }
 }
+
+public class ArticleStatsDto
+{
+    public int NombreTotalArticles { get; set; }
+    public int NombrePiecesDetachees { get; set; }
+    public decimal ValeurStockTotal { get; set; }
+    public decimal PrixMoyenArticle { get; set; }
+    public List<ArticleCategoryStatsDto> ParCategorie { get; set; } = new();
+    public List<ArticleTopDto> ArticlesLesPlusVendus { get; set; } = new();
+}
+
+public class ArticleCategoryStatsDto
+{
+    public string Categorie { get; set; } = string.Empty;
+    public int Nombre { get; set; }
+    public decimal PrixMoyen { get; set; }
+}
+
+public class ArticleTopDto
+{
+    public int Id { get; set; }
+    public string Nom { get; set; } = string.Empty;
+    public string Reference { get; set; } = string.Empty;
+    public string Categorie { get; set; } = string.Empty;
+    public int NombreVentes { get; set; }
+}
