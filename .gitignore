@@ -1,5 +1,6 @@
 *.md
 *.bat
+*.sql
 SAV_Microservices.postman_collection.json
 .vs/
 *.log

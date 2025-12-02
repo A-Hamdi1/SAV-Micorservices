@@ -257,14 +257,14 @@ public class ArticleAchatService : IArticleAchatService
         if (articleAchat == null)
             return null;
 
-        // Récupérer les infos de l'article pour recalculer la garantie
+        // Récupérer les infos de l'article
         var articleInfo = await _articlesApiClient.GetArticleByIdAsync(articleAchat.ArticleId);
         if (articleInfo == null)
             return null;
 
         articleAchat.DateAchat = dto.DateAchat;
         articleAchat.NumeroSerie = dto.NumeroSerie;
-        articleAchat.DureeGarantieJours = articleInfo.DureeGarantie * 30; // Recalcul
+        articleAchat.DureeGarantieJours = dto.DureeGarantieJours;
 
         await _context.SaveChangesAsync();
 

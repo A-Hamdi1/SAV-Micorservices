@@ -43,7 +43,9 @@ public class CreatePieceDetacheeDto
     public int ArticleId { get; set; }
     public string Nom { get; set; } = string.Empty;
     public string Reference { get; set; } = string.Empty;
+    
     public decimal Prix { get; set; }
+    
     public int Stock { get; set; }
 }
 
