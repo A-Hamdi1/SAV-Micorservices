@@ -17,6 +17,13 @@ public class ArticlesApiClient : IArticlesApiClient
         _configuration = configuration;
         _logger = logger;
         _httpClient.BaseAddress = new Uri(_configuration["Services:ArticlesApi"] ?? "https://localhost:5004");
+        
+        // Ajouter l'API Key pour la communication inter-services
+        var apiKey = _configuration["InterServiceApiKey"];
+        if (!string.IsNullOrEmpty(apiKey))
+        {
+            _httpClient.DefaultRequestHeaders.Add("X-API-Key", apiKey);
+        }
     }
 
     public async Task<PieceDetacheeApiDto?> GetPieceDetacheeByIdAsync(int pieceDetacheeId)

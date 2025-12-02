@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using SAV.Articles.API.Filters;
 using SAV.Articles.Application.Interfaces;
 using SAV.Shared.Common;
 using SAV.Shared.DTOs.Articles;
@@ -47,6 +48,7 @@ public class PiecesDetacheesController : ControllerBase
     }
 
     [HttpGet("{id}")]
+    [ApiKeyAuth] // Sécurisé pour la communication inter-services
     public async Task<ActionResult<ApiResponse<PieceDetacheeDto>>> GetPieceDetachee(int id)
     {
         try

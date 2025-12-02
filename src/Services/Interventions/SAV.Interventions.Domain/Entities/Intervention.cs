@@ -4,7 +4,14 @@ public class Intervention
 {
     public int Id { get; set; }
     public int ReclamationId { get; set; }
+    
+    // Nouveau système avec Technicien
+    public int? TechnicienId { get; set; }
+    public Technicien? Technicien { get; set; }
+    
+    // Ancien système (conservé pour compatibilité)
     public string TechnicienNom { get; set; } = string.Empty;
+    
     public DateTime DateIntervention { get; set; }
     public InterventionStatut Statut { get; set; } = InterventionStatut.Planifiee;
     public bool EstGratuite { get; set; }

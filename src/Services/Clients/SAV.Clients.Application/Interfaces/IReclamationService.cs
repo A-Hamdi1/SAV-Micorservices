@@ -9,4 +9,6 @@ public interface IReclamationService
     Task<ReclamationListDto> GetAllReclamationsAsync(int page, int pageSize, string? statut = null);
     Task<ReclamationDto?> GetReclamationByIdAsync(int id);
     Task<ReclamationDto?> UpdateReclamationStatutAsync(int id, UpdateReclamationStatutDto dto);
+    Task<List<ReclamationDto>> GetReclamationsByClientIdAsync(int clientId);
+    Task<bool> DeleteReclamationAsync(int id);
 }
