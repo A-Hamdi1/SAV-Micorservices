@@ -51,7 +51,7 @@ public class ArticlesController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    [ApiKeyAuth] // Sécurisé pour la communication inter-services
+    [ApiKeyAuth] // Accepts both JWT Bearer and API Key for inter-service communication
     public async Task<ActionResult<ApiResponse<ArticleDto>>> GetArticle(int id)
     {
         try

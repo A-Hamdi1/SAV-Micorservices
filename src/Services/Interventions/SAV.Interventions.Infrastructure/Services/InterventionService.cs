@@ -45,10 +45,24 @@ public class InterventionService : IInterventionService
             var isUnderWarranty = await _clientsApiClient.IsArticleUnderWarrantyAsync(reclamation.ArticleAchatId);
             _logger.LogInformation("Article under warranty: {IsUnderWarranty}", isUnderWarranty);
 
+            // Si un TechnicienId est fourni, récupérer le technicien et le marquer non disponible
+            Technicien? technicien = null;
+            if (dto.TechnicienId.HasValue)
+            {
+                technicien = await _context.Techniciens.FindAsync(dto.TechnicienId.Value);
+                if (technicien == null)
+                {
+                    _logger.LogWarning("Technicien {TechnicienId} not found", dto.TechnicienId);
+                    return null;
+                }
+                technicien.EstDisponible = false;
+            }
+
             var intervention = new Intervention
             {
                 ReclamationId = dto.ReclamationId,
-                TechnicienNom = dto.TechnicienNom,
+                TechnicienId = dto.TechnicienId,
+                TechnicienNom = technicien?.NomComplet ?? dto.TechnicienNom,
                 DateIntervention = dto.DateIntervention,
                 MontantMainOeuvre = dto.MontantMainOeuvre,
                 Commentaire = dto.Commentaire,
@@ -59,7 +73,15 @@ public class InterventionService : IInterventionService
             _context.Interventions.Add(intervention);
             await _context.SaveChangesAsync();
             
-            _logger.LogInformation("Successfully created intervention {InterventionId}", intervention.Id);
+            _logger.LogInformation("Successfully created intervention {InterventionId} with technicien {TechnicienId}", 
+                intervention.Id, dto.TechnicienId);
+
+            // Mettre à jour automatiquement le statut de la réclamation vers "EnCours"
+            var updated = await _clientsApiClient.UpdateReclamationStatutAsync(dto.ReclamationId, "EnCours");
+            if (updated)
+            {
+                _logger.LogInformation("Réclamation {ReclamationId} passée en statut EnCours", dto.ReclamationId);
+            }
 
             return await MapToDto(intervention);
         }
@@ -147,6 +169,7 @@ public class InterventionService : IInterventionService
     {
         var intervention = await _context.Interventions
             .Include(i => i.PiecesUtilisees)
+            .Include(i => i.Technicien)
             .FirstOrDefaultAsync(i => i.Id == id);
 
         if (intervention == null)
@@ -155,7 +178,46 @@ public class InterventionService : IInterventionService
         if (Enum.TryParse<InterventionStatut>(dto.Statut, out var newStatut))
         {
             intervention.Statut = newStatut;
+            
+            // Si l'intervention est terminée ou annulée, libérer le technicien
+            if ((newStatut == InterventionStatut.Terminee || newStatut == InterventionStatut.Annulee) 
+                && intervention.TechnicienId.HasValue)
+            {
+                var technicien = await _context.Techniciens.FindAsync(intervention.TechnicienId);
+                if (technicien != null)
+                {
+                    technicien.EstDisponible = true;
+                    _logger.LogInformation("Technicien {TechnicienId} libéré après intervention {Statut}", 
+                        technicien.Id, newStatut);
+                }
+            }
+            
             await _context.SaveChangesAsync();
+
+            // Synchroniser automatiquement le statut de la réclamation
+            string? reclamationStatut = newStatut switch
+            {
+                InterventionStatut.Planifiee => "EnCours",
+                InterventionStatut.EnCours => "EnCours",
+                InterventionStatut.Terminee => "Resolue",
+                InterventionStatut.Annulee => "Rejetee",
+                _ => null
+            };
+
+            if (reclamationStatut != null)
+            {
+                var updated = await _clientsApiClient.UpdateReclamationStatutAsync(intervention.ReclamationId, reclamationStatut);
+                if (updated)
+                {
+                    _logger.LogInformation("Réclamation {ReclamationId} statut mis à jour automatiquement vers {Statut}", 
+                        intervention.ReclamationId, reclamationStatut);
+                }
+                else
+                {
+                    _logger.LogWarning("Échec de la mise à jour automatique du statut de la réclamation {ReclamationId}", 
+                        intervention.ReclamationId);
+                }
+            }
         }
 
         return await MapToDto(intervention);
@@ -205,6 +267,21 @@ public class InterventionService : IInterventionService
                 return null;
             }
 
+            // Vérifier et réduire le stock
+            if (pieceInfo.Stock < dto.Quantite)
+            {
+                _logger.LogWarning("Insufficient stock for piece {PieceDetacheeId}: available {Stock}, requested {Quantite}", 
+                    dto.PieceDetacheeId, pieceInfo.Stock, dto.Quantite);
+                return null;
+            }
+
+            var stockReduced = await _articlesApiClient.ReduceStockAsync(dto.PieceDetacheeId, dto.Quantite);
+            if (!stockReduced)
+            {
+                _logger.LogWarning("Failed to reduce stock for piece {PieceDetacheeId}", dto.PieceDetacheeId);
+                return null;
+            }
+
             var pieceUtilisee = new PieceUtilisee
             {
                 InterventionId = interventionId,
@@ -216,7 +293,7 @@ public class InterventionService : IInterventionService
             _context.PiecesUtilisees.Add(pieceUtilisee);
             await _context.SaveChangesAsync();
             
-            _logger.LogInformation("Successfully added piece {PieceUtiliseeId} to intervention {InterventionId}", 
+            _logger.LogInformation("Successfully added piece {PieceUtiliseeId} to intervention {InterventionId} and reduced stock", 
                 pieceUtilisee.Id, interventionId);
 
             return new PieceUtiliseeDto
@@ -327,19 +404,33 @@ public class InterventionService : IInterventionService
             return null;
 
         // Vérifier que le technicien existe
-        var technicien = await _context.Techniciens.FindAsync(technicienId);
-        if (technicien == null)
+        var newTechnicien = await _context.Techniciens.FindAsync(technicienId);
+        if (newTechnicien == null)
         {
             _logger.LogWarning("Technicien {TechnicienId} not found", technicienId);
             return null;
         }
 
+        // Si l'intervention avait déjà un technicien assigné, le libérer
+        if (intervention.TechnicienId.HasValue && intervention.TechnicienId != technicienId)
+        {
+            var oldTechnicien = await _context.Techniciens.FindAsync(intervention.TechnicienId);
+            if (oldTechnicien != null)
+            {
+                oldTechnicien.EstDisponible = true;
+                _logger.LogInformation("Technicien {TechnicienId} is now available", oldTechnicien.Id);
+            }
+        }
+
+        // Assigner le nouveau technicien et le marquer comme non disponible
         intervention.TechnicienId = technicienId;
-        intervention.TechnicienNom = technicien.NomComplet;
+        intervention.TechnicienNom = newTechnicien.NomComplet;
+        newTechnicien.EstDisponible = false;
 
         await _context.SaveChangesAsync();
 
-        _logger.LogInformation("Technicien updated for intervention {InterventionId}: {TechnicienNom}", id, technicien.NomComplet);
+        _logger.LogInformation("Technicien {TechnicienId} assigned to intervention {InterventionId} and marked as unavailable", 
+            technicienId, id);
 
         return await MapToDto(intervention);
     }
@@ -358,6 +449,17 @@ public class InterventionService : IInterventionService
         {
             _logger.LogWarning("Cannot delete intervention {InterventionId}: status is {Statut}", id, intervention.Statut);
             return false;
+        }
+
+        // Libérer le technicien si assigné
+        if (intervention.TechnicienId.HasValue)
+        {
+            var technicien = await _context.Techniciens.FindAsync(intervention.TechnicienId);
+            if (technicien != null)
+            {
+                technicien.EstDisponible = true;
+                _logger.LogInformation("Technicien {TechnicienId} libéré après suppression intervention", technicien.Id);
+            }
         }
 
         _context.Interventions.Remove(intervention);

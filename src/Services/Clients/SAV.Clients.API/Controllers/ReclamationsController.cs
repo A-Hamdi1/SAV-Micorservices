@@ -92,7 +92,7 @@ public class ReclamationsController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    [Authorize(Roles = "ResponsableSAV,Client")]
+    [ApiKeyAuth] // Accepte JWT (ResponsableSAV, Client) OU API Key (inter-services)
     public async Task<ActionResult<ApiResponse<ReclamationDto>>> GetReclamationById(int id)
     {
         var reclamation = await _reclamationService.GetReclamationByIdAsync(id);
@@ -106,8 +106,8 @@ public class ReclamationsController : ControllerBase
             });
         }
 
-        // Si c'est un client, vérifier qu'il accède à SA propre réclamation
-        if (User.IsInRole("Client"))
+        // Si c'est un client authentifié via JWT, vérifier qu'il accède à SA propre réclamation
+        if (User.Identity?.IsAuthenticated == true && User.IsInRole("Client"))
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var client = await _reclamationService.GetClientByUserIdAsync(userId);
@@ -126,7 +126,7 @@ public class ReclamationsController : ControllerBase
     }
 
     [HttpPut("{id}/statut")]
-    [Authorize(Roles = "ResponsableSAV")]
+    [ApiKeyAuth] // Accepts both JWT Bearer and API Key for inter-service communication
     public async Task<ActionResult<ApiResponse<ReclamationDto>>> UpdateReclamationStatut(
         int id, 
         [FromBody] UpdateReclamationStatutDto dto)

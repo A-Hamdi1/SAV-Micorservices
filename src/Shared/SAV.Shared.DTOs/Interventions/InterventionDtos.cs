@@ -18,6 +18,7 @@ public class InterventionDto
 public class CreateInterventionDto
 {
     public int ReclamationId { get; set; }
+    public int? TechnicienId { get; set; }
     public string TechnicienNom { get; set; } = string.Empty;
     public DateTime DateIntervention { get; set; }
     public decimal? MontantMainOeuvre { get; set; }

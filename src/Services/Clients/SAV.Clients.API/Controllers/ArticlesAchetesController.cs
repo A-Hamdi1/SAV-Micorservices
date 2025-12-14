@@ -60,27 +60,39 @@ public class ArticlesAchetesController : ControllerBase
             });
         }
 
-        var article = await _articleAchatService.CreateArticleAchatAsync(userId, dto);
-
-        if (article == null)
+        try
         {
+            var article = await _articleAchatService.CreateArticleAchatAsync(userId, dto);
+
+            if (article == null)
+            {
+                return BadRequest(new ApiResponse<ArticleAchatDto>
+                {
+                    Success = false,
+                    Message = "Impossible d'enregistrer l'article acheté. Veuillez d'abord créer votre profil client."
+                });
+            }
+
+            return CreatedAtAction(nameof(GetMyArticles), new ApiResponse<ArticleAchatDto>
+            {
+                Success = true,
+                Data = article,
+                Message = "Article acheté enregistré avec succès"
+            });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error creating article achat for user {UserId}", userId);
             return BadRequest(new ApiResponse<ArticleAchatDto>
             {
                 Success = false,
-                Message = "Impossible d'enregistrer l'article acheté"
+                Message = "Erreur lors de l'enregistrement: " + ex.Message
             });
         }
-
-        return CreatedAtAction(nameof(GetMyArticles), new ApiResponse<ArticleAchatDto>
-        {
-            Success = true,
-            Data = article,
-            Message = "Article acheté enregistré avec succès"
-        });
     }
 
     [HttpGet("{id}/garantie")]
-    [Authorize(Roles = "ResponsableSAV")]
+    [ApiKeyAuth] // Accepte JWT (ResponsableSAV) OU API Key (inter-services - Interventions)
     public async Task<ActionResult<ApiResponse<bool>>> CheckGarantie(int id)
     {
         try

@@ -54,11 +54,11 @@ public class ArticleAchatService : IArticleAchatService
             .FirstOrDefaultAsync(c => c.UserId == userId);
 
         if (client == null)
-            return null;
+            throw new InvalidOperationException("Profil client non trouvé. Veuillez d'abord créer votre profil.");
 
         var articleInfo = await _articlesApiClient.GetArticleByIdAsync(dto.ArticleId);
         if (articleInfo == null)
-            return null;
+            throw new InvalidOperationException("Article non trouvé dans le catalogue.");
 
         var articleAchat = new Domain.Entities.ArticleAchat
         {
