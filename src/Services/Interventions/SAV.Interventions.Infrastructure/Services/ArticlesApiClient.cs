@@ -54,6 +54,33 @@ public class ArticlesApiClient : IArticlesApiClient
         }
     }
 
+    public async Task<bool> ReduceStockAsync(int pieceDetacheeId, int quantite)
+    {
+        try
+        {
+            var url = $"/api/pieces-detachees/{pieceDetacheeId}/stock/reduce";
+            _logger.LogInformation("Calling Articles API: PATCH {Url} with quantite {Quantite}", url, quantite);
+            
+            var response = await _httpClient.PatchAsJsonAsync(url, new { Quantite = quantite });
+            
+            _logger.LogInformation("Articles API response: {StatusCode}", response.StatusCode);
+            
+            if (!response.IsSuccessStatusCode)
+            {
+                var errorContent = await response.Content.ReadAsStringAsync();
+                _logger.LogWarning("Articles API returned {StatusCode}: {Content}", response.StatusCode, errorContent);
+                return false;
+            }
+
+            return true;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error reducing stock for piece {PieceDetacheeId}", pieceDetacheeId);
+            return false;
+        }
+    }
+
     private class ApiResponse<T>
     {
         public bool Success { get; set; }

@@ -58,4 +58,24 @@ public class PieceDetacheeService : IPieceDetacheeService
             Stock = piece.Stock
         };
     }
+
+    public async Task<bool> ReduceStockAsync(int pieceId, int quantite)
+    {
+        var piece = await _context.PiecesDetachees.FindAsync(pieceId);
+        
+        if (piece == null)
+        {
+            return false;
+        }
+
+        if (piece.Stock < quantite)
+        {
+            return false; // Stock insuffisant
+        }
+
+        piece.Stock -= quantite;
+        await _context.SaveChangesAsync();
+        
+        return true;
+    }
 }

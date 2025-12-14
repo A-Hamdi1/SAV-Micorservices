@@ -82,6 +82,33 @@ public class ClientsApiClient : IClientsApiClient
         }
     }
 
+    public async Task<bool> UpdateReclamationStatutAsync(int reclamationId, string statut)
+    {
+        try
+        {
+            var url = $"/api/reclamations/{reclamationId}/statut";
+            _logger.LogInformation("Calling Clients API: PUT {Url} with statut {Statut}", url, statut);
+            
+            var response = await _httpClient.PutAsJsonAsync(url, new { Statut = statut });
+            
+            _logger.LogInformation("Clients API response: {StatusCode}", response.StatusCode);
+            
+            if (!response.IsSuccessStatusCode)
+            {
+                var errorContent = await response.Content.ReadAsStringAsync();
+                _logger.LogWarning("Clients API returned {StatusCode}: {Content}", response.StatusCode, errorContent);
+                return false;
+            }
+
+            return true;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error updating reclamation statut {ReclamationId} to {Statut}", reclamationId, statut);
+            return false;
+        }
+    }
+
     private class ApiResponse<T>
     {
         public bool Success { get; set; }

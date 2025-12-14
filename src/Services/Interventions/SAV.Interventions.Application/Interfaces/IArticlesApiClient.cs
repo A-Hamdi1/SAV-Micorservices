@@ -3,6 +3,7 @@ namespace SAV.Interventions.Application.Interfaces;
 public interface IArticlesApiClient
 {
     Task<PieceDetacheeApiDto?> GetPieceDetacheeByIdAsync(int pieceDetacheeId);
+    Task<bool> ReduceStockAsync(int pieceDetacheeId, int quantite);
 }
 
 public class PieceDetacheeApiDto

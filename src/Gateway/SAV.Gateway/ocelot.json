@@ -82,7 +82,10 @@
         }
       ],
       "UpstreamPathTemplate": "/api/articles/{everything}",
-      "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE" ]
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      }
     },
     {
       "DownstreamPathTemplate": "/api/pieces-detachees/{everything}",
@@ -94,7 +97,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/pieces-detachees/{everything}",
-      "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE" ]
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT", "DELETE", "PATCH" ]
     },
     {
       "DownstreamPathTemplate": "/api/techniciens/{everything}",

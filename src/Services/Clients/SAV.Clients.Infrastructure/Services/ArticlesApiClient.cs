@@ -33,11 +33,21 @@ public class ArticlesApiClient : IArticlesApiClient
                 return null;
             }
 
-            return await response.Content.ReadFromJsonAsync<ArticleApiDto>();
+            // The API returns ApiResponse<ArticleDto>, so we need to extract the Data property
+            var apiResponse = await response.Content.ReadFromJsonAsync<ApiResponseWrapper<ArticleApiDto>>();
+            return apiResponse?.Data;
         }
         catch
         {
             return null;
         }
     }
+}
+
+// Wrapper class to deserialize the API response
+public class ApiResponseWrapper<T>
+{
+    public bool Success { get; set; }
+    public T? Data { get; set; }
+    public string? Message { get; set; }
 }

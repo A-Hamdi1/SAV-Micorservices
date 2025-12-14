@@ -4,6 +4,7 @@ public interface IClientsApiClient
 {
     Task<ReclamationApiDto?> GetReclamationByIdAsync(int reclamationId);
     Task<bool> IsArticleUnderWarrantyAsync(int articleAchatId);
+    Task<bool> UpdateReclamationStatutAsync(int reclamationId, string statut);
 }
 
 public class ReclamationApiDto

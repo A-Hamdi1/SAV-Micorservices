@@ -6,4 +6,5 @@ public interface IPieceDetacheeService
 {
     Task<PieceDetacheeDto> CreatePieceDetacheeAsync(CreatePieceDetacheeDto dto);
     Task<PieceDetacheeDto?> GetPieceDetacheeByIdAsync(int id);
+    Task<bool> ReduceStockAsync(int pieceId, int quantite);
 }

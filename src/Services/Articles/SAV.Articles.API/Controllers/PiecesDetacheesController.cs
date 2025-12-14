@@ -48,7 +48,7 @@ public class PiecesDetacheesController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    [ApiKeyAuth] // Sécurisé pour la communication inter-services
+    [ApiKeyAuth] // Accepts both JWT Bearer and API Key for inter-service communication
     public async Task<ActionResult<ApiResponse<PieceDetacheeDto>>> GetPieceDetachee(int id)
     {
         try
@@ -82,4 +82,46 @@ public class PiecesDetacheesController : ControllerBase
             });
         }
     }
+
+    [HttpPatch("{id}/stock/reduce")]
+    [ApiKeyAuth] // Accepts both JWT Bearer and API Key for inter-service communication
+    public async Task<ActionResult<ApiResponse<bool>>> ReduceStock(int id, [FromBody] ReduceStockDto dto)
+    {
+        try
+        {
+            var success = await _pieceService.ReduceStockAsync(id, dto.Quantite);
+            
+            if (!success)
+            {
+                return BadRequest(new ApiResponse<bool>
+                {
+                    Success = false,
+                    Data = false,
+                    Message = "Stock insuffisant ou pièce non trouvée"
+                });
+            }
+
+            return Ok(new ApiResponse<bool>
+            {
+                Success = true,
+                Data = true,
+                Message = "Stock réduit avec succès"
+            });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error reducing stock for piece {Id}", id);
+            return StatusCode(500, new ApiResponse<bool>
+            {
+                Success = false,
+                Message = "Une erreur s'est produite",
+                Errors = new List<string> { ex.Message }
+            });
+        }
+    }
+}
+
+public class ReduceStockDto
+{
+    public int Quantite { get; set; }
 }
