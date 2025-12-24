@@ -74,6 +74,9 @@ builder.Services.AddHttpClient<IArticlesApiClient, ArticlesApiClient>();
 builder.Services.AddScoped<IInterventionService, InterventionService>();
 builder.Services.AddScoped<IFacturationService, FacturationService>();
 builder.Services.AddScoped<ITechnicienService, TechnicienService>();
+builder.Services.AddScoped<IEvaluationService, EvaluationService>();
+builder.Services.AddScoped<IRdvService, RdvService>();
+builder.Services.AddScoped<IExportService, ExportService>();
 
 builder.Services.AddCors(options =>
 {

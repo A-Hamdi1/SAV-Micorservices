@@ -1,15 +1,31 @@
-import { ReactNode } from 'react';
-import Navbar from './Navbar';
+import { useState, ReactNode } from 'react';
+import Sidebar from './Sidebar';
+import Header from './Header';
 
 interface LayoutProps {
   children: ReactNode;
 }
 
 const Layout = ({ children }: LayoutProps) => {
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
   return (
-    <div className="min-h-screen bg-gray-50">
-      <Navbar />
-      <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">{children}</main>
+    <div className="flex h-screen overflow-hidden">
+      {/* Sidebar */}
+      <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
+
+      {/* Content Area */}
+      <div className="relative flex flex-1 flex-col overflow-y-auto overflow-x-hidden">
+        {/* Header */}
+        <Header sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
+
+        {/* Main Content */}
+        <main>
+          <div className="mx-auto max-w-screen-2xl p-4 md:p-6 2xl:p-10">
+            {children}
+          </div>
+        </main>
+      </div>
     </div>
   );
 };

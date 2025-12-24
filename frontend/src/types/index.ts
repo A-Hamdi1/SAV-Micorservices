@@ -3,6 +3,7 @@ export interface User {
   id: string;
   email: string;
   role: string;
+  clientId?: number; // ID du client si l'utilisateur est un client
 }
 
 export interface AuthResponse {
@@ -98,6 +99,7 @@ export interface PieceDetacheeDto {
   reference: string;
   prix: number;
   stock: number;
+  estEnAlerte: boolean; // Calculé par le backend
 }
 
 export interface CreatePieceDetacheeDto {
@@ -199,7 +201,8 @@ export interface InterventionDto {
 
 export interface CreateInterventionDto {
   reclamationId: number;
-  technicienId: number;
+  technicienId?: number; // Optionnel comme dans le backend
+  technicienNom?: string; // Ajouté pour correspondre au backend
   dateIntervention: string;
   montantMainOeuvre?: number;
   commentaire?: string;
@@ -346,15 +349,16 @@ export interface ArticleTopDto {
 }
 
 export interface InterventionStatsDto {
-  nombreTotal: number;
-  nombrePlanifiees: number;
-  nombreEnCours: number;
-  nombreTerminees: number;
-  nombreAnnulees: number;
-  montantTotalGenere: number;
-  montantMoyen: number;
-  dureeMoyenneJours: number;
-  parMois: InterventionStatsByMonthDto[];
+  totalInterventions: number;
+  interventionsTerminees: number;
+  interventionsEnCours: number;
+  interventionsPlanifiees: number;
+  interventionsAnnulees: number;
+  chiffreAffairesTotal: number;
+  chiffreAffairesMois: number;
+  tauxResolution: number;
+  tempsMoyenResolution: number;
+  interventionsSousGarantie: number;
 }
 
 export interface InterventionStatsByMonthDto {

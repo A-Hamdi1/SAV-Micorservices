@@ -155,7 +155,8 @@ public class ArticleService : IArticleService
                 Nom = p.Nom,
                 Reference = p.Reference,
                 Prix = p.Prix,
-                Stock = p.Stock
+                Stock = p.Stock,
+                EstEnAlerte = p.Stock <= p.SeuilAlerte
             })
             .ToListAsync();
     }

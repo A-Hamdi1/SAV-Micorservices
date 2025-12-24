@@ -11,6 +11,7 @@ public class ArticlesDbContext : DbContext
 
     public DbSet<Article> Articles { get; set; }
     public DbSet<PieceDetachee> PiecesDetachees { get; set; }
+    public DbSet<MouvementStock> MouvementsStock { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -38,6 +39,20 @@ public class ArticlesDbContext : DbContext
             entity.Property(e => e.Reference).IsRequired().HasMaxLength(50);
             entity.Property(e => e.Prix).HasColumnType("decimal(18,2)");
             entity.HasIndex(e => e.Reference);
+            
+            entity.HasMany(e => e.MouvementsStock)
+                  .WithOne(m => m.PieceDetachee)
+                  .HasForeignKey(m => m.PieceDetacheeId)
+                  .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        builder.Entity<MouvementStock>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Type).HasConversion<string>();
+            entity.Property(e => e.Raison).HasMaxLength(500);
+            entity.HasIndex(e => e.PieceDetacheeId);
+            entity.HasIndex(e => e.CreatedAt);
         });
     }
 }

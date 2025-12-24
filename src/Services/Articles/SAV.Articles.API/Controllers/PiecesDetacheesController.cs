@@ -119,9 +119,136 @@ public class PiecesDetacheesController : ControllerBase
             });
         }
     }
+
+    /// <summary>
+    /// Obtenir toutes les pièces détachées
+    /// </summary>
+    [HttpGet]
+    [Authorize]
+    public async Task<ActionResult<ApiResponse<IEnumerable<PieceDetacheeDto>>>> GetAllPieces()
+    {
+        var pieces = await _pieceService.GetAllPiecesDetacheesAsync();
+        return Ok(new ApiResponse<IEnumerable<PieceDetacheeDto>>
+        {
+            Success = true,
+            Data = pieces
+        });
+    }
+
+    /// <summary>
+    /// Obtenir les pièces d'un article
+    /// </summary>
+    [HttpGet("article/{articleId}")]
+    [Authorize]
+    public async Task<ActionResult<ApiResponse<IEnumerable<PieceDetacheeDto>>>> GetPiecesByArticle(int articleId)
+    {
+        var pieces = await _pieceService.GetPiecesDetacheesByArticleIdAsync(articleId);
+        return Ok(new ApiResponse<IEnumerable<PieceDetacheeDto>>
+        {
+            Success = true,
+            Data = pieces
+        });
+    }
+
+    /// <summary>
+    /// Mettre à jour une pièce
+    /// </summary>
+    [HttpPut("{id}")]
+    [Authorize(Roles = "ResponsableSAV")]
+    public async Task<ActionResult<ApiResponse<PieceDetacheeDto>>> UpdatePiece(int id, [FromBody] UpdatePieceDetacheeDto dto)
+    {
+        var piece = await _pieceService.UpdatePieceDetacheeAsync(id, dto);
+        if (piece == null)
+            return NotFound(new ApiResponse<PieceDetacheeDto> { Success = false, Message = "Pièce non trouvée" });
+        
+        return Ok(new ApiResponse<PieceDetacheeDto>
+        {
+            Success = true,
+            Data = piece,
+            Message = "Pièce mise à jour"
+        });
+    }
+
+    /// <summary>
+    /// Supprimer une pièce
+    /// </summary>
+    [HttpDelete("{id}")]
+    [Authorize(Roles = "ResponsableSAV")]
+    public async Task<ActionResult<ApiResponse>> DeletePiece(int id)
+    {
+        var result = await _pieceService.DeletePieceDetacheeAsync(id);
+        if (!result)
+            return NotFound(new ApiResponse { Success = false, Message = "Pièce non trouvée" });
+        
+        return Ok(new ApiResponse { Success = true, Message = "Pièce supprimée" });
+    }
+
+    /// <summary>
+    /// Ajouter du stock
+    /// </summary>
+    [HttpPatch("{id}/stock/add")]
+    [Authorize(Roles = "ResponsableSAV")]
+    public async Task<ActionResult<ApiResponse<bool>>> AddStock(int id, [FromBody] AddStockDto dto)
+    {
+        var success = await _pieceService.AddStockAsync(id, dto.Quantite);
+        if (!success)
+            return NotFound(new ApiResponse<bool> { Success = false, Message = "Pièce non trouvée" });
+        
+        return Ok(new ApiResponse<bool> { Success = true, Data = true, Message = "Stock ajouté" });
+    }
+
+    /// <summary>
+    /// Obtenir les pièces en alerte stock
+    /// </summary>
+    [HttpGet("low-stock")]
+    [Authorize(Roles = "ResponsableSAV")]
+    public async Task<ActionResult<ApiResponse<IEnumerable<PieceDetacheeDto>>>> GetLowStock([FromQuery] int seuil = 10)
+    {
+        var pieces = await _pieceService.GetPiecesLowStockAsync(seuil);
+        return Ok(new ApiResponse<IEnumerable<PieceDetacheeDto>>
+        {
+            Success = true,
+            Data = pieces
+        });
+    }
+
+    /// <summary>
+    /// Obtenir les mouvements de stock d'une pièce
+    /// </summary>
+    [HttpGet("{id}/mouvements")]
+    [Authorize(Roles = "ResponsableSAV")]
+    public async Task<ActionResult<ApiResponse<IEnumerable<MouvementStockDto>>>> GetMouvements(int id)
+    {
+        var mouvements = await _pieceService.GetMouvementsStockAsync(id);
+        return Ok(new ApiResponse<IEnumerable<MouvementStockDto>>
+        {
+            Success = true,
+            Data = mouvements
+        });
+    }
+
+    /// <summary>
+    /// Obtenir les statistiques de stock
+    /// </summary>
+    [HttpGet("stats")]
+    [Authorize(Roles = "ResponsableSAV")]
+    public async Task<ActionResult<ApiResponse<StockStatsDto>>> GetStockStats()
+    {
+        var stats = await _pieceService.GetStockStatsAsync();
+        return Ok(new ApiResponse<StockStatsDto>
+        {
+            Success = true,
+            Data = stats
+        });
+    }
 }
 
 public class ReduceStockDto
+{
+    public int Quantite { get; set; }
+}
+
+public class AddStockDto
 {
     public int Quantite { get; set; }
 }

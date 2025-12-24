@@ -1,6 +1,9 @@
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+﻿import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { techniciensApi } from '../../api/techniciens';
+import PageHeader from '../../components/common/PageHeader';
+import { Card, CardHeader, CardBody } from '../../components/common/Card';
+import Button from '../../components/common/Button';
 import LoadingSpinner from '../../components/common/LoadingSpinner';
 import StatusBadge from '../../components/common/StatusBadge';
 import { formatDate } from '../../utils/formatters';
@@ -16,7 +19,7 @@ const TechnicienDetailsPage = () => {
     mutationFn: () => techniciensApi.deleteTechnicien(technicienId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['techniciens'] });
-      toast.success('Technicien supprimé avec succès');
+      toast.success('Technicien supprimÃ© avec succÃ¨s');
       navigate('/responsable/techniciens');
     },
   });
@@ -26,12 +29,12 @@ const TechnicienDetailsPage = () => {
       techniciensApi.updateDisponibilite(technicienId, { estDisponible }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['technicien', technicienId] });
-      toast.success('Disponibilité mise à jour');
+      toast.success('DisponibilitÃ© mise Ã  jour');
     },
   });
 
   const handleDelete = async () => {
-    if (window.confirm('Êtes-vous sûr de vouloir supprimer ce technicien ?')) {
+    if (window.confirm('ÃŠtes-vous sÃ»r de vouloir supprimer ce technicien ?')) {
       try {
         await deleteMutation.mutateAsync();
       } catch (error) {
@@ -47,14 +50,14 @@ const TechnicienDetailsPage = () => {
   });
 
   if (isLoading) {
-    return <LoadingSpinner />;
+    return <LoadingSpinner fullScreen />;
   }
 
   if (!technicien?.data) {
     return (
-      <div className="px-4 py-6 sm:px-0">
-        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
-          Technicien non trouvé
+      <div className="p-6">
+        <div className="bg-red-50 border border-red-200 text-danger px-4 py-3 rounded-lg">
+          Technicien non trouvÃ©
         </div>
       </div>
     );
@@ -71,23 +74,14 @@ const TechnicienDetailsPage = () => {
   };
 
   return (
-    <div className="px-4 py-6 sm:px-0">
-      <div className="mb-6">
-        <Link
-          to="/responsable/techniciens"
-          className="text-primary-600 hover:text-primary-800 text-sm font-medium"
-        >
-          ← Retour aux techniciens
-        </Link>
-      </div>
-
-      <div className="mb-8 flex justify-between items-center">
-        <div>
-          <h1 className="text-3xl font-bold text-gray-900">{tech.nomComplet}</h1>
-          <div className="mt-2 flex items-center space-x-2">
+    <div className="p-6">
+      <PageHeader
+        title={tech.nomComplet}
+        subtitle={
+          <div className="flex items-center gap-3 mt-2">
             <span
               className={`px-2 py-1 text-xs rounded-full ${
-                tech.estDisponible ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                tech.estDisponible ? 'bg-green-100 text-success' : 'bg-red-100 text-danger'
               }`}
             >
               {tech.estDisponible ? 'Disponible' : 'Non disponible'}
@@ -95,93 +89,101 @@ const TechnicienDetailsPage = () => {
             <button
               onClick={handleToggleDisponibilite}
               disabled={toggleDisponibiliteMutation.isPending}
-              className="text-blue-600 hover:text-blue-800 text-sm font-medium disabled:opacity-50"
+              className="text-primary-600 hover:text-primary-800 text-sm font-medium disabled:opacity-50"
             >
               {tech.estDisponible ? 'Rendre indisponible' : 'Rendre disponible'}
             </button>
           </div>
-        </div>
-        <div className="flex space-x-2">
-          <button
-            onClick={() => navigate(`/responsable/techniciens/${technicienId}/edit`)}
-            className="bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-md text-sm font-medium"
-          >
-            Modifier
-          </button>
-          <button
-            onClick={handleDelete}
-            disabled={deleteMutation.isPending}
-            className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md text-sm font-medium disabled:opacity-50"
-          >
-            {deleteMutation.isPending ? 'Suppression...' : 'Supprimer'}
-          </button>
-        </div>
-      </div>
+        }
+        breadcrumb={[
+          { label: 'Dashboard', path: '/responsable' },
+          { label: 'Techniciens', path: '/responsable/techniciens' },
+          { label: tech.nomComplet },
+        ]}
+        actions={
+          <div className="flex gap-3">
+            <Button
+              variant="primary"
+              onClick={() => navigate(`/responsable/techniciens/${technicienId}/edit`)}
+            >
+              Modifier
+            </Button>
+            <Button
+              variant="danger"
+              onClick={handleDelete}
+              disabled={deleteMutation.isPending}
+              loading={deleteMutation.isPending}
+            >
+              Supprimer
+            </Button>
+          </div>
+        }
+      />
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="bg-white shadow rounded-lg">
-          <div className="px-4 py-5 sm:p-6">
-            <h2 className="text-lg font-medium text-gray-900 mb-4">Informations</h2>
+        <Card>
+          <CardHeader title="Informations" />
+          <CardBody>
             <dl className="space-y-4">
               <div>
-                <dt className="text-sm font-medium text-gray-500">Email</dt>
-                <dd className="mt-1 text-sm text-gray-900">{tech.email}</dd>
+                <dt className="text-sm font-medium text-bodydark2">Email</dt>
+                <dd className="mt-1 text-sm text-black">{tech.email}</dd>
               </div>
               <div>
-                <dt className="text-sm font-medium text-gray-500">Téléphone</dt>
-                <dd className="mt-1 text-sm text-gray-900">{tech.telephone}</dd>
+                <dt className="text-sm font-medium text-bodydark2">TÃ©lÃ©phone</dt>
+                <dd className="mt-1 text-sm text-black">{tech.telephone}</dd>
               </div>
               <div>
-                <dt className="text-sm font-medium text-gray-500">Spécialité</dt>
-                <dd className="mt-1 text-sm text-gray-900">{tech.specialite}</dd>
+                <dt className="text-sm font-medium text-bodydark2">SpÃ©cialitÃ©</dt>
+                <dd className="mt-1 text-sm text-black">{tech.specialite}</dd>
               </div>
               <div>
-                <dt className="text-sm font-medium text-gray-500">Date d'embauche</dt>
-                <dd className="mt-1 text-sm text-gray-900">{formatDate(tech.dateEmbauche)}</dd>
+                <dt className="text-sm font-medium text-bodydark2">Date d'embauche</dt>
+                <dd className="mt-1 text-sm text-black">{formatDate(tech.dateEmbauche)}</dd>
               </div>
             </dl>
-          </div>
-        </div>
+          </CardBody>
+        </Card>
 
         {tech.stats && (
-          <div className="bg-white shadow rounded-lg">
-            <div className="px-4 py-5 sm:p-6">
-              <h2 className="text-lg font-medium text-gray-900 mb-4">Statistiques</h2>
+          <Card>
+            <CardHeader title="Statistiques" />
+            <CardBody>
               <dl className="space-y-4">
                 <div>
-                  <dt className="text-sm font-medium text-gray-500">Interventions totales</dt>
-                  <dd className="mt-1 text-sm text-gray-900">{tech.stats.nombreInterventionsTotal}</dd>
+                  <dt className="text-sm font-medium text-bodydark2">Interventions totales</dt>
+                  <dd className="mt-1 text-sm text-black">{tech.stats.nombreInterventionsTotal}</dd>
                 </div>
                 <div>
-                  <dt className="text-sm font-medium text-gray-500">Interventions terminées</dt>
-                  <dd className="mt-1 text-sm text-gray-900">
+                  <dt className="text-sm font-medium text-bodydark2">Interventions terminÃ©es</dt>
+                  <dd className="mt-1 text-sm text-black">
                     {tech.stats.nombreInterventionsTerminees}
                   </dd>
                 </div>
                 <div>
-                  <dt className="text-sm font-medium text-gray-500">Taux de réussite</dt>
-                  <dd className="mt-1 text-sm text-gray-900">
+                  <dt className="text-sm font-medium text-bodydark2">Taux de rÃ©ussite</dt>
+                  <dd className="mt-1 text-sm text-black">
                     {tech.stats.tauxReussite.toFixed(1)}%
                   </dd>
                 </div>
                 <div>
-                  <dt className="text-sm font-medium text-gray-500">Chiffre d'affaires total</dt>
-                  <dd className="mt-1 text-sm font-bold text-gray-900">
-                    {tech.stats.chiffreAffaireTotal.toFixed(2)} €
+                  <dt className="text-sm font-medium text-bodydark2">Chiffre d'affaires total</dt>
+                  <dd className="mt-1 text-sm font-bold text-black">
+                    {tech.stats.chiffreAffaireTotal.toFixed(2)} â‚¬
                   </dd>
                 </div>
               </dl>
-            </div>
-          </div>
+            </CardBody>
+          </Card>
         )}
 
         {tech.interventions && tech.interventions.length > 0 && (
-          <div className="lg:col-span-2 bg-white shadow rounded-lg">
-            <div className="px-4 py-5 sm:p-6">
-              <h2 className="text-lg font-medium text-gray-900 mb-4">Interventions</h2>
+          <Card className="lg:col-span-2">
+            <CardHeader title="Interventions" />
+            <CardBody>
               <div className="space-y-4">
                 {tech.interventions.map((intervention) => (
-                  <div key={intervention.id} className="border border-gray-200 rounded-lg p-4">
+                  <div key={intervention.id} className="border border-stroke rounded-lg p-4">
                     <div className="flex justify-between items-start mb-2">
                       <Link
                         to={`/responsable/interventions/${intervention.id}`}
@@ -191,14 +193,14 @@ const TechnicienDetailsPage = () => {
                       </Link>
                       <StatusBadge status={intervention.statut} />
                     </div>
-                    <p className="text-sm text-gray-600">
+                    <p className="text-sm text-bodydark2">
                       Date: {formatDate(intervention.dateIntervention)}
                     </p>
                   </div>
                 ))}
               </div>
-            </div>
-          </div>
+            </CardBody>
+          </Card>
         )}
       </div>
     </div>

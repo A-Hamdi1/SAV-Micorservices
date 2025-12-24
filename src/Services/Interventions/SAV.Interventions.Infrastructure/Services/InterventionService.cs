@@ -481,46 +481,165 @@ public class InterventionService : IInterventionService
         var nombreEnCours = interventions.Count(i => i.Statut == InterventionStatut.EnCours);
         var nombreTerminees = interventions.Count(i => i.Statut == InterventionStatut.Terminee);
         var nombreAnnulees = interventions.Count(i => i.Statut == InterventionStatut.Annulee);
+        var nombreSousGarantie = interventions.Count(i => i.EstGratuite);
 
-        var interventionsTerminees = interventions.Where(i => i.Statut == InterventionStatut.Terminee).ToList();
-        var montantTotalGenere = interventionsTerminees.Sum(i => i.MontantTotal);
-        var montantMoyen = interventionsTerminees.Any() ? montantTotalGenere / interventionsTerminees.Count : 0;
+        var interventionsTermineesListe = interventions.Where(i => i.Statut == InterventionStatut.Terminee).ToList();
+        var chiffreAffairesTotal = interventionsTermineesListe.Sum(i => i.MontantTotal);
 
-        // Calcul durée moyenne (de création à date intervention)
-        var dureeMoyenneJours = 0m;
-        if (interventionsTerminees.Any())
+        // Chiffre d'affaires du mois courant
+        var debutMois = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, 1);
+        var chiffreAffairesMois = interventionsTermineesListe
+            .Where(i => i.DateIntervention >= debutMois)
+            .Sum(i => i.MontantTotal);
+
+        // Taux de résolution
+        var tauxResolution = nombreTotal > 0 ? (double)nombreTerminees / nombreTotal * 100 : 0;
+
+        // Temps moyen de résolution (de création à date intervention)
+        var tempsMoyenResolution = 0.0;
+        if (interventionsTermineesListe.Any())
         {
-            var durees = interventionsTerminees.Select(i => (i.DateIntervention - i.CreatedAt).TotalDays).ToList();
-            dureeMoyenneJours = (decimal)durees.Average();
+            var durees = interventionsTermineesListe.Select(i => (i.DateIntervention - i.CreatedAt).TotalDays).ToList();
+            tempsMoyenResolution = durees.Average();
         }
-
-        // Stats par mois (6 derniers mois)
-        var statsParMois = interventions
-            .Where(i => i.DateIntervention >= DateTime.UtcNow.AddMonths(-6))
-            .GroupBy(i => new { i.DateIntervention.Year, i.DateIntervention.Month })
-            .Select(g => new InterventionStatsByMonthDto
-            {
-                Annee = g.Key.Year,
-                Mois = g.Key.Month,
-                MoisNom = new DateTime(g.Key.Year, g.Key.Month, 1).ToString("MMMM yyyy"),
-                Nombre = g.Count(),
-                Montant = g.Where(i => i.Statut == InterventionStatut.Terminee).Sum(i => i.MontantTotal)
-            })
-            .OrderBy(s => s.Annee)
-            .ThenBy(s => s.Mois)
-            .ToList();
 
         return new InterventionStatsDto
         {
-            NombreTotal = nombreTotal,
-            NombrePlanifiees = nombrePlanifiees,
-            NombreEnCours = nombreEnCours,
-            NombreTerminees = nombreTerminees,
-            NombreAnnulees = nombreAnnulees,
-            MontantTotalGenere = montantTotalGenere,
-            MontantMoyen = montantMoyen,
-            DureeMoyenneJours = Math.Round(dureeMoyenneJours, 2),
-            ParMois = statsParMois
+            TotalInterventions = nombreTotal,
+            InterventionsPlanifiees = nombrePlanifiees,
+            InterventionsEnCours = nombreEnCours,
+            InterventionsTerminees = nombreTerminees,
+            InterventionsAnnulees = nombreAnnulees,
+            ChiffreAffairesTotal = chiffreAffairesTotal,
+            ChiffreAffairesMois = chiffreAffairesMois,
+            TauxResolution = Math.Round(tauxResolution, 2),
+            TempsMoyenResolution = Math.Round(tempsMoyenResolution, 2),
+            InterventionsSousGarantie = nombreSousGarantie
+        };
+    }
+
+    public async Task<AnalyticsDto> GetAnalyticsAsync(int? annee = null)
+    {
+        var year = annee ?? DateTime.UtcNow.Year;
+        var startOfYear = new DateTime(year, 1, 1);
+        var endOfYear = new DateTime(year, 12, 31, 23, 59, 59);
+        var startOfMonth = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, 1);
+
+        var interventions = await _context.Interventions
+            .Include(i => i.PiecesUtilisees)
+            .Include(i => i.Technicien)
+            .Where(i => i.DateIntervention >= startOfYear && i.DateIntervention <= endOfYear)
+            .ToListAsync();
+
+        var evaluations = await _context.Evaluations
+            .Include(e => e.Intervention)
+            .Where(e => e.Intervention.DateIntervention >= startOfYear && e.Intervention.DateIntervention <= endOfYear)
+            .ToListAsync();
+
+        var total = interventions.Count;
+        var terminees = interventions.Count(i => i.Statut == InterventionStatut.Terminee);
+        var enCours = interventions.Count(i => i.Statut == InterventionStatut.EnCours);
+        var planifiees = interventions.Count(i => i.Statut == InterventionStatut.Planifiee);
+        var annulees = interventions.Count(i => i.Statut == InterventionStatut.Annulee);
+        var sousGarantie = interventions.Count(i => i.EstGratuite);
+
+        var interventionsTerminees = interventions.Where(i => i.Statut == InterventionStatut.Terminee).ToList();
+        var chiffreAffairesTotal = interventionsTerminees.Sum(i => i.MontantTotal);
+        var chiffreAffairesMois = interventions
+            .Where(i => i.DateIntervention >= startOfMonth && i.Statut == InterventionStatut.Terminee)
+            .Sum(i => i.MontantTotal);
+
+        var tauxResolution = total > 0 ? (terminees * 100.0 / total) : 0;
+        var tempsMoyenResolution = interventionsTerminees.Any()
+            ? interventionsTerminees.Average(i => (i.DateIntervention - i.CreatedAt).TotalDays)
+            : 0;
+
+        // Chiffre d'affaires par mois
+        var chiffreParMois = interventionsTerminees
+            .GroupBy(i => new { i.DateIntervention.Year, i.DateIntervention.Month })
+            .Select(g => new ChiffreAffairesMensuelDto
+            {
+                Annee = g.Key.Year,
+                Mois = g.Key.Month,
+                MoisNom = new DateTime(g.Key.Year, g.Key.Month, 1).ToString("MMMM"),
+                Montant = g.Sum(i => i.MontantTotal),
+                NombreInterventions = g.Count()
+            })
+            .OrderBy(c => c.Annee).ThenBy(c => c.Mois)
+            .ToList();
+
+        // Interventions par statut
+        var parStatut = new List<InterventionsParStatutDto>
+        {
+            new() { Statut = "Planifiée", Nombre = planifiees, Pourcentage = total > 0 ? planifiees * 100.0 / total : 0 },
+            new() { Statut = "En cours", Nombre = enCours, Pourcentage = total > 0 ? enCours * 100.0 / total : 0 },
+            new() { Statut = "Terminée", Nombre = terminees, Pourcentage = total > 0 ? terminees * 100.0 / total : 0 },
+            new() { Statut = "Annulée", Nombre = annulees, Pourcentage = total > 0 ? annulees * 100.0 / total : 0 }
+        };
+
+        // Top techniciens
+        var topTechniciens = interventions
+            .Where(i => i.TechnicienId.HasValue)
+            .GroupBy(i => i.TechnicienId!.Value)
+            .Select(g =>
+            {
+                var tech = g.First().Technicien;
+                var techEvals = evaluations.Where(e => e.Intervention.TechnicienId == g.Key).ToList();
+                var nombreTotal = g.Count();
+                var nombreTerminees = g.Count(i => i.Statut == InterventionStatut.Terminee);
+                var interventionsTermineesAvecDates = g.Where(i => i.Statut == InterventionStatut.Terminee).ToList();
+                var dureeMoyenne = interventionsTermineesAvecDates.Any() 
+                    ? interventionsTermineesAvecDates.Average(i => (i.DateIntervention - i.CreatedAt).TotalDays)
+                    : 0;
+                return new TechnicienPerformanceDto
+                {
+                    TechnicienId = g.Key,
+                    TechnicienNom = tech != null ? $"{tech.Prenom} {tech.Nom}" : "",
+                    NombreInterventions = nombreTotal,
+                    InterventionsTerminees = nombreTerminees,
+                    TauxReussite = nombreTotal > 0 ? (double)nombreTerminees / nombreTotal * 100 : 0,
+                    DureeMoyenne = Math.Abs(dureeMoyenne),
+                    NoteMoyenne = techEvals.Any() ? techEvals.Average(e => e.Note) : 0,
+                    ChiffreAffaires = g.Where(i => i.Statut == InterventionStatut.Terminee).Sum(i => i.MontantTotal)
+                };
+            })
+            .OrderByDescending(t => t.InterventionsTerminees)
+            .Take(5)
+            .ToList();
+
+        // Interventions par jour (30 derniers jours)
+        var last30Days = DateTime.UtcNow.AddDays(-30);
+        var parJour = interventions
+            .Where(i => i.DateIntervention >= last30Days)
+            .GroupBy(i => i.DateIntervention.Date)
+            .Select(g => new InterventionsParJourDto
+            {
+                Date = g.Key,
+                Nombre = g.Count()
+            })
+            .OrderBy(p => p.Date)
+            .ToList();
+
+        return new AnalyticsDto
+        {
+            InterventionStats = new InterventionStatsDto
+            {
+                TotalInterventions = total,
+                InterventionsTerminees = terminees,
+                InterventionsEnCours = enCours,
+                InterventionsPlanifiees = planifiees,
+                InterventionsAnnulees = annulees,
+                ChiffreAffairesTotal = chiffreAffairesTotal,
+                ChiffreAffairesMois = chiffreAffairesMois,
+                TauxResolution = Math.Round(tauxResolution, 2),
+                TempsMoyenResolution = Math.Round(tempsMoyenResolution, 2),
+                InterventionsSousGarantie = sousGarantie
+            },
+            ChiffreAffairesMensuel = chiffreParMois,
+            InterventionsParStatut = parStatut,
+            TopTechniciens = topTechniciens,
+            TopArticlesProblemes = new List<ArticleProblemeDto>(), // Nécessiterait appel API Clients
+            InterventionsParJour = parJour
         };
     }
 }

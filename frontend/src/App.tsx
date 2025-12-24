@@ -12,6 +12,11 @@ import ClientProfilePage from './pages/client/ClientProfilePage';
 import MyArticlesPage from './pages/client/MyArticlesPage';
 import MyReclamationsPage from './pages/client/MyReclamationsPage';
 import ReclamationDetailsPage from './pages/client/ReclamationDetailsPage';
+import EvaluationPage from './pages/client/EvaluationPage';
+import DemandeRdvPage from './pages/client/DemandeRdvPage';
+import PaymentPage from './pages/client/PaymentPage';
+import PaymentSuccessPage from './pages/client/PaymentSuccessPage';
+import PaymentCancelPage from './pages/client/PaymentCancelPage';
 
 // Responsable Pages
 import ResponsableDashboard from './pages/responsable/ResponsableDashboard';
@@ -36,6 +41,10 @@ import EditTechnicienPage from './pages/responsable/EditTechnicienPage';
 import ArticlesAchetesListPage from './pages/responsable/ArticlesAchetesListPage';
 import ArticleAchatDetailsPage from './pages/responsable/ArticleAchatDetailsPage';
 import StatsPage from './pages/responsable/StatsPage';
+import AnalyticsDashboardPage from './pages/responsable/AnalyticsDashboardPage';
+import StockManagementPage from './pages/responsable/StockManagementPage';
+import RdvManagementPage from './pages/responsable/RdvManagementPage';
+import PaymentsManagementPage from './pages/responsable/PaymentsManagementPage';
 
 // Composant pour la redirection par défaut
 const DefaultRedirect = () => {
@@ -71,6 +80,11 @@ function App() {
                 <Route path="articles" element={<MyArticlesPage />} />
                 <Route path="reclamations" element={<MyReclamationsPage />} />
                 <Route path="reclamations/:id" element={<ReclamationDetailsPage />} />
+                <Route path="evaluation/:interventionId" element={<EvaluationPage />} />
+                <Route path="rdv/:reclamationId" element={<DemandeRdvPage />} />
+                <Route path="payment/:interventionId" element={<PaymentPage />} />
+                <Route path="payment/:interventionId/success" element={<PaymentSuccessPage />} />
+                <Route path="payment/:interventionId/cancel" element={<PaymentCancelPage />} />
                 <Route path="*" element={<Navigate to="/client/dashboard" replace />} />
               </Routes>
             </Layout>
@@ -108,6 +122,10 @@ function App() {
                 <Route path="articles-achetes" element={<ArticlesAchetesListPage />} />
                 <Route path="articles-achetes/:id" element={<ArticleAchatDetailsPage />} />
                 <Route path="stats" element={<StatsPage />} />
+                <Route path="analytics" element={<AnalyticsDashboardPage />} />
+                <Route path="stock" element={<StockManagementPage />} />
+                <Route path="rdv" element={<RdvManagementPage />} />
+                <Route path="payments" element={<PaymentsManagementPage />} />
                 <Route path="*" element={<Navigate to="/responsable/dashboard" replace />} />
               </Routes>
             </Layout>

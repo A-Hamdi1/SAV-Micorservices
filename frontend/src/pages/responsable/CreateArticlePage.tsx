@@ -1,10 +1,12 @@
-import { useNavigate } from 'react-router-dom';
+﻿import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { articlesApi } from '../../api/articles';
 import { CreateArticleDto } from '../../types';
-import LoadingSpinner from '../../components/common/LoadingSpinner';
 import { toast } from 'react-toastify';
+import PageHeader from '../../components/common/PageHeader';
+import { Card, CardBody } from '../../components/common/Card';
+import Button from '../../components/common/Button';
 
 const CreateArticlePage = () => {
   const navigate = useNavigate();
@@ -14,7 +16,7 @@ const CreateArticlePage = () => {
     mutationFn: (data: CreateArticleDto) => articlesApi.createArticle(data),
     onSuccess: (response) => {
       queryClient.invalidateQueries({ queryKey: ['articles'] });
-      toast.success('Article créé avec succès');
+      toast.success('Article crÃ©Ã© avec succÃ¨s');
       navigate(`/responsable/articles/${response.data?.id}`);
     },
   });
@@ -34,124 +36,121 @@ const CreateArticlePage = () => {
   };
 
   return (
-    <div className="px-4 py-6 sm:px-0">
-      <div className="mb-6">
-        <button
-          onClick={() => navigate('/responsable/articles')}
-          className="text-primary-600 hover:text-primary-800 text-sm font-medium"
-        >
-          ← Retour aux articles
-        </button>
-      </div>
+    <>
+      <PageHeader
+        title="CrÃ©er un article"
+        subtitle="Ajouter un nouvel article au catalogue"
+        breadcrumb={[
+          { label: 'Dashboard', path: '/responsable' },
+          { label: 'Articles', path: '/responsable/articles' },
+          { label: 'CrÃ©er' }
+        ]}
+      />
 
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900">Créer un article</h1>
-      </div>
-
-      <div className="bg-white shadow rounded-lg">
-        <div className="px-4 py-5 sm:p-6">
+      <Card>
+        <CardBody>
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
               <div>
-                <label htmlFor="reference" className="block text-sm font-medium text-gray-700">
-                  Référence *
+                <label htmlFor="reference" className="form-label">
+                  RÃ©fÃ©rence *
                 </label>
                 <input
-                  {...register('reference', { required: 'Référence requise' })}
+                  {...register('reference', { required: 'RÃ©fÃ©rence requise' })}
                   type="text"
-                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
+                  className="form-input"
                 />
                 {errors.reference && (
-                  <p className="mt-1 text-sm text-red-600">{errors.reference.message}</p>
+                  <p className="mt-1 text-sm text-danger">{errors.reference.message}</p>
                 )}
               </div>
 
               <div>
-                <label htmlFor="nom" className="block text-sm font-medium text-gray-700">
+                <label htmlFor="nom" className="form-label">
                   Nom *
                 </label>
                 <input
                   {...register('nom', { required: 'Nom requis' })}
                   type="text"
-                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
+                  className="form-input"
                 />
                 {errors.nom && (
-                  <p className="mt-1 text-sm text-red-600">{errors.nom.message}</p>
+                  <p className="mt-1 text-sm text-danger">{errors.nom.message}</p>
                 )}
               </div>
 
               <div>
-                <label htmlFor="categorie" className="block text-sm font-medium text-gray-700">
-                  Catégorie *
+                <label htmlFor="categorie" className="form-label">
+                  CatÃ©gorie *
                 </label>
                 <input
-                  {...register('categorie', { required: 'Catégorie requise' })}
+                  {...register('categorie', { required: 'CatÃ©gorie requise' })}
                   type="text"
-                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
+                  className="form-input"
                 />
                 {errors.categorie && (
-                  <p className="mt-1 text-sm text-red-600">{errors.categorie.message}</p>
+                  <p className="mt-1 text-sm text-danger">{errors.categorie.message}</p>
                 )}
               </div>
 
               <div>
-                <label htmlFor="prixVente" className="block text-sm font-medium text-gray-700">
-                  Prix de vente (€) *
+                <label htmlFor="prixVente" className="form-label">
+                  Prix de vente (â‚¬) *
                 </label>
                 <input
                   {...register('prixVente', {
                     required: 'Prix de vente requis',
-                    min: { value: 0, message: 'Le prix doit être positif' },
+                    min: { value: 0, message: 'Le prix doit Ãªtre positif' },
                     valueAsNumber: true,
                   })}
                   type="number"
                   step="0.01"
-                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
+                  className="form-input"
                 />
                 {errors.prixVente && (
-                  <p className="mt-1 text-sm text-red-600">{errors.prixVente.message}</p>
+                  <p className="mt-1 text-sm text-danger">{errors.prixVente.message}</p>
                 )}
               </div>
 
               <div>
-                <label htmlFor="dureeGarantie" className="block text-sm font-medium text-gray-700">
-                  Durée de garantie (mois) *
+                <label htmlFor="dureeGarantie" className="form-label">
+                  DurÃ©e de garantie (mois) *
                 </label>
                 <input
                   {...register('dureeGarantie', {
-                    required: 'Durée de garantie requise',
-                    min: { value: 0, message: 'La durée doit être positive' },
+                    required: 'DurÃ©e de garantie requise',
+                    min: { value: 0, message: 'La durÃ©e doit Ãªtre positive' },
                     valueAsNumber: true,
                   })}
                   type="number"
-                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
+                  className="form-input"
                 />
                 {errors.dureeGarantie && (
-                  <p className="mt-1 text-sm text-red-600">{errors.dureeGarantie.message}</p>
+                  <p className="mt-1 text-sm text-danger">{errors.dureeGarantie.message}</p>
                 )}
               </div>
             </div>
 
-            <div className="flex justify-end space-x-4">
-              <button
+            <div className="flex justify-end gap-3">
+              <Button
                 type="button"
+                variant="outline"
                 onClick={() => navigate('/responsable/articles')}
-                className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
               >
                 Annuler
-              </button>
-              <button
+              </Button>
+              <Button
                 type="submit"
-                disabled={createMutation.isPending}
-                className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 disabled:opacity-50"
+                variant="primary"
+                loading={createMutation.isPending}
               >
-                {createMutation.isPending ? 'Création...' : 'Créer l\'article'}
-              </button>
+                CrÃ©er l'article
+              </Button>
             </div>
           </form>
-        </div>
-      </div>
-    </div>
+        </CardBody>
+      </Card>
+    </>
   );
 };
 

@@ -1,4 +1,4 @@
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+﻿import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { reclamationsApi } from '../../api/reclamations';
@@ -6,6 +6,9 @@ import { interventionsApi } from '../../api/interventions';
 import { UpdateReclamationStatutDto } from '../../types';
 import LoadingSpinner from '../../components/common/LoadingSpinner';
 import StatusBadge from '../../components/common/StatusBadge';
+import PageHeader from '../../components/common/PageHeader';
+import { Card, CardHeader, CardBody } from '../../components/common/Card';
+import Button from '../../components/common/Button';
 import { toast } from 'react-toastify';
 import { formatDate } from '../../utils/formatters';
 
@@ -19,13 +22,13 @@ const ReclamationDetailsPage = () => {
     mutationFn: () => reclamationsApi.deleteReclamation(reclamationId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['reclamations'] });
-      toast.success('Réclamation supprimée avec succès');
+      toast.success('RÃ©clamation supprimÃ©e avec succÃ¨s');
       navigate('/responsable/reclamations');
     },
   });
 
   const handleDelete = async () => {
-    if (window.confirm('Êtes-vous sûr de vouloir supprimer cette réclamation ?')) {
+    if (window.confirm('ÃŠtes-vous sÃ»r de vouloir supprimer cette rÃ©clamation ?')) {
       try {
         await deleteMutation.mutateAsync();
       } catch (error) {
@@ -51,7 +54,7 @@ const ReclamationDetailsPage = () => {
       reclamationsApi.updateReclamationStatut(reclamationId, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['reclamation', reclamationId] });
-      toast.success('Statut mis à jour');
+      toast.success('Statut mis Ã  jour');
     },
   });
 
@@ -62,15 +65,35 @@ const ReclamationDetailsPage = () => {
   } = useForm<UpdateReclamationStatutDto>();
 
   if (isLoading) {
-    return <LoadingSpinner />;
+    return <LoadingSpinner fullScreen />;
   }
 
   if (!reclamation?.data) {
     return (
-      <div className="px-4 py-6 sm:px-0">
-        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
-          Réclamation non trouvée
-        </div>
+      <div className="space-y-6">
+        <PageHeader
+          title="RÃ©clamation non trouvÃ©e"
+          breadcrumb={[
+            { label: 'Dashboard', path: '/responsable' },
+            { label: 'RÃ©clamations', path: '/responsable/reclamations' },
+            { label: 'DÃ©tails' },
+          ]}
+        />
+        <Card>
+          <CardBody>
+            <div className="flex flex-col items-center justify-center py-12">
+              <div className="w-16 h-16 rounded-full bg-danger/10 flex items-center justify-center mb-4">
+                <svg className="w-8 h-8 text-danger" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+              </div>
+              <p className="text-bodydark2 mb-4">La rÃ©clamation demandÃ©e n'existe pas.</p>
+              <Button variant="primary" onClick={() => navigate('/responsable/reclamations')}>
+                Retour aux rÃ©clamations
+              </Button>
+            </div>
+          </CardBody>
+        </Card>
       </div>
     );
   }
@@ -86,162 +109,203 @@ const ReclamationDetailsPage = () => {
   };
 
   return (
-    <div className="px-4 py-6 sm:px-0">
-      <div className="mb-6">
-        <Link
-          to="/responsable/reclamations"
-          className="text-primary-600 hover:text-primary-800 text-sm font-medium"
-        >
-          ← Retour aux réclamations
-        </Link>
-      </div>
-
-      <div className="mb-8 flex justify-between items-center">
-        <div>
-          <h1 className="text-3xl font-bold text-gray-900">Réclamation #{rec.id}</h1>
-          <div className="mt-2 flex items-center">
+    <div className="space-y-6">
+      <PageHeader
+        title={`RÃ©clamation #${rec.id}`}
+        breadcrumb={[
+          { label: 'Dashboard', path: '/responsable' },
+          { label: 'RÃ©clamations', path: '/responsable/reclamations' },
+          { label: `#${rec.id}` },
+        ]}
+        actions={
+          <div className="flex items-center gap-3">
             <StatusBadge status={rec.statut} />
+            <Button
+              variant="danger"
+              onClick={handleDelete}
+              loading={deleteMutation.isPending}
+            >
+              <svg className="w-4 h-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+              </svg>
+              Supprimer
+            </Button>
           </div>
-        </div>
-        <button
-          onClick={handleDelete}
-          disabled={deleteMutation.isPending}
-          className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md text-sm font-medium disabled:opacity-50"
-        >
-          {deleteMutation.isPending ? 'Suppression...' : 'Supprimer'}
-        </button>
-      </div>
+        }
+      />
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Main Content */}
         <div className="lg:col-span-2 space-y-6">
-          <div className="bg-white shadow rounded-lg">
-            <div className="px-4 py-5 sm:p-6">
-              <h2 className="text-lg font-medium text-gray-900 mb-4">Informations</h2>
-              <dl className="space-y-4">
-                <div>
-                  <dt className="text-sm font-medium text-gray-500">Client</dt>
-                  <dd className="mt-1 text-sm text-gray-900">
-                    {rec.clientPrenom} {rec.clientNom}
-                  </dd>
-                </div>
-                <div>
-                  <dt className="text-sm font-medium text-gray-500">Article</dt>
-                  <dd className="mt-1 text-sm text-gray-900">{rec.articleNom}</dd>
-                </div>
-                <div>
-                  <dt className="text-sm font-medium text-gray-500">Description</dt>
-                  <dd className="mt-1 text-sm text-gray-900">{rec.description}</dd>
-                </div>
-                <div>
-                  <dt className="text-sm font-medium text-gray-500">Date de création</dt>
-                  <dd className="mt-1 text-sm text-gray-900">{formatDate(rec.dateCreation)}</dd>
-                </div>
-                {rec.dateResolution && (
-                  <div>
-                    <dt className="text-sm font-medium text-gray-500">Date de résolution</dt>
-                    <dd className="mt-1 text-sm text-gray-900">{formatDate(rec.dateResolution)}</dd>
-                  </div>
-                )}
-                {rec.commentaireResponsable && (
-                  <div>
-                    <dt className="text-sm font-medium text-gray-500">Commentaire</dt>
-                    <dd className="mt-1 text-sm text-gray-900">{rec.commentaireResponsable}</dd>
-                  </div>
-                )}
-              </dl>
-            </div>
-          </div>
-
-              <div className="bg-white shadow rounded-lg">
-            <div className="px-4 py-5 sm:p-6">
-              <div className="flex justify-between items-center mb-4">
-                <h2 className="text-lg font-medium text-gray-900">Interventions</h2>
-                <Link
-                  to={`/responsable/interventions/new/${rec.id}`}
-                  className="bg-primary-600 hover:bg-primary-700 text-white px-3 py-1 rounded text-xs font-medium"
-                >
-                  + Créer intervention
-                </Link>
-              </div>
-              {interventions?.data && interventions.data.length > 0 ? (
+          {/* Informations Card */}
+          <Card>
+            <CardHeader title="Informations de la rÃ©clamation" />
+            <CardBody>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-4">
-                  {interventions.data.map((intervention) => (
-                    <div
-                      key={intervention.id}
-                      className="border border-gray-200 rounded-lg p-4"
-                    >
-                      <div className="flex justify-between items-start mb-2">
-                        <Link
-                          to={`/responsable/interventions/${intervention.id}`}
-                          className="text-primary-600 hover:text-primary-800 font-medium"
-                        >
-                          Intervention #{intervention.id}
-                        </Link>
-                        <StatusBadge status={intervention.statut} />
+                  <div>
+                    <label className="text-xs font-medium text-bodydark2 uppercase tracking-wider">Client</label>
+                    <div className="mt-1 flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-full bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center">
+                        <span className="text-sm font-bold text-white">
+                          {rec.clientPrenom?.charAt(0)}{rec.clientNom?.charAt(0)}
+                        </span>
                       </div>
-                      <p className="text-sm text-gray-600">
-                        Technicien: {intervention.technicienNom}
-                      </p>
-                      <p className="text-sm text-gray-600">
-                        Date: {formatDate(intervention.dateIntervention)}
+                      <p className="text-sm font-medium text-black">
+                        {rec.clientPrenom} {rec.clientNom}
                       </p>
                     </div>
+                  </div>
+                  <div>
+                    <label className="text-xs font-medium text-bodydark2 uppercase tracking-wider">Article</label>
+                    <p className="mt-1 text-sm text-black">{rec.articleNom}</p>
+                  </div>
+                  <div>
+                    <label className="text-xs font-medium text-bodydark2 uppercase tracking-wider">Date de crÃ©ation</label>
+                    <p className="mt-1 text-sm text-black">{formatDate(rec.dateCreation)}</p>
+                  </div>
+                  {rec.dateResolution && (
+                    <div>
+                      <label className="text-xs font-medium text-bodydark2 uppercase tracking-wider">Date de rÃ©solution</label>
+                      <p className="mt-1 text-sm text-black">{formatDate(rec.dateResolution)}</p>
+                    </div>
+                  )}
+                </div>
+                <div className="space-y-4">
+                  <div>
+                    <label className="text-xs font-medium text-bodydark2 uppercase tracking-wider">Description</label>
+                    <p className="mt-1 text-sm text-black bg-gray-2 rounded-lg p-3">{rec.description}</p>
+                  </div>
+                  {rec.commentaireResponsable && (
+                    <div>
+                      <label className="text-xs font-medium text-bodydark2 uppercase tracking-wider">Commentaire responsable</label>
+                      <p className="mt-1 text-sm text-black bg-primary-50 rounded-lg p-3">{rec.commentaireResponsable}</p>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </CardBody>
+          </Card>
+
+          {/* Interventions Card */}
+          <Card>
+            <CardHeader
+              title="Interventions"
+              action={
+                <Link
+                  to={`/responsable/interventions/new/${rec.id}`}
+                  className="inline-flex items-center gap-2 text-sm font-medium text-primary-600 hover:text-primary-700"
+                >
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                  </svg>
+                  CrÃ©er intervention
+                </Link>
+              }
+            />
+            <CardBody className="p-0">
+              {interventions?.data && interventions.data.length > 0 ? (
+                <div className="divide-y divide-stroke">
+                  {interventions.data.map((intervention) => (
+                    <Link
+                      key={intervention.id}
+                      to={`/responsable/interventions/${intervention.id}`}
+                      className="flex items-center justify-between p-4 hover:bg-gray-2 transition-colors"
+                    >
+                      <div className="flex items-center gap-4">
+                        <div className="w-10 h-10 rounded-lg bg-blue-50 flex items-center justify-center">
+                          <svg className="w-5 h-5 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                          </svg>
+                        </div>
+                        <div>
+                          <p className="text-sm font-medium text-black">
+                            Intervention #{intervention.id}
+                          </p>
+                          <p className="text-xs text-bodydark2">
+                            {intervention.technicienNom} â€¢ {formatDate(intervention.dateIntervention)}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <StatusBadge status={intervention.statut} size="sm" />
+                        <svg className="w-5 h-5 text-bodydark2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                        </svg>
+                      </div>
+                    </Link>
                   ))}
                 </div>
               ) : (
-                <p className="text-gray-500 text-sm">Aucune intervention</p>
+                <div className="flex flex-col items-center justify-center py-12">
+                  <div className="w-16 h-16 rounded-full bg-gray-2 flex items-center justify-center mb-4">
+                    <svg className="w-8 h-8 text-bodydark2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                    </svg>
+                  </div>
+                  <p className="text-bodydark2 text-sm mb-4">Aucune intervention pour cette rÃ©clamation</p>
+                  <Link
+                    to={`/responsable/interventions/new/${rec.id}`}
+                    className="text-sm font-medium text-primary-600 hover:text-primary-700"
+                  >
+                    CrÃ©er une intervention
+                  </Link>
+                </div>
               )}
-            </div>
-          </div>
+            </CardBody>
+          </Card>
         </div>
 
+        {/* Sidebar */}
         <div className="lg:col-span-1">
-          <div className="bg-white shadow rounded-lg">
-            <div className="px-4 py-5 sm:p-6">
-              <h2 className="text-lg font-medium text-gray-900 mb-4">Mettre à jour le statut</h2>
+          <Card>
+            <CardHeader title="Mettre Ã  jour le statut" />
+            <CardBody>
               <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
                 <div>
-                  <label htmlFor="statut" className="block text-sm font-medium text-gray-700">
+                  <label htmlFor="statut" className="form-label">
                     Statut
                   </label>
                   <select
                     {...register('statut', { required: 'Statut requis' })}
-                    className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
+                    className="form-select"
                   >
                     <option value="EnAttente">En Attente</option>
                     <option value="EnCours">En Cours</option>
-                    <option value="Resolue">Résolue</option>
-                    <option value="Rejetee">Rejetée</option>
+                    <option value="Resolue">RÃ©solue</option>
+                    <option value="Rejetee">RejetÃ©e</option>
                   </select>
                   {errors.statut && (
-                    <p className="mt-1 text-sm text-red-600">{errors.statut.message}</p>
+                    <p className="mt-1 text-sm text-danger">{errors.statut.message}</p>
                   )}
                 </div>
 
                 <div>
                   <label
                     htmlFor="commentaireResponsable"
-                    className="block text-sm font-medium text-gray-700"
+                    className="form-label"
                   >
                     Commentaire (optionnel)
                   </label>
                   <textarea
                     {...register('commentaireResponsable')}
-                    rows={3}
-                    className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
+                    rows={4}
+                    className="form-input"
+                    placeholder="Ajoutez un commentaire..."
                   />
                 </div>
 
-                <button
+                <Button
                   type="submit"
-                  disabled={updateMutation.isPending}
-                  className="w-full bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-md text-sm font-medium disabled:opacity-50"
+                  variant="primary"
+                  className="w-full"
+                  loading={updateMutation.isPending}
                 >
-                  {updateMutation.isPending ? 'Mise à jour...' : 'Mettre à jour'}
-                </button>
+                  Mettre Ã  jour
+                </Button>
               </form>
-            </div>
-          </div>
+            </CardBody>
+          </Card>
         </div>
       </div>
     </div>

@@ -18,4 +18,5 @@ public interface IInterventionService
     Task<InterventionDto?> UpdateInterventionTechnicienAsync(int id, int technicienId);
     Task<bool> DeleteInterventionAsync(int id);
     Task<InterventionStatsDto> GetInterventionsStatsAsync();
+    Task<AnalyticsDto> GetAnalyticsAsync(int? annee = null);
 }

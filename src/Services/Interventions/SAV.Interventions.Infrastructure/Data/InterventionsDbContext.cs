@@ -12,6 +12,9 @@ public class InterventionsDbContext : DbContext
     public DbSet<Intervention> Interventions => Set<Intervention>();
     public DbSet<PieceUtilisee> PiecesUtilisees => Set<PieceUtilisee>();
     public DbSet<Technicien> Techniciens => Set<Technicien>();
+    public DbSet<Evaluation> Evaluations => Set<Evaluation>();
+    public DbSet<CreneauDisponible> CreneauxDisponibles => Set<CreneauDisponible>();
+    public DbSet<DemandeRdv> DemandesRdv => Set<DemandeRdv>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -56,6 +59,56 @@ public class InterventionsDbContext : DbContext
                 .WithMany(i => i.PiecesUtilisees)
                 .HasForeignKey(e => e.InterventionId)
                 .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        modelBuilder.Entity<Evaluation>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Note).IsRequired();
+            entity.Property(e => e.Commentaire).HasMaxLength(2000);
+            
+            entity.HasOne(e => e.Intervention)
+                .WithMany()
+                .HasForeignKey(e => e.InterventionId)
+                .OnDelete(DeleteBehavior.Cascade);
+            
+            entity.HasIndex(e => e.InterventionId).IsUnique();
+            entity.HasIndex(e => e.ClientId);
+        });
+
+        modelBuilder.Entity<CreneauDisponible>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            
+            entity.HasOne(e => e.Technicien)
+                .WithMany()
+                .HasForeignKey(e => e.TechnicienId)
+                .OnDelete(DeleteBehavior.Cascade);
+            
+            entity.HasOne(e => e.Intervention)
+                .WithMany()
+                .HasForeignKey(e => e.InterventionId)
+                .OnDelete(DeleteBehavior.SetNull);
+            
+            entity.HasIndex(e => new { e.TechnicienId, e.DateDebut });
+            entity.HasIndex(e => e.EstReserve);
+        });
+
+        modelBuilder.Entity<DemandeRdv>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Statut).HasConversion<string>();
+            entity.Property(e => e.PreferenceMoment).HasMaxLength(50);
+            entity.Property(e => e.Commentaire).HasMaxLength(1000);
+            
+            entity.HasOne(e => e.Creneau)
+                .WithMany()
+                .HasForeignKey(e => e.CreneauId)
+                .OnDelete(DeleteBehavior.SetNull);
+            
+            entity.HasIndex(e => e.ClientId);
+            entity.HasIndex(e => e.ReclamationId);
+            entity.HasIndex(e => e.Statut);
         });
     }
 }
