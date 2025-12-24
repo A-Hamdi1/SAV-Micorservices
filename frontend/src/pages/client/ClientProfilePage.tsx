@@ -20,7 +20,7 @@ const ClientProfilePage = () => {
     mutationFn: (data: CreateClientDto) => clientsApi.createMyProfile(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['client-profile'] });
-      toast.success('Profil crÃ©Ã© avec succÃ¨s');
+      toast.success('Profil créé avec succès');
     },
   });
 
@@ -28,7 +28,7 @@ const ClientProfilePage = () => {
     mutationFn: (data: UpdateClientDto) => clientsApi.updateMyProfile(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['client-profile'] });
-      toast.success('Profil mis Ã  jour avec succÃ¨s');
+      toast.success('Profil mis à jour avec succès');
     },
   });
 
@@ -69,7 +69,7 @@ const ClientProfilePage = () => {
     <div className="space-y-6">
       <PageHeader
         title="Mon profil"
-        subtitle="GÃ©rez vos informations personnelles"
+        subtitle="Gérez vos informations personnelles"
         breadcrumb={[
           { label: 'Dashboard', path: '/client' },
           { label: 'Mon profil' },
@@ -102,8 +102,8 @@ const ClientProfilePage = () => {
                 </>
               ) : (
                 <div className="text-center">
-                  <p className="text-bodydark2 mb-2">Aucun profil crÃ©Ã©</p>
-                  <p className="text-xs text-bodydark2">Remplissez le formulaire pour crÃ©er votre profil</p>
+                  <p className="text-bodydark2 mb-2">Aucun profil créé</p>
+                  <p className="text-xs text-bodydark2">Remplissez le formulaire pour créer votre profil</p>
                 </div>
               )}
             </CardBody>
@@ -113,7 +113,7 @@ const ClientProfilePage = () => {
         {/* Form Card */}
         <div className="lg:col-span-2">
           <Card>
-            <CardHeader title={hasProfile ? 'Modifier le profil' : 'CrÃ©er votre profil'} />
+            <CardHeader title={hasProfile ? 'Modifier le profil' : 'Créer votre profil'} />
             <CardBody>
               <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
                 <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
@@ -134,13 +134,13 @@ const ClientProfilePage = () => {
 
                   <div>
                     <label htmlFor="prenom" className="form-label">
-                      PrÃ©nom
+                      Prénom
                     </label>
                     <input
-                      {...register('prenom', { required: 'PrÃ©nom requis' })}
+                      {...register('prenom', { required: 'Prénom requis' })}
                       type="text"
                       className="form-input"
-                      placeholder="Votre prÃ©nom"
+                      placeholder="Votre prénom"
                     />
                     {errors.prenom && (
                       <p className="mt-1 text-sm text-danger">{errors.prenom.message}</p>
@@ -149,11 +149,11 @@ const ClientProfilePage = () => {
 
                   <div>
                     <label htmlFor="telephone" className="form-label">
-                      TÃ©lÃ©phone
+                      Téléphone
                     </label>
                     <div className="relative">
                       <input
-                        {...register('telephone', { required: 'TÃ©lÃ©phone requis' })}
+                        {...register('telephone', { required: 'Téléphone requis' })}
                         type="tel"
                         className="form-input pl-10"
                         placeholder="06 00 00 00 00"
@@ -195,7 +195,7 @@ const ClientProfilePage = () => {
                     variant="primary"
                     loading={createMutation.isPending || updateMutation.isPending}
                   >
-                    {hasProfile ? 'Mettre Ã  jour' : 'CrÃ©er le profil'}
+                    {hasProfile ? 'Mettre à jour' : 'Créer le profil'}
                   </Button>
                 </div>
               </form>

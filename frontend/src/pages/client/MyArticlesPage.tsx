@@ -40,7 +40,7 @@ const MyArticlesPage = () => {
     mutationFn: (data: CreateArticleAchatDto) => articlesAchetesApi.createArticleAchat(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['my-articles'] });
-      toast.success('Article enregistrÃ© avec succÃ¨s');
+      toast.success('Article enregistré avec succès');
       setShowAddForm(false);
     },
   });
@@ -61,8 +61,8 @@ const MyArticlesPage = () => {
     return (
       <div className="space-y-6">
         <PageHeader
-          title="Mes articles achetÃ©s"
-          subtitle="GÃ©rez vos articles et vÃ©rifiez leur garantie"
+          title="Mes articles achetés"
+          subtitle="Gérez vos articles et vérifiez leur garantie"
           breadcrumb={[
             { label: 'Dashboard' },
             { label: 'Mes articles' },
@@ -78,14 +78,14 @@ const MyArticlesPage = () => {
               </div>
               <h3 className="text-lg font-semibold text-black mb-2">Profil requis</h3>
               <p className="text-bodydark2 text-center max-w-md mb-6">
-                Vous devez d'abord crÃ©er votre profil client avant de pouvoir ajouter des articles.
+                Vous devez d'abord créer votre profil client avant de pouvoir ajouter des articles.
               </p>
               <Link to="/client/profile">
                 <Button variant="primary">
                   <svg className="w-4 h-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                   </svg>
-                  CrÃ©er mon profil
+                  Créer mon profil
                 </Button>
               </Link>
             </div>
@@ -107,8 +107,8 @@ const MyArticlesPage = () => {
   return (
     <div className="space-y-6">
       <PageHeader
-        title="Mes articles achetÃ©s"
-        subtitle="GÃ©rez vos articles et vÃ©rifiez leur garantie"
+        title="Mes articles achetés"
+        subtitle="Gérez vos articles et vérifiez leur garantie"
         breadcrumb={[
           { label: 'Dashboard', path: '/client' },
           { label: 'Mes articles' },
@@ -140,7 +140,7 @@ const MyArticlesPage = () => {
       {/* Add Form */}
       {showAddForm && (
         <Card>
-          <CardHeader title="Ajouter un article achetÃ©" />
+          <CardHeader title="Ajouter un article acheté" />
           <CardBody>
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
@@ -152,7 +152,7 @@ const MyArticlesPage = () => {
                     {...register('articleId', { required: 'Article requis', valueAsNumber: true })}
                     className="form-select"
                   >
-                    <option value="">SÃ©lectionner un article</option>
+                    <option value="">Sélectionner un article</option>
                     {availableArticles?.data?.items.map((article) => (
                       <option key={article.id} value={article.id}>
                         {article.nom} - {article.reference}
@@ -166,10 +166,10 @@ const MyArticlesPage = () => {
 
                 <div>
                   <label htmlFor="numeroSerie" className="form-label">
-                    NumÃ©ro de sÃ©rie
+                    Numéro de série
                   </label>
                   <input
-                    {...register('numeroSerie', { required: 'NumÃ©ro de sÃ©rie requis' })}
+                    {...register('numeroSerie', { required: 'Numéro de série requis' })}
                     type="text"
                     className="form-input"
                     placeholder="SN-XXXXXXXXXX"
@@ -214,8 +214,8 @@ const MyArticlesPage = () => {
         <CardBody className="p-0">
           {articles?.data?.length === 0 ? (
             <EmptyState
-              title="Aucun article enregistrÃ©"
-              description="Ajoutez votre premier article pour commencer Ã  gÃ©rer vos garanties."
+              title="Aucun article enregistré"
+              description="Ajoutez votre premier article pour commencer à gérer vos garanties."
               icon={
                 <svg className="w-12 h-12 text-bodydark2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />

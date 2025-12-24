@@ -1,6 +1,6 @@
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
-import { User } from '../types';
+import { persist, createJSONStorage } from 'zustand/middleware';
+import { User, UserRole } from '../types';
 import { authApi } from '../api/auth';
 import { toast } from 'react-toastify';
 
@@ -9,13 +9,42 @@ interface AuthState {
   token: string | null;
   refreshToken: string | null;
   isAuthenticated: boolean;
-  role: string | null;
+  role: UserRole | null;
   login: (email: string, password: string) => Promise<void>;
   register: (email: string, password: string, confirmPassword: string, role: string) => Promise<void>;
   logout: () => void;
   refreshAccessToken: () => Promise<void>;
   setUser: (user: User) => void;
+  getToken: () => string | null;
 }
+
+// Custom storage that syncs with localStorage for axios interceptor
+const customStorage = createJSONStorage(() => ({
+  getItem: (name: string) => {
+    const item = localStorage.getItem(name);
+    return item;
+  },
+  setItem: (name: string, value: string) => {
+    localStorage.setItem(name, value);
+    // Also sync individual tokens for axios interceptor
+    try {
+      const parsed = JSON.parse(value);
+      if (parsed.state?.token) {
+        localStorage.setItem('token', parsed.state.token);
+      }
+      if (parsed.state?.refreshToken) {
+        localStorage.setItem('refreshToken', parsed.state.refreshToken);
+      }
+    } catch {
+      // Ignore parse errors
+    }
+  },
+  removeItem: (name: string) => {
+    localStorage.removeItem(name);
+    localStorage.removeItem('token');
+    localStorage.removeItem('refreshToken');
+  },
+}));
 
 export const useAuthStore = create<AuthState>()(
   persist(
@@ -25,6 +54,9 @@ export const useAuthStore = create<AuthState>()(
       refreshToken: null,
       isAuthenticated: false,
       role: null,
+
+      // Helper to get current token (useful for axios interceptor)
+      getToken: () => get().token,
 
       login: async (email: string, password: string) => {
         try {
@@ -56,10 +88,6 @@ export const useAuthStore = create<AuthState>()(
               isAuthenticated: true,
               role: authData.role,
             });
-
-            // Stocker aussi directement dans localStorage pour l'intercepteur Axios
-            localStorage.setItem('token', authData.token);
-            localStorage.setItem('refreshToken', authData.refreshToken);
 
             toast.success('Connexion réussie');
           } else {
@@ -102,10 +130,6 @@ export const useAuthStore = create<AuthState>()(
               isAuthenticated: true,
               role: authData.role,
             });
-
-            // Stocker aussi directement dans localStorage pour l'intercepteur Axios
-            localStorage.setItem('token', authData.token);
-            localStorage.setItem('refreshToken', authData.refreshToken);
 
             toast.success('Inscription réussie');
           } else {
@@ -153,10 +177,7 @@ export const useAuthStore = create<AuthState>()(
               token: authData.token,
               refreshToken: authData.refreshToken,
             });
-            
-            // Stocker aussi directement dans localStorage pour l'intercepteur Axios
-            localStorage.setItem('token', authData.token);
-            localStorage.setItem('refreshToken', authData.refreshToken);
+            // Note: Token sync handled by custom storage
           } else {
             throw new Error('Failed to refresh token');
           }
@@ -172,6 +193,7 @@ export const useAuthStore = create<AuthState>()(
     }),
     {
       name: 'auth-storage',
+      storage: customStorage,
       partialize: (state) => ({
         user: state.user,
         token: state.token,

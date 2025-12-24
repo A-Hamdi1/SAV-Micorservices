@@ -16,7 +16,7 @@ const CreateTechnicienPage = () => {
     mutationFn: (data: CreateTechnicienDto) => techniciensApi.createTechnicien(data),
     onSuccess: (response) => {
       queryClient.invalidateQueries({ queryKey: ['techniciens'] });
-      toast.success('Technicien crÃ©Ã© avec succÃ¨s');
+      toast.success('Technicien créé avec succès');
       navigate(`/responsable/techniciens/${response.data?.id}`);
     },
   });
@@ -38,12 +38,12 @@ const CreateTechnicienPage = () => {
   return (
     <>
       <PageHeader
-        title="CrÃ©er un technicien"
-        subtitle="Ajouter un nouveau technicien Ã  l'Ã©quipe"
+        title="Créer un technicien"
+        subtitle="Ajouter un nouveau technicien à l'équipe"
         breadcrumb={[
           { label: 'Dashboard', path: '/responsable' },
           { label: 'Techniciens', path: '/responsable/techniciens' },
-          { label: 'CrÃ©er' }
+          { label: 'Créer' }
         ]}
       />
 
@@ -67,10 +67,10 @@ const CreateTechnicienPage = () => {
 
               <div>
                 <label htmlFor="prenom" className="form-label">
-                  PrÃ©nom *
+                  Prénom *
                 </label>
                 <input
-                  {...register('prenom', { required: 'PrÃ©nom requis' })}
+                  {...register('prenom', { required: 'Prénom requis' })}
                   type="text"
                   className="form-input"
                 />
@@ -101,10 +101,10 @@ const CreateTechnicienPage = () => {
 
               <div>
                 <label htmlFor="telephone" className="form-label">
-                  TÃ©lÃ©phone *
+                  Téléphone *
                 </label>
                 <input
-                  {...register('telephone', { required: 'TÃ©lÃ©phone requis' })}
+                  {...register('telephone', { required: 'Téléphone requis' })}
                   type="tel"
                   className="form-input"
                 />
@@ -115,10 +115,10 @@ const CreateTechnicienPage = () => {
 
               <div>
                 <label htmlFor="specialite" className="form-label">
-                  SpÃ©cialitÃ© *
+                  Spécialité *
                 </label>
                 <input
-                  {...register('specialite', { required: 'SpÃ©cialitÃ© requise' })}
+                  {...register('specialite', { required: 'Spécialité requise' })}
                   type="text"
                   className="form-input"
                 />
@@ -152,7 +152,7 @@ const CreateTechnicienPage = () => {
                 variant="primary"
                 loading={createMutation.isPending}
               >
-                CrÃ©er le technicien
+                Créer le technicien
               </Button>
             </div>
           </form>

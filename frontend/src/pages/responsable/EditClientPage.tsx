@@ -27,7 +27,7 @@ const EditClientPage = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['client', clientId] });
       queryClient.invalidateQueries({ queryKey: ['clients'] });
-      toast.success('Client mis Ã  jour avec succÃ¨s');
+      toast.success('Client mis à jour avec succès');
       navigate(`/responsable/clients/${clientId}`);
     },
   });
@@ -58,7 +58,7 @@ const EditClientPage = () => {
     return (
       <>
         <PageHeader
-          title="Client non trouvÃ©"
+          title="Client non trouvé"
           breadcrumb={[
             { label: 'Dashboard', path: '/responsable' },
             { label: 'Clients', path: '/responsable/clients' },
@@ -68,7 +68,7 @@ const EditClientPage = () => {
         <Card>
           <CardBody>
             <div className="bg-danger/10 border border-danger/20 text-danger px-4 py-3 rounded-lg">
-              Client non trouvÃ©
+              Client non trouvé
             </div>
           </CardBody>
         </Card>
@@ -117,10 +117,10 @@ const EditClientPage = () => {
 
               <div>
                 <label htmlFor="prenom" className="form-label">
-                  PrÃ©nom *
+                  Prénom *
                 </label>
                 <input
-                  {...register('prenom', { required: 'PrÃ©nom requis' })}
+                  {...register('prenom', { required: 'Prénom requis' })}
                   type="text"
                   className="form-input"
                 />
@@ -131,10 +131,10 @@ const EditClientPage = () => {
 
               <div>
                 <label htmlFor="telephone" className="form-label">
-                  TÃ©lÃ©phone *
+                  Téléphone *
                 </label>
                 <input
-                  {...register('telephone', { required: 'TÃ©lÃ©phone requis' })}
+                  {...register('telephone', { required: 'Téléphone requis' })}
                   type="tel"
                   className="form-input"
                 />
@@ -171,7 +171,7 @@ const EditClientPage = () => {
                 variant="primary"
                 loading={updateMutation.isPending}
               >
-                Mettre Ã  jour
+                Mettre à jour
               </Button>
             </div>
           </form>

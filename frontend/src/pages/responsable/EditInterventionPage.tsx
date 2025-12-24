@@ -34,7 +34,7 @@ const EditInterventionPage = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['intervention', interventionId] });
       queryClient.invalidateQueries({ queryKey: ['interventions'] });
-      toast.success('Intervention mise Ã  jour avec succÃ¨s');
+      toast.success('Intervention mise à jour avec succès');
       navigate(`/responsable/interventions/${interventionId}`);
     },
   });
@@ -67,7 +67,7 @@ const EditInterventionPage = () => {
     return (
       <>
         <PageHeader
-          title="Intervention non trouvÃ©e"
+          title="Intervention non trouvée"
           breadcrumb={[
             { label: 'Dashboard', path: '/responsable' },
             { label: 'Interventions', path: '/responsable/interventions' },
@@ -77,7 +77,7 @@ const EditInterventionPage = () => {
         <Card>
           <CardBody>
             <div className="bg-danger/10 border border-danger/20 text-danger px-4 py-3 rounded-lg">
-              Intervention non trouvÃ©e
+              Intervention non trouvée
             </div>
           </CardBody>
         </Card>
@@ -118,7 +118,7 @@ const EditInterventionPage = () => {
                   {...register('technicienNom', { required: 'Technicien requis' })}
                   className="form-select"
                 >
-                  <option value="">SÃ©lectionner un technicien</option>
+                  <option value="">Sélectionner un technicien</option>
                   {techniciens?.data?.map((tech) => (
                     <option key={tech.id} value={tech.nomComplet}>
                       {tech.nomComplet} - {tech.specialite}
@@ -152,11 +152,11 @@ const EditInterventionPage = () => {
                   htmlFor="montantMainOeuvre"
                   className="form-label"
                 >
-                  Main d'Å“uvre (â‚¬)
+                  Main d'œuvre ($)
                 </label>
                 <input
                   {...register('montantMainOeuvre', {
-                    min: { value: 0, message: 'Le montant doit Ãªtre positif' },
+                    min: { value: 0, message: 'Le montant doit être positif' },
                     valueAsNumber: true,
                   })}
                   type="number"
@@ -193,7 +193,7 @@ const EditInterventionPage = () => {
                 variant="primary"
                 loading={updateMutation.isPending}
               >
-                Mettre Ã  jour
+                Mettre à jour
               </Button>
             </div>
           </form>

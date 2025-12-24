@@ -78,7 +78,7 @@ const AnalyticsDashboardPage = () => {
 
   if (loading) return <LoadingSpinner fullScreen />;
   if (error) return <ErrorMessage message={error} />;
-  if (!analytics) return <ErrorMessage message="Aucune donnÃ©e disponible" />;
+  if (!analytics) return <ErrorMessage message="Aucune donnée disponible" />;
 
   return (
     <div className="mx-auto max-w-screen-2xl p-4 md:p-6 2xl:p-10">
@@ -116,11 +116,11 @@ const AnalyticsDashboardPage = () => {
       {/* KPI Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
         <div className="rounded-xl p-6 text-white" style={{ background: 'linear-gradient(135deg, #3b82f6, #60a5fa)' }}>
-          <div className="text-sm opacity-80 mb-1">Taux de RÃ©solution</div>
+          <div className="text-sm opacity-80 mb-1">Taux de Résolution</div>
           <div className="text-3xl font-bold">{(analytics.interventionStats?.tauxResolution || analytics.tauxResolutionPremierPassage || 0).toFixed(1)}%</div>
         </div>
         <div className="rounded-xl p-6 text-white" style={{ background: 'linear-gradient(135deg, #22c55e, #4ade80)' }}>
-          <div className="text-sm opacity-80 mb-1">DÃ©lai Moyen Intervention</div>
+          <div className="text-sm opacity-80 mb-1">Délai Moyen Intervention</div>
           <div className="text-3xl font-bold">{(analytics.interventionStats?.tempsMoyenResolution || analytics.delaiMoyenIntervention || 0).toFixed(1)} j</div>
         </div>
         <div className="rounded-xl p-6 text-white" style={{ background: 'linear-gradient(135deg, #8b5cf6, #a78bfa)' }}>
@@ -202,9 +202,9 @@ const AnalyticsDashboardPage = () => {
                 <tr className="bg-gray-2 text-left">
                   <th className="px-6 py-4 font-medium text-black">Technicien</th>
                   <th className="px-6 py-4 font-medium text-black text-center">Interventions</th>
-                  <th className="px-6 py-4 font-medium text-black text-center">TerminÃ©es</th>
-                  <th className="px-6 py-4 font-medium text-black text-center">Taux RÃ©ussite</th>
-                  <th className="px-6 py-4 font-medium text-black text-center">DurÃ©e Moy.</th>
+                  <th className="px-6 py-4 font-medium text-black text-center">Terminées</th>
+                  <th className="px-6 py-4 font-medium text-black text-center">Taux Réussite</th>
+                  <th className="px-6 py-4 font-medium text-black text-center">Durée Moy.</th>
                   <th className="px-6 py-4 font-medium text-black text-center">Note</th>
                 </tr>
               </thead>
@@ -235,17 +235,17 @@ const AnalyticsDashboardPage = () => {
         </CardBody>
       </Card>
 
-      {/* Articles ProblÃ©matiques */}
+      {/* Articles Problématiques */}
       <Card className="mb-6">
         <CardHeader>
-          <h2 className="text-lg font-semibold text-black">âš ï¸ Articles ProblÃ©matiques</h2>
+          <h2 className="text-lg font-semibold text-black">🛏 Articles Problématiques</h2>
         </CardHeader>
         <CardBody>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {(analytics.topArticlesProblemes || analytics.articlesProblematiques || []).map((article) => (
               <div key={article.articleId} className="border border-stroke rounded-xl p-4 hover:shadow-md transition-shadow">
                 <div className="font-medium text-black">{article.articleNom}</div>
-                <div className="text-sm text-bodydark2 mt-1">{article.nombreReclamations} rÃ©clamations</div>
+                <div className="text-sm text-bodydark2 mt-1">{article.nombreReclamations} réclamations</div>
                 <div className="mt-2">
                   <div className="h-2 bg-gray-2 rounded-full">
                     <div
@@ -263,7 +263,7 @@ const AnalyticsDashboardPage = () => {
       {/* Export Buttons */}
       <Card>
         <CardHeader>
-          <h2 className="text-lg font-semibold text-black">ðŸ“¥ Exporter les DonnÃ©es</h2>
+          <h2 className="text-lg font-semibold text-black">📥 Exporter les Données</h2>
         </CardHeader>
         <CardBody>
           <div className="flex flex-wrap gap-4">
@@ -279,7 +279,7 @@ const AnalyticsDashboardPage = () => {
               onClick={() => handleExport('reclamations')}
               disabled={exporting}
             >
-              <span className="mr-2">ðŸ“</span> RÃ©clamations (Excel)
+              <span className="mr-2">📝</span> Réclamations (Excel)
             </Button>
             <Button
               variant="warning"

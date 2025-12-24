@@ -36,7 +36,7 @@ const ArticlesAchetesListPage = () => {
     mutationFn: (id: number) => articlesAchetesApi.deleteArticleAchat(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['articles-achetes'] });
-      toast.success('Article achetÃ© supprimÃ© avec succÃ¨s');
+      toast.success('Article acheté supprimé avec succès');
     },
   });
 
@@ -64,11 +64,11 @@ const ArticlesAchetesListPage = () => {
   return (
     <>
       <PageHeader
-        title="Articles achetÃ©s"
-        subtitle="Gestion des articles achetÃ©s par les clients"
+        title="Articles achetés"
+        subtitle="Gestion des articles achetés par les clients"
         breadcrumb={[
           { label: 'Dashboard', path: '/responsable' },
-          { label: 'Articles achetÃ©s' }
+          { label: 'Articles achetés' }
         ]}
       />
 
@@ -133,9 +133,9 @@ const ArticlesAchetesListPage = () => {
                         </div>
                       </div>
                       <div className="flex items-center gap-4 text-sm text-bodydark2 ml-13">
-                        <span>NÂ° sÃ©rie: {article.numeroSerie}</span>
-                        <span>â€¢</span>
-                        <span>AchetÃ© le {formatDate(article.dateAchat)}</span>
+                        <span>N° série: {article.numeroSerie}</span>
+                        <span>'¢</span>
+                        <span>Acheté le {formatDate(article.dateAchat)}</span>
                       </div>
                     </div>
                     <div className="flex items-center gap-4">
@@ -173,8 +173,8 @@ const ArticlesAchetesListPage = () => {
             </div>
           ) : (
             <EmptyState
-              title="Aucun article achetÃ©"
-              description="Aucun article achetÃ© ne correspond Ã  vos critÃ¨res de recherche"
+              title="Aucun article acheté"
+              description="Aucun article acheté ne correspond à vos critères de recherche"
               icon={
                 <svg className="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />

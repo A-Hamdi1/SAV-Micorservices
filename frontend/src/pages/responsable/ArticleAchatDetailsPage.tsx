@@ -29,7 +29,7 @@ const ArticleAchatDetailsPage = () => {
       articlesAchetesApi.updateArticleAchat(articleAchatId, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['article-achat', articleAchatId] });
-      toast.success('Article achetÃ© mis Ã  jour avec succÃ¨s');
+      toast.success('Article acheté mis à jour avec succès');
     },
   });
 
@@ -37,7 +37,7 @@ const ArticleAchatDetailsPage = () => {
     mutationFn: () => articlesAchetesApi.deleteArticleAchat(articleAchatId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['articles-achetes'] });
-      toast.success('Article achetÃ© supprimÃ© avec succÃ¨s');
+      toast.success('Article acheté supprimé avec succès');
       navigate('/responsable/articles-achetes');
     },
   });
@@ -67,7 +67,7 @@ const ArticleAchatDetailsPage = () => {
     return (
       <div className="mx-auto max-w-screen-2xl p-4 md:p-6 2xl:p-10">
         <div className="bg-danger/10 border border-danger/20 text-danger px-4 py-3 rounded-xl">
-          Article achetÃ© non trouvÃ©
+          Article acheté non trouvé
         </div>
       </div>
     );
@@ -84,7 +84,7 @@ const ArticleAchatDetailsPage = () => {
   };
 
   const handleDelete = async () => {
-    if (window.confirm('ÃŠtes-vous sÃ»r de vouloir supprimer cet article achetÃ© ?')) {
+    if (window.confirm('Êtes-vous sûr de vouloir supprimer cet article acheté ?')) {
       try {
         await deleteMutation.mutateAsync();
       } catch (error) {
@@ -105,7 +105,7 @@ const ArticleAchatDetailsPage = () => {
         }
         breadcrumb={[
           { label: 'Responsable', path: '/responsable' },
-          { label: 'Articles AchetÃ©s', path: '/responsable/articles-achetes' },
+          { label: 'Articles Achetés', path: '/responsable/articles-achetes' },
           { label: articleData.articleNom },
         ]}
         actions={
@@ -135,11 +135,11 @@ const ArticleAchatDetailsPage = () => {
                 <dd className="mt-1 text-sm text-black">{articleData.articleNom}</dd>
               </div>
               <div>
-                <dt className="text-sm font-medium text-bodydark2">RÃ©fÃ©rence</dt>
+                <dt className="text-sm font-medium text-bodydark2">Référence</dt>
                 <dd className="mt-1 text-sm text-black">{articleData.articleReference}</dd>
               </div>
               <div>
-                <dt className="text-sm font-medium text-bodydark2">NumÃ©ro de sÃ©rie</dt>
+                <dt className="text-sm font-medium text-bodydark2">Numéro de série</dt>
                 <dd className="mt-1 text-sm text-black">{articleData.numeroSerie}</dd>
               </div>
               <div>
@@ -147,7 +147,7 @@ const ArticleAchatDetailsPage = () => {
                 <dd className="mt-1 text-sm text-black">{formatDate(articleData.dateAchat)}</dd>
               </div>
               <div>
-                <dt className="text-sm font-medium text-bodydark2">DurÃ©e de garantie</dt>
+                <dt className="text-sm font-medium text-bodydark2">Durée de garantie</dt>
                 <dd className="mt-1 text-sm text-black">{articleData.dureeGarantieJours} jours</dd>
               </div>
             </dl>
@@ -176,10 +176,10 @@ const ArticleAchatDetailsPage = () => {
 
               <div>
                 <label htmlFor="numeroSerie" className="form-label">
-                  NumÃ©ro de sÃ©rie *
+                  Numéro de série *
                 </label>
                 <input
-                  {...register('numeroSerie', { required: 'NumÃ©ro de sÃ©rie requis' })}
+                  {...register('numeroSerie', { required: 'Numéro de série requis' })}
                   type="text"
                   className="form-input"
                 />
@@ -193,12 +193,12 @@ const ArticleAchatDetailsPage = () => {
                   htmlFor="dureeGarantieJours"
                   className="form-label"
                 >
-                  DurÃ©e de garantie (jours) *
+                  Durée de garantie (jours) *
                 </label>
                 <input
                   {...register('dureeGarantieJours', {
-                    required: 'DurÃ©e de garantie requise',
-                    min: { value: 0, message: 'La durÃ©e doit Ãªtre positive' },
+                    required: 'Durée de garantie requise',
+                    min: { value: 0, message: 'La durée doit être positive' },
                     valueAsNumber: true,
                   })}
                   type="number"
@@ -217,7 +217,7 @@ const ArticleAchatDetailsPage = () => {
                 className="w-full"
                 disabled={updateMutation.isPending}
               >
-                {updateMutation.isPending ? 'Mise Ã  jour...' : 'Mettre Ã  jour'}
+                {updateMutation.isPending ? 'Mise à jour...' : 'Mettre à jour'}
               </Button>
             </form>
           </CardBody>

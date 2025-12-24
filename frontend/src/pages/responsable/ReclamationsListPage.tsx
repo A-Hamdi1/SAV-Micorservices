@@ -31,11 +31,11 @@ const ReclamationsListPage = () => {
   return (
     <div className="space-y-6">
       <PageHeader
-        title="RÃ©clamations"
-        subtitle="Gestion des rÃ©clamations clients"
+        title="Réclamations"
+        subtitle="Gestion des réclamations clients"
         breadcrumb={[
           { label: 'Dashboard', path: '/responsable' },
-          { label: 'RÃ©clamations' },
+          { label: 'Réclamations' },
         ]}
       />
 
@@ -56,8 +56,8 @@ const ReclamationsListPage = () => {
                   <option value="">Tous les statuts</option>
                   <option value="EnAttente">En Attente</option>
                   <option value="EnCours">En Cours</option>
-                  <option value="Resolue">RÃ©solue</option>
-                  <option value="Rejetee">RejetÃ©e</option>
+                  <option value="Resolue">Résolue</option>
+                  <option value="Rejetee">Rejetée</option>
                 </select>
               </div>
             </div>
@@ -65,7 +65,7 @@ const ReclamationsListPage = () => {
               <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
               </svg>
-              <span>{totalCount} rÃ©clamation(s)</span>
+              <span>{totalCount} réclamation(s)</span>
             </div>
           </div>
         </CardBody>
@@ -76,8 +76,8 @@ const ReclamationsListPage = () => {
         <CardBody className="p-0">
           {reclamations.length === 0 ? (
             <EmptyState
-              title="Aucune rÃ©clamation"
-              description="Il n'y a pas de rÃ©clamations correspondant Ã  vos critÃ¨res."
+              title="Aucune réclamation"
+              description="Il n'y a pas de réclamations correspondant à vos critères."
               icon={
                 <svg className="w-12 h-12 text-bodydark2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />

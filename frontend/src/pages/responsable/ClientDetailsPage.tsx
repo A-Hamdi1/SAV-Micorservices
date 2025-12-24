@@ -21,13 +21,13 @@ const ClientDetailsPage = () => {
     mutationFn: () => clientsApi.deleteClient(clientId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['clients'] });
-      toast.success('Client supprimÃ© avec succÃ¨s');
+      toast.success('Client supprimé avec succès');
       navigate('/responsable/clients');
     },
   });
 
   const handleDelete = async () => {
-    if (window.confirm('ÃŠtes-vous sÃ»r de vouloir supprimer ce client ?')) {
+    if (window.confirm('Êtes-vous sûr de vouloir supprimer ce client ?')) {
       try {
         await deleteMutation.mutateAsync();
       } catch (error) {
@@ -62,7 +62,7 @@ const ClientDetailsPage = () => {
     return (
       <div className="p-6">
         <div className="bg-red-50 border border-red-200 text-danger px-4 py-3 rounded-lg">
-          Client non trouvÃ©
+          Client non trouvé
         </div>
       </div>
     );
@@ -106,7 +106,7 @@ const ClientDetailsPage = () => {
             <CardBody>
               <dl className="space-y-4">
                 <div>
-                  <dt className="text-sm font-medium text-bodydark2">TÃ©lÃ©phone</dt>
+                  <dt className="text-sm font-medium text-bodydark2">Téléphone</dt>
                   <dd className="mt-1 text-sm text-black">{clientData.telephone}</dd>
                 </div>
                 <div>
@@ -124,7 +124,7 @@ const ClientDetailsPage = () => {
 
         <div className="lg:col-span-2 space-y-6">
           <Card>
-            <CardHeader title="RÃ©clamations" />
+            <CardHeader title="Réclamations" />
             <CardBody>
               {reclamations?.data && reclamations.data.length > 0 ? (
                 <div className="space-y-4">
@@ -138,7 +138,7 @@ const ClientDetailsPage = () => {
                           to={`/responsable/reclamations/${reclamation.id}`}
                           className="text-primary-600 hover:text-primary-800 font-medium"
                         >
-                          RÃ©clamation #{reclamation.id}
+                          Réclamation #{reclamation.id}
                         </Link>
                         <StatusBadge status={reclamation.statut} />
                       </div>
@@ -151,13 +151,13 @@ const ClientDetailsPage = () => {
                   ))}
                 </div>
               ) : (
-                <p className="text-bodydark2 text-sm">Aucune rÃ©clamation</p>
+                <p className="text-bodydark2 text-sm">Aucune réclamation</p>
               )}
             </CardBody>
           </Card>
 
           <Card>
-            <CardHeader title="Articles achetÃ©s" />
+            <CardHeader title="Articles achetés" />
             <CardBody>
               {articles?.data && articles.data.length > 0 ? (
                 <div className="space-y-4">
@@ -168,7 +168,7 @@ const ClientDetailsPage = () => {
                     >
                       <p className="text-sm font-medium text-black">{article.articleNom}</p>
                       <p className="text-sm text-bodydark2">Ref: {article.articleReference}</p>
-                      <p className="text-sm text-bodydark2">NÂ° sÃ©rie: {article.numeroSerie}</p>
+                      <p className="text-sm text-bodydark2">N° série: {article.numeroSerie}</p>
                       <div className="mt-2 flex items-center">
                         <span
                           className={`px-2 py-1 text-xs rounded-full ${
@@ -184,7 +184,7 @@ const ClientDetailsPage = () => {
                   ))}
                 </div>
               ) : (
-                <p className="text-bodydark2 text-sm">Aucun article achetÃ©</p>
+                <p className="text-bodydark2 text-sm">Aucun article acheté</p>
               )}
             </CardBody>
           </Card>

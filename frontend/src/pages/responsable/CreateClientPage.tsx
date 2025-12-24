@@ -16,7 +16,7 @@ const CreateClientPage = () => {
     mutationFn: (data: CreateClientByResponsableDto) => clientsApi.createClient(data),
     onSuccess: (response) => {
       queryClient.invalidateQueries({ queryKey: ['clients'] });
-      toast.success('Client crÃ©Ã© avec succÃ¨s');
+      toast.success('Client créé avec succès');
       navigate(`/responsable/clients/${response.data?.id}`);
     },
   });
@@ -38,12 +38,12 @@ const CreateClientPage = () => {
   return (
     <>
       <PageHeader
-        title="CrÃ©er un client"
-        subtitle="Ajouter un nouveau client au systÃ¨me"
+        title="Créer un client"
+        subtitle="Ajouter un nouveau client au système"
         breadcrumb={[
           { label: 'Dashboard', path: '/responsable' },
           { label: 'Clients', path: '/responsable/clients' },
-          { label: 'CrÃ©er' }
+          { label: 'Créer' }
         ]}
       />
 
@@ -65,7 +65,7 @@ const CreateClientPage = () => {
                   <p className="mt-1 text-sm text-danger">{errors.userId.message}</p>
                 )}
                 <p className="mt-1 text-xs text-bodydark2">
-                  L'utilisateur doit dÃ©jÃ  exister dans le systÃ¨me
+                  L'utilisateur doit déjà exister dans le système
                 </p>
               </div>
 
@@ -85,10 +85,10 @@ const CreateClientPage = () => {
 
               <div>
                 <label htmlFor="prenom" className="form-label">
-                  PrÃ©nom *
+                  Prénom *
                 </label>
                 <input
-                  {...register('prenom', { required: 'PrÃ©nom requis' })}
+                  {...register('prenom', { required: 'Prénom requis' })}
                   type="text"
                   className="form-input"
                 />
@@ -99,10 +99,10 @@ const CreateClientPage = () => {
 
               <div>
                 <label htmlFor="telephone" className="form-label">
-                  TÃ©lÃ©phone *
+                  Téléphone *
                 </label>
                 <input
-                  {...register('telephone', { required: 'TÃ©lÃ©phone requis' })}
+                  {...register('telephone', { required: 'Téléphone requis' })}
                   type="tel"
                   className="form-input"
                 />
@@ -139,7 +139,7 @@ const CreateClientPage = () => {
                 variant="primary"
                 loading={createMutation.isPending}
               >
-                CrÃ©er le client
+                Créer le client
               </Button>
             </div>
           </form>

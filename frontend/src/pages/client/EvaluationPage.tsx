@@ -36,7 +36,7 @@ const EvaluationPage = () => {
           setExistingEvaluation(response.data.data);
         }
       } catch (err) {
-        // 404 = pas d'Ã©valuation existante, c'est OK
+        // 404 = pas d'évaluation existante, c'est OK
         const axiosErr = err as { response?: { status?: number } };
         if (axiosErr.response?.status !== 404) {
           console.error('Erreur:', err);
@@ -53,7 +53,7 @@ const EvaluationPage = () => {
     e.preventDefault();
     
     if (!interventionId || !user?.clientId) {
-      setError('DonnÃ©es manquantes');
+      setError('Données manquantes');
       return;
     }
 
@@ -77,7 +77,7 @@ const EvaluationPage = () => {
       }, 2000);
     } catch (err) {
       const axiosErr = err as { response?: { data?: { message?: string } } };
-      setError(axiosErr.response?.data?.message || 'Erreur lors de l\'envoi de l\'Ã©valuation');
+      setError(axiosErr.response?.data?.message || 'Erreur lors de l\'envoi de l\'évaluation');
     } finally {
       setSubmitting(false);
     }
@@ -89,10 +89,10 @@ const EvaluationPage = () => {
     return (
       <div>
         <PageHeader
-          title="Ã‰valuation"
+          title="évaluation"
           breadcrumb={[
-            { label: 'Mes rÃ©clamations', path: '/client/reclamations' },
-            { label: 'Ã‰valuation' },
+            { label: 'Mes réclamations', path: '/client/reclamations' },
+            { label: 'évaluation' },
           ]}
         />
         <div className="max-w-2xl mx-auto">
@@ -103,9 +103,9 @@ const EvaluationPage = () => {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
               </div>
-              <h1 className="text-2xl font-bold text-black mb-4">Ã‰valuation dÃ©jÃ  soumise</h1>
+              <h1 className="text-2xl font-bold text-black mb-4">évaluation déjà soumise</h1>
               <p className="text-bodydark2 mb-6">
-                Vous avez dÃ©jÃ  Ã©valuÃ© cette intervention le {new Date(existingEvaluation.createdAt).toLocaleDateString('fr-FR')}.
+                Vous avez déjà évalué cette intervention le {new Date(existingEvaluation.createdAt).toLocaleDateString('fr-FR')}.
               </p>
               
               <div className="bg-gray-2 dark:bg-meta-4 rounded-xl p-6 text-left">
@@ -149,10 +149,10 @@ const EvaluationPage = () => {
     return (
       <div>
         <PageHeader
-          title="Ã‰valuation"
+          title="évaluation"
           breadcrumb={[
-            { label: 'Mes rÃ©clamations', path: '/client/reclamations' },
-            { label: 'Ã‰valuation' },
+            { label: 'Mes réclamations', path: '/client/reclamations' },
+            { label: 'évaluation' },
           ]}
         />
         <div className="max-w-2xl mx-auto">
@@ -163,8 +163,8 @@ const EvaluationPage = () => {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
               </div>
-              <h1 className="text-2xl font-bold text-success mb-4">Merci pour votre Ã©valuation !</h1>
-              <p className="text-bodydark2">Votre retour nous aide Ã  amÃ©liorer notre service.</p>
+              <h1 className="text-2xl font-bold text-success mb-4">Merci pour votre évaluation !</h1>
+              <p className="text-bodydark2">Votre retour nous aide à améliorer notre service.</p>
               <p className="text-bodydark2 text-sm mt-4">Redirection en cours...</p>
             </CardBody>
           </Card>
@@ -176,11 +176,11 @@ const EvaluationPage = () => {
   return (
     <div>
       <PageHeader
-        title="Ã‰valuer l'intervention"
+        title="évaluer l'intervention"
         subtitle={`Intervention #${interventionId}`}
         breadcrumb={[
-          { label: 'Mes rÃ©clamations', path: '/client/reclamations' },
-          { label: 'Ã‰valuation' },
+          { label: 'Mes réclamations', path: '/client/reclamations' },
+          { label: 'évaluation' },
         ]}
       />
 
@@ -193,7 +193,7 @@ const EvaluationPage = () => {
               {/* Note Stars */}
               <div>
                 <label className="form-label text-center block">
-                  Comment Ã©valuez-vous cette intervention ?
+                  Comment évaluez-vous cette intervention ?
                 </label>
                 <div className="flex justify-center gap-2 mt-3">
                   {[1, 2, 3, 4, 5].map((star) => (
@@ -214,11 +214,11 @@ const EvaluationPage = () => {
                   ))}
                 </div>
                 <p className="text-center text-bodydark2 mt-2">
-                  {note === 1 && 'ðŸ˜ž TrÃ¨s insatisfait'}
-                  {note === 2 && 'ðŸ˜• Insatisfait'}
-                  {note === 3 && 'ðŸ˜ Neutre'}
-                  {note === 4 && 'ðŸ™‚ Satisfait'}
-                  {note === 5 && 'ðŸ˜Š TrÃ¨s satisfait'}
+                  {note === 1 && '😞 Très insatisfait'}
+                  {note === 2 && '😕 Insatisfait'}
+                  {note === 3 && '😐 Neutre'}
+                  {note === 4 && '🙂 Satisfait'}
+                  {note === 5 && '😊 Très satisfait'}
                 </p>
               </div>
 
@@ -232,11 +232,11 @@ const EvaluationPage = () => {
                   onChange={(e) => setCommentaire(e.target.value)}
                   className="form-input"
                   rows={4}
-                  placeholder="Partagez votre expÃ©rience..."
+                  placeholder="Partagez votre expérience..."
                   maxLength={1000}
                 />
                 <p className="text-xs text-bodydark2 mt-1 text-right">
-                  {commentaire.length}/1000 caractÃ¨res
+                  {commentaire.length}/1000 caractères
                 </p>
               </div>
 
@@ -281,7 +281,7 @@ const EvaluationPage = () => {
                   loading={submitting}
                   className="flex-1"
                 >
-                  Envoyer mon Ã©valuation
+                  Envoyer mon évaluation
                 </Button>
                 <Button
                   type="button"

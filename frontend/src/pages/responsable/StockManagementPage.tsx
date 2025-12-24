@@ -14,7 +14,7 @@ interface PieceDetachee {
   reference: string;
   prix: number;
   stock: number;
-  estEnAlerte?: boolean; // CalculÃ© par le backend
+  estEnAlerte?: boolean; // Calculé par le backend
 }
 
 const StockManagementPage = () => {
@@ -89,14 +89,14 @@ const StockManagementPage = () => {
           { label: 'Responsable', path: '/responsable' },
           { label: 'Stock' }
         ]}
-        subtitle="GÃ©rez les piÃ¨ces dÃ©tachÃ©es et le stock"
+        subtitle="Gérez les pièces détachées et le stock"
       />
 
       {/* Stats Overview */}
       {stats && (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-6">
           <div className="rounded-xl p-6 text-white" style={{ background: 'linear-gradient(135deg, #3b82f6, #60a5fa)' }}>
-            <div className="text-sm opacity-80 mb-1">Total PiÃ¨ces</div>
+            <div className="text-sm opacity-80 mb-1">Total Pièces</div>
             <div className="text-3xl font-bold">{stats.totalPieces}</div>
           </div>
           <div className="rounded-xl p-6 text-white" style={{ background: 'linear-gradient(135deg, #22c55e, #4ade80)' }}>
@@ -126,7 +126,7 @@ const StockManagementPage = () => {
           onClick={() => setActiveTab('all')}
           className={`px-6 py-3 font-medium transition-colors ${activeTab === 'all' ? 'border-b-2 border-primary text-primary' : 'text-bodydark2 hover:text-black'}`}
         >
-          Toutes les PiÃ¨ces ({pieces.length})
+          Toutes les Pièces ({pieces.length})
         </button>
         <button
           onClick={() => setActiveTab('alerts')}
@@ -150,7 +150,7 @@ const StockManagementPage = () => {
               <table className="w-full table-auto">
                 <thead>
                   <tr className="bg-gray-2 text-left">
-                    <th className="px-6 py-4 font-medium text-black">RÃ©fÃ©rence</th>
+                    <th className="px-6 py-4 font-medium text-black">Référence</th>
                     <th className="px-6 py-4 font-medium text-black">Nom</th>
                     <th className="px-6 py-4 font-medium text-black text-center">Stock</th>
                     <th className="px-6 py-4 font-medium text-black text-right">Prix</th>
@@ -207,8 +207,8 @@ const StockManagementPage = () => {
             <Card>
               <CardBody>
                 <div className="bg-meta-3/10 border border-meta-3/20 rounded-xl p-6 text-center">
-                  <span className="text-4xl mb-2 block">âœ…</span>
-                  <p className="text-meta-3 font-medium">Aucune piÃ¨ce en alerte stock</p>
+                  <span className="text-4xl mb-2 block">✓</span>
+                  <p className="text-meta-3 font-medium">Aucune pièce en alerte stock</p>
                 </div>
               </CardBody>
             </Card>
@@ -219,7 +219,7 @@ const StockManagementPage = () => {
                   <div className="flex items-center justify-between">
                     <div>
                       <div className="font-medium text-black">{piece.nom}</div>
-                      <div className="text-sm text-bodydark2">RÃ©f: {piece.reference}</div>
+                      <div className="text-sm text-bodydark2">Réf: {piece.reference}</div>
                     </div>
                     <div className="flex items-center gap-4">
                       <div className="text-right">
@@ -230,7 +230,7 @@ const StockManagementPage = () => {
                         variant="success"
                         onClick={() => { setSelectedPiece(piece); setAddStockModal(true); }}
                       >
-                        RÃ©approvisionner
+                        Réapprovisionner
                       </Button>
                     </div>
                   </div>
@@ -244,10 +244,10 @@ const StockManagementPage = () => {
       {/* Stats Tab */}
       {activeTab === 'stats' && stats && (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* PiÃ¨ces les plus utilisÃ©es */}
+          {/* Pièces les plus utilisées */}
           <Card>
             <CardHeader>
-              <h2 className="text-lg font-semibold text-black">ðŸ”¥ PiÃ¨ces les Plus UtilisÃ©es</h2>
+              <h2 className="text-lg font-semibold text-black">🔥 Pièces les Plus Utilisées</h2>
             </CardHeader>
             <CardBody>
               <div className="space-y-3">
@@ -274,10 +274,10 @@ const StockManagementPage = () => {
             </CardBody>
           </Card>
 
-          {/* Mouvements rÃ©cents */}
+          {/* Mouvements récents */}
           <Card>
             <CardHeader>
-              <h2 className="text-lg font-semibold text-black">ðŸ“‹ Mouvements RÃ©cents</h2>
+              <h2 className="text-lg font-semibold text-black">📋 Mouvements Récents</h2>
             </CardHeader>
             <CardBody>
               <div className="space-y-3">
@@ -318,12 +318,12 @@ const StockManagementPage = () => {
             </CardHeader>
             <CardBody>
               <p className="text-bodydark2 mb-4">
-                PiÃ¨ce: <strong className="text-black">{selectedPiece.nom}</strong> ({selectedPiece.reference})
+                Pièce: <strong className="text-black">{selectedPiece.nom}</strong> ({selectedPiece.reference})
               </p>
               <p className="text-bodydark2 mb-4">Stock actuel: <strong className="text-black">{selectedPiece.stock}</strong></p>
               
               <div className="mb-4">
-                <label className="form-label">QuantitÃ© Ã  ajouter</label>
+                <label className="form-label">Quantité à ajouter</label>
                 <input
                   type="number"
                   min="1"
@@ -371,7 +371,7 @@ const StockManagementPage = () => {
             </CardHeader>
             <CardBody className="p-0">
               <p className="text-bodydark2 px-6 py-4">
-                PiÃ¨ce: <strong className="text-black">{selectedPiece.nom}</strong>
+                Pièce: <strong className="text-black">{selectedPiece.nom}</strong>
               </p>
               
               <table className="w-full table-auto">
@@ -379,9 +379,9 @@ const StockManagementPage = () => {
                   <tr className="bg-gray-2 text-left">
                     <th className="px-4 py-3 font-medium text-black">Date</th>
                     <th className="px-4 py-3 font-medium text-black text-center">Type</th>
-                    <th className="px-4 py-3 font-medium text-black text-center">QtÃ©</th>
+                    <th className="px-4 py-3 font-medium text-black text-center">Qté</th>
                     <th className="px-4 py-3 font-medium text-black text-center">Avant</th>
-                    <th className="px-4 py-3 font-medium text-black text-center">AprÃ¨s</th>
+                    <th className="px-4 py-3 font-medium text-black text-center">Après</th>
                     <th className="px-4 py-3 font-medium text-black">Raison</th>
                   </tr>
                 </thead>

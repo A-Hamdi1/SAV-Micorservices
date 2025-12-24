@@ -23,7 +23,7 @@ const TechniciensListPage = () => {
     mutationFn: (id: number) => techniciensApi.deleteTechnicien(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['techniciens'] });
-      toast.success('Technicien supprimÃ© avec succÃ¨s');
+      toast.success('Technicien supprimé avec succès');
     },
   });
 
@@ -32,14 +32,14 @@ const TechniciensListPage = () => {
       techniciensApi.updateDisponibilite(id, { estDisponible }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['techniciens'] });
-      toast.success('DisponibilitÃ© mise Ã  jour');
+      toast.success('Disponibilité mise à jour');
     },
   });
 
   const handleDelete = async (id: number, e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    if (window.confirm('ÃŠtes-vous sÃ»r de vouloir supprimer ce technicien ?')) {
+    if (window.confirm('Êtes-vous sûr de vouloir supprimer ce technicien ?')) {
       try {
         await deleteMutation.mutateAsync(id);
       } catch (error) {

@@ -75,7 +75,7 @@ const InterventionDetailsPage = () => {
       interventionsApi.updateInterventionStatut(interventionId, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['intervention', interventionId] });
-      toast.success('Statut mis Ã  jour');
+      toast.success('Statut mis à jour');
       setShowChangeStatus(false);
     },
   });
@@ -85,7 +85,7 @@ const InterventionDetailsPage = () => {
       interventionsApi.addPieceUtilisee(interventionId, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['intervention', interventionId] });
-      toast.success('PiÃ¨ce ajoutÃ©e avec succÃ¨s');
+      toast.success('Pièce ajoutée avec succès');
       setShowAddPiece(false);
     },
   });
@@ -95,7 +95,7 @@ const InterventionDetailsPage = () => {
       interventionsApi.updateInterventionTechnicien(interventionId, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['intervention', interventionId] });
-      toast.success('Technicien assignÃ© avec succÃ¨s');
+      toast.success('Technicien assigné avec succès');
       setShowAssignTechnicien(false);
     },
   });
@@ -104,7 +104,7 @@ const InterventionDetailsPage = () => {
     mutationFn: () => interventionsApi.deleteIntervention(interventionId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['interventions'] });
-      toast.success('Intervention supprimÃ©e avec succÃ¨s');
+      toast.success('Intervention supprimée avec succès');
       navigate('/responsable/interventions');
     },
   });
@@ -136,7 +136,7 @@ const InterventionDetailsPage = () => {
     return (
       <div className="p-6">
         <div className="bg-red-50 border border-red-200 text-danger px-4 py-3 rounded-lg">
-          Intervention non trouvÃ©e
+          Intervention non trouvée
         </div>
       </div>
     );
@@ -170,7 +170,7 @@ const InterventionDetailsPage = () => {
   };
 
   const handleDelete = async () => {
-    if (window.confirm('ÃŠtes-vous sÃ»r de vouloir supprimer cette intervention ?')) {
+    if (window.confirm('Êtes-vous sûr de vouloir supprimer cette intervention ?')) {
       try {
         await deleteMutation.mutateAsync();
       } catch (error) {
@@ -192,10 +192,10 @@ const InterventionDetailsPage = () => {
       link.click();
       document.body.removeChild(link);
       window.URL.revokeObjectURL(url);
-      toast.success('Facture PDF tÃ©lÃ©chargÃ©e');
+      toast.success('Facture PDF téléchargée');
     } catch (error) {
       console.error('Error downloading PDF:', error);
-      toast.error('Erreur lors du tÃ©lÃ©chargement de la facture PDF');
+      toast.error('Erreur lors du téléchargement de la facture PDF');
     } finally {
       setIsDownloadingPdf(false);
     }
@@ -214,10 +214,10 @@ const InterventionDetailsPage = () => {
       link.click();
       document.body.removeChild(link);
       window.URL.revokeObjectURL(url);
-      toast.success('Rapport PDF tÃ©lÃ©chargÃ©');
+      toast.success('Rapport PDF téléchargé');
     } catch (error) {
       console.error('Error downloading PDF:', error);
-      toast.error('Erreur lors du tÃ©lÃ©chargement du rapport PDF');
+      toast.error('Erreur lors du téléchargement du rapport PDF');
     } finally {
       setIsDownloadingPdf(false);
     }
@@ -260,7 +260,7 @@ const InterventionDetailsPage = () => {
             <CardBody>
               <dl className="space-y-4">
                 <div>
-                  <dt className="text-sm font-medium text-bodydark2">RÃ©clamation ID</dt>
+                  <dt className="text-sm font-medium text-bodydark2">Réclamation ID</dt>
                   <dd className="mt-1 text-sm text-black">{interv.reclamationId}</dd>
                 </div>
                 <div>
@@ -303,7 +303,7 @@ const InterventionDetailsPage = () => {
 
           <Card>
             <CardHeader
-              title="PiÃ¨ces utilisÃ©es"
+              title="Pièces utilisées"
               action={
                 <Button
                   variant="primary"
@@ -321,16 +321,16 @@ const InterventionDetailsPage = () => {
                   <form onSubmit={handleSubmitPiece(onSubmitPiece)} className="space-y-3">
                     <div>
                       <label className="form-label">
-                        PiÃ¨ce dÃ©tachÃ©e
+                        Pièce détachée
                       </label>
                       <select
                         {...registerPiece('pieceDetacheeId', {
-                          required: 'PiÃ¨ce requise',
+                          required: 'Pièce requise',
                           valueAsNumber: true,
                         })}
                         className="form-select"
                       >
-                        <option value="">SÃ©lectionner une piÃ¨ce</option>
+                        <option value="">Sélectionner une pièce</option>
                         {piecesDetachees?.data?.map((piece) => (
                           <option key={piece.id} value={piece.id}>
                             {piece.nom} - {piece.reference} ({formatCurrency(piece.prix)}) - Stock: {piece.stock}
@@ -339,7 +339,7 @@ const InterventionDetailsPage = () => {
                       </select>
                       {(!piecesDetachees?.data || piecesDetachees.data.length === 0) && (
                         <p className="mt-1 text-sm text-warning">
-                          Aucune piÃ¨ce dÃ©tachÃ©e disponible pour cet article
+                          Aucune pièce détachée disponible pour cet article
                         </p>
                       )}
                       {errorsPiece.pieceDetacheeId && (
@@ -349,11 +349,11 @@ const InterventionDetailsPage = () => {
                       )}
                     </div>
                     <div>
-                      <label className="form-label">QuantitÃ©</label>
+                      <label className="form-label">Quantité</label>
                       <input
                         {...registerPiece('quantite', {
-                          required: 'QuantitÃ© requise',
-                          min: { value: 1, message: 'La quantitÃ© doit Ãªtre au moins 1' },
+                          required: 'Quantité requise',
+                          min: { value: 1, message: 'La quantité doit être au moins 1' },
                           valueAsNumber: true,
                         })}
                         type="number"
@@ -396,7 +396,7 @@ const InterventionDetailsPage = () => {
                       <p className="text-sm font-medium text-black">{piece.pieceNom}</p>
                       <p className="text-sm text-bodydark2">Ref: {piece.pieceReference}</p>
                       <div className="mt-2 flex justify-between">
-                        <p className="text-sm text-bodydark2">QuantitÃ©: {piece.quantite}</p>
+                        <p className="text-sm text-bodydark2">Quantité: {piece.quantite}</p>
                         <p className="text-sm font-medium text-black">
                           {formatCurrency(piece.sousTotal)}
                         </p>
@@ -405,7 +405,7 @@ const InterventionDetailsPage = () => {
                   ))}
                 </div>
               ) : (
-                <p className="text-bodydark2 text-sm">Aucune piÃ¨ce utilisÃ©e</p>
+                <p className="text-bodydark2 text-sm">Aucune pièce utilisée</p>
               )}
             </CardBody>
           </Card>
@@ -490,10 +490,10 @@ const InterventionDetailsPage = () => {
                       {...registerStatus('statut', { required: 'Statut requis' })}
                       className="form-select"
                     >
-                      <option value="Planifiee">PlanifiÃ©e</option>
+                      <option value="Planifiee">Planifiée</option>
                       <option value="EnCours">En Cours</option>
-                      <option value="Terminee">TerminÃ©e</option>
-                      <option value="Annulee">AnnulÃ©e</option>
+                      <option value="Terminee">Terminée</option>
+                      <option value="Annulee">Annulée</option>
                     </select>
                     {errorsStatus.statut && (
                       <p className="mt-1 text-sm text-danger">{errorsStatus.statut.message}</p>
@@ -507,7 +507,7 @@ const InterventionDetailsPage = () => {
                       loading={updateStatusMutation.isPending}
                       fullWidth
                     >
-                      Mettre Ã  jour
+                      Mettre à jour
                     </Button>
                     <Button
                       type="button"
@@ -536,7 +536,7 @@ const InterventionDetailsPage = () => {
                       })}
                       className="form-select"
                     >
-                      <option value="">SÃ©lectionner un technicien</option>
+                      <option value="">Sélectionner un technicien</option>
                       {techniciens?.data?.map((tech) => (
                         <option key={tech.id} value={tech.id}>
                           {tech.nomComplet} - {tech.specialite}

@@ -26,14 +26,14 @@ const ClientsListPage = () => {
     mutationFn: (id: number) => clientsApi.deleteClient(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['clients'] });
-      toast.success('Client supprimÃ© avec succÃ¨s');
+      toast.success('Client supprimé avec succès');
     },
   });
 
   const handleDelete = async (id: number, e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    if (window.confirm('ÃŠtes-vous sÃ»r de vouloir supprimer ce client ?')) {
+    if (window.confirm('Êtes-vous sûr de vouloir supprimer ce client ?')) {
       try {
         await deleteMutation.mutateAsync(id);
       } catch (error) {

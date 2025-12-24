@@ -22,13 +22,13 @@ const ReclamationDetailsPage = () => {
     mutationFn: () => reclamationsApi.deleteReclamation(reclamationId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['reclamations'] });
-      toast.success('RÃ©clamation supprimÃ©e avec succÃ¨s');
+      toast.success('Réclamation supprimée avec succès');
       navigate('/responsable/reclamations');
     },
   });
 
   const handleDelete = async () => {
-    if (window.confirm('ÃŠtes-vous sÃ»r de vouloir supprimer cette rÃ©clamation ?')) {
+    if (window.confirm('Êtes-vous sûr de vouloir supprimer cette réclamation ?')) {
       try {
         await deleteMutation.mutateAsync();
       } catch (error) {
@@ -54,7 +54,7 @@ const ReclamationDetailsPage = () => {
       reclamationsApi.updateReclamationStatut(reclamationId, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['reclamation', reclamationId] });
-      toast.success('Statut mis Ã  jour');
+      toast.success('Statut mis à jour');
     },
   });
 
@@ -72,11 +72,11 @@ const ReclamationDetailsPage = () => {
     return (
       <div className="space-y-6">
         <PageHeader
-          title="RÃ©clamation non trouvÃ©e"
+          title="Réclamation non trouvée"
           breadcrumb={[
             { label: 'Dashboard', path: '/responsable' },
-            { label: 'RÃ©clamations', path: '/responsable/reclamations' },
-            { label: 'DÃ©tails' },
+            { label: 'Réclamations', path: '/responsable/reclamations' },
+            { label: 'Détails' },
           ]}
         />
         <Card>
@@ -87,9 +87,9 @@ const ReclamationDetailsPage = () => {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                 </svg>
               </div>
-              <p className="text-bodydark2 mb-4">La rÃ©clamation demandÃ©e n'existe pas.</p>
+              <p className="text-bodydark2 mb-4">La réclamation demandée n'existe pas.</p>
               <Button variant="primary" onClick={() => navigate('/responsable/reclamations')}>
-                Retour aux rÃ©clamations
+                Retour aux réclamations
               </Button>
             </div>
           </CardBody>
@@ -111,10 +111,10 @@ const ReclamationDetailsPage = () => {
   return (
     <div className="space-y-6">
       <PageHeader
-        title={`RÃ©clamation #${rec.id}`}
+        title={`Réclamation #${rec.id}`}
         breadcrumb={[
           { label: 'Dashboard', path: '/responsable' },
-          { label: 'RÃ©clamations', path: '/responsable/reclamations' },
+          { label: 'Réclamations', path: '/responsable/reclamations' },
           { label: `#${rec.id}` },
         ]}
         actions={
@@ -139,7 +139,7 @@ const ReclamationDetailsPage = () => {
         <div className="lg:col-span-2 space-y-6">
           {/* Informations Card */}
           <Card>
-            <CardHeader title="Informations de la rÃ©clamation" />
+            <CardHeader title="Informations de la réclamation" />
             <CardBody>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-4">
@@ -161,12 +161,12 @@ const ReclamationDetailsPage = () => {
                     <p className="mt-1 text-sm text-black">{rec.articleNom}</p>
                   </div>
                   <div>
-                    <label className="text-xs font-medium text-bodydark2 uppercase tracking-wider">Date de crÃ©ation</label>
+                    <label className="text-xs font-medium text-bodydark2 uppercase tracking-wider">Date de création</label>
                     <p className="mt-1 text-sm text-black">{formatDate(rec.dateCreation)}</p>
                   </div>
                   {rec.dateResolution && (
                     <div>
-                      <label className="text-xs font-medium text-bodydark2 uppercase tracking-wider">Date de rÃ©solution</label>
+                      <label className="text-xs font-medium text-bodydark2 uppercase tracking-wider">Date de résolution</label>
                       <p className="mt-1 text-sm text-black">{formatDate(rec.dateResolution)}</p>
                     </div>
                   )}
@@ -199,7 +199,7 @@ const ReclamationDetailsPage = () => {
                   <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
                   </svg>
-                  CrÃ©er intervention
+                  Créer intervention
                 </Link>
               }
             />
@@ -223,7 +223,7 @@ const ReclamationDetailsPage = () => {
                             Intervention #{intervention.id}
                           </p>
                           <p className="text-xs text-bodydark2">
-                            {intervention.technicienNom} â€¢ {formatDate(intervention.dateIntervention)}
+                            {intervention.technicienNom} · {formatDate(intervention.dateIntervention)}
                           </p>
                         </div>
                       </div>
@@ -243,12 +243,12 @@ const ReclamationDetailsPage = () => {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
                     </svg>
                   </div>
-                  <p className="text-bodydark2 text-sm mb-4">Aucune intervention pour cette rÃ©clamation</p>
+                  <p className="text-bodydark2 text-sm mb-4">Aucune intervention pour cette réclamation</p>
                   <Link
                     to={`/responsable/interventions/new/${rec.id}`}
                     className="text-sm font-medium text-primary-600 hover:text-primary-700"
                   >
-                    CrÃ©er une intervention
+                    Créer une intervention
                   </Link>
                 </div>
               )}
@@ -259,7 +259,7 @@ const ReclamationDetailsPage = () => {
         {/* Sidebar */}
         <div className="lg:col-span-1">
           <Card>
-            <CardHeader title="Mettre Ã  jour le statut" />
+            <CardHeader title="Mettre à jour le statut" />
             <CardBody>
               <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
                 <div>
@@ -272,8 +272,8 @@ const ReclamationDetailsPage = () => {
                   >
                     <option value="EnAttente">En Attente</option>
                     <option value="EnCours">En Cours</option>
-                    <option value="Resolue">RÃ©solue</option>
-                    <option value="Rejetee">RejetÃ©e</option>
+                    <option value="Resolue">Résolue</option>
+                    <option value="Rejetee">Rejetée</option>
                   </select>
                   {errors.statut && (
                     <p className="mt-1 text-sm text-danger">{errors.statut.message}</p>
@@ -301,7 +301,7 @@ const ReclamationDetailsPage = () => {
                   className="w-full"
                   loading={updateMutation.isPending}
                 >
-                  Mettre Ã  jour
+                  Mettre à jour
                 </Button>
               </form>
             </CardBody>

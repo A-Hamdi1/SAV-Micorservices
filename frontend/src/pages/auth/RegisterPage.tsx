@@ -21,7 +21,7 @@ const RegisterPage = () => {
 
   const password = watch('password');
 
-  // Rediriger si dÃ©jÃ  connectÃ©
+  // Rediriger si déjà connecté
   useEffect(() => {
     if (isAuthenticated) {
       if (role === 'Client') {
@@ -36,7 +36,7 @@ const RegisterPage = () => {
     setIsLoading(true);
     try {
       await registerUser(data.email, data.password, data.confirmPassword, data.role);
-      // La redirection sera gÃ©rÃ©e par le useEffect qui surveille isAuthenticated et role
+      // La redirection sera gérée par le useEffect qui surveille isAuthenticated et role
     } catch (error) {
       console.error('Register error:', error);
     } finally {
@@ -60,8 +60,8 @@ const RegisterPage = () => {
           </div>
 
           <div className="mb-8">
-            <h2 className="text-2xl font-bold text-black mb-2">CrÃ©er un compte âœ¨</h2>
-            <p className="text-bodydark2">Rejoignez SAV Pro et commencez Ã  gÃ©rer vos rÃ©clamations</p>
+            <h2 className="text-2xl font-bold text-black mb-2">Créer un compte ✨</h2>
+            <p className="text-bodydark2">Rejoignez SAV Pro et commencez à gérer vos réclamations</p>
           </div>
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
@@ -113,11 +113,11 @@ const RegisterPage = () => {
                     required: 'Mot de passe requis',
                     minLength: {
                       value: 6,
-                      message: 'Le mot de passe doit contenir au moins 6 caractÃ¨res',
+                      message: 'Le mot de passe doit contenir au moins 6 caractères',
                     },
                   })}
                   type="password"
-                  placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"
+                  placeholder="*******"
                   className="form-input pl-12"
                 />
                 <span className="absolute left-4 top-1/2 -translate-y-1/2 text-bodydark2">
@@ -135,7 +135,7 @@ const RegisterPage = () => {
                 </p>
               )}
               <p className="mt-2 text-xs text-bodydark2">
-                Minimum 6 caractÃ¨res
+                Minimum 6 caractères
               </p>
             </div>
 
@@ -152,7 +152,7 @@ const RegisterPage = () => {
                       value === password || 'Les mots de passe ne correspondent pas',
                   })}
                   type="password"
-                  placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"
+                  placeholder="**********"
                   className="form-input pl-12"
                 />
                 <span className="absolute left-4 top-1/2 -translate-y-1/2 text-bodydark2">
@@ -186,7 +186,7 @@ const RegisterPage = () => {
                 </a>{' '}
                 et la{' '}
                 <a href="#" className="text-primary-600 hover:underline">
-                  Politique de confidentialitÃ©
+                  Politique de confidentialité
                 </a>
               </label>
             </div>
@@ -216,7 +216,7 @@ const RegisterPage = () => {
                 <div className="w-full border-t border-stroke"></div>
               </div>
               <div className="relative flex justify-center text-sm">
-                <span className="px-2 bg-white text-bodydark2">Vous avez dÃ©jÃ  un compte ?</span>
+                <span className="px-2 bg-white text-bodydark2">Vous avez déjà un compte ?</span>
               </div>
             </div>
 
@@ -277,7 +277,7 @@ const RegisterPage = () => {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                   </svg>
                 </div>
-                <span>Suivez vos rÃ©clamations facilement</span>
+                <span>Suivez vos réclamations facilement</span>
               </div>
               <div className="flex items-center gap-3 text-white/90">
                 <div className="flex-shrink-0 w-8 h-8 rounded-full bg-white/10 flex items-center justify-center">
@@ -292,7 +292,7 @@ const RegisterPage = () => {
             {/* Testimonial */}
             <div className="mt-12 bg-white/10 backdrop-blur-sm rounded-xl p-6 text-left">
               <p className="text-white/90 italic mb-4">
-                "SAV Pro a transformÃ© la faÃ§on dont nous gÃ©rons nos rÃ©clamations. Interface intuitive et support excellent !"
+                "SAV Pro a transformé la façon dont nous gérons nos réclamations. Interface intuitive et support excellent !"
               </p>
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center">

@@ -19,7 +19,7 @@ const TechnicienDetailsPage = () => {
     mutationFn: () => techniciensApi.deleteTechnicien(technicienId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['techniciens'] });
-      toast.success('Technicien supprimÃ© avec succÃ¨s');
+      toast.success('Technicien supprimé avec succès');
       navigate('/responsable/techniciens');
     },
   });
@@ -29,12 +29,12 @@ const TechnicienDetailsPage = () => {
       techniciensApi.updateDisponibilite(technicienId, { estDisponible }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['technicien', technicienId] });
-      toast.success('DisponibilitÃ© mise Ã  jour');
+      toast.success('Disponibilité mise à jour');
     },
   });
 
   const handleDelete = async () => {
-    if (window.confirm('ÃŠtes-vous sÃ»r de vouloir supprimer ce technicien ?')) {
+    if (window.confirm('Êtes-vous sûr de vouloir supprimer ce technicien ?')) {
       try {
         await deleteMutation.mutateAsync();
       } catch (error) {
@@ -57,7 +57,7 @@ const TechnicienDetailsPage = () => {
     return (
       <div className="p-6">
         <div className="bg-red-50 border border-red-200 text-danger px-4 py-3 rounded-lg">
-          Technicien non trouvÃ©
+          Technicien non trouvé
         </div>
       </div>
     );
@@ -130,11 +130,11 @@ const TechnicienDetailsPage = () => {
                 <dd className="mt-1 text-sm text-black">{tech.email}</dd>
               </div>
               <div>
-                <dt className="text-sm font-medium text-bodydark2">TÃ©lÃ©phone</dt>
+                <dt className="text-sm font-medium text-bodydark2">Téléphone</dt>
                 <dd className="mt-1 text-sm text-black">{tech.telephone}</dd>
               </div>
               <div>
-                <dt className="text-sm font-medium text-bodydark2">SpÃ©cialitÃ©</dt>
+                <dt className="text-sm font-medium text-bodydark2">Spécialité</dt>
                 <dd className="mt-1 text-sm text-black">{tech.specialite}</dd>
               </div>
               <div>
@@ -155,13 +155,13 @@ const TechnicienDetailsPage = () => {
                   <dd className="mt-1 text-sm text-black">{tech.stats.nombreInterventionsTotal}</dd>
                 </div>
                 <div>
-                  <dt className="text-sm font-medium text-bodydark2">Interventions terminÃ©es</dt>
+                  <dt className="text-sm font-medium text-bodydark2">Interventions terminées</dt>
                   <dd className="mt-1 text-sm text-black">
                     {tech.stats.nombreInterventionsTerminees}
                   </dd>
                 </div>
                 <div>
-                  <dt className="text-sm font-medium text-bodydark2">Taux de rÃ©ussite</dt>
+                  <dt className="text-sm font-medium text-bodydark2">Taux de réussite</dt>
                   <dd className="mt-1 text-sm text-black">
                     {tech.stats.tauxReussite.toFixed(1)}%
                   </dd>
@@ -169,7 +169,7 @@ const TechnicienDetailsPage = () => {
                 <div>
                   <dt className="text-sm font-medium text-bodydark2">Chiffre d'affaires total</dt>
                   <dd className="mt-1 text-sm font-bold text-black">
-                    {tech.stats.chiffreAffaireTotal.toFixed(2)} â‚¬
+                    {tech.stats.chiffreAffaireTotal.toFixed(2)} $
                   </dd>
                 </div>
               </dl>
