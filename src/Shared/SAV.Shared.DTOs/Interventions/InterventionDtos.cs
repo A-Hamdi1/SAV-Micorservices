@@ -63,3 +63,69 @@ public class InterventionListDto
     public int Page { get; set; }
     public int PageSize { get; set; }
 }
+
+public class InterventionStatsDto
+{
+    public int TotalInterventions { get; set; }
+    public int InterventionsTerminees { get; set; }
+    public int InterventionsEnCours { get; set; }
+    public int InterventionsPlanifiees { get; set; }
+    public int InterventionsAnnulees { get; set; }
+    public decimal ChiffreAffairesTotal { get; set; }
+    public decimal ChiffreAffairesMois { get; set; }
+    public double TauxResolution { get; set; }
+    public double TempsMoyenResolution { get; set; } // en jours
+    public int InterventionsSousGarantie { get; set; }
+}
+
+public class AnalyticsDto
+{
+    public InterventionStatsDto InterventionStats { get; set; } = new();
+    public List<ChiffreAffairesMensuelDto> ChiffreAffairesMensuel { get; set; } = new();
+    public List<InterventionsParStatutDto> InterventionsParStatut { get; set; } = new();
+    public List<TechnicienPerformanceDto> TopTechniciens { get; set; } = new();
+    public List<ArticleProblemeDto> TopArticlesProblemes { get; set; } = new();
+    public List<InterventionsParJourDto> InterventionsParJour { get; set; } = new();
+}
+
+public class ChiffreAffairesMensuelDto
+{
+    public int Mois { get; set; }
+    public int Annee { get; set; }
+    public string MoisNom { get; set; } = string.Empty;
+    public decimal Montant { get; set; }
+    public int NombreInterventions { get; set; }
+}
+
+public class InterventionsParStatutDto
+{
+    public string Statut { get; set; } = string.Empty;
+    public int Nombre { get; set; }
+    public double Pourcentage { get; set; }
+}
+
+public class TechnicienPerformanceDto
+{
+    public int TechnicienId { get; set; }
+    public string TechnicienNom { get; set; } = string.Empty;
+    public int NombreInterventions { get; set; }
+    public int InterventionsTerminees { get; set; }
+    public double TauxReussite { get; set; }
+    public double DureeMoyenne { get; set; }
+    public double NoteMoyenne { get; set; }
+    public decimal ChiffreAffaires { get; set; }
+}
+
+public class ArticleProblemeDto
+{
+    public int ArticleId { get; set; }
+    public string ArticleNom { get; set; } = string.Empty;
+    public int NombreReclamations { get; set; }
+    public double TauxProbleme { get; set; }
+}
+
+public class InterventionsParJourDto
+{
+    public DateTime Date { get; set; }
+    public int Nombre { get; set; }
+}

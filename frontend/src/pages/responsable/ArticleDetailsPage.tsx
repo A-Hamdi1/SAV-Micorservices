@@ -1,12 +1,16 @@
-import { useState } from 'react';
+﻿import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { useParams, Link, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { articlesApi } from '../../api/articles';
 import { CreatePieceDetacheeDto } from '../../types';
 import LoadingSpinner from '../../components/common/LoadingSpinner';
 import { formatCurrency, formatDate } from '../../utils/formatters';
 import { toast } from 'react-toastify';
+import PageHeader from '../../components/common/PageHeader';
+import { Card, CardHeader, CardBody } from '../../components/common/Card';
+import Button from '../../components/common/Button';
+import EmptyState from '../../components/common/EmptyState';
 
 const ArticleDetailsPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -19,13 +23,13 @@ const ArticleDetailsPage = () => {
     mutationFn: () => articlesApi.deleteArticle(articleId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['articles'] });
-      toast.success('Article supprimé avec succès');
+      toast.success('Article supprimÃ© avec succÃ¨s');
       navigate('/responsable/articles');
     },
   });
 
   const handleDelete = async () => {
-    if (window.confirm('Êtes-vous sûr de vouloir supprimer cet article ?')) {
+    if (window.confirm('ÃŠtes-vous sÃ»r de vouloir supprimer cet article ?')) {
       try {
         await deleteMutation.mutateAsync();
       } catch (error) {
@@ -50,7 +54,7 @@ const ArticleDetailsPage = () => {
     mutationFn: (data: CreatePieceDetacheeDto) => articlesApi.createPieceDetachee(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['pieces', articleId] });
-      toast.success('Pièce détachée créée avec succès');
+      toast.success('PiÃ¨ce dÃ©tachÃ©e crÃ©Ã©e avec succÃ¨s');
       setShowAddPiece(false);
       resetPiece();
     },
@@ -68,16 +72,28 @@ const ArticleDetailsPage = () => {
   });
 
   if (articleLoading || piecesLoading) {
-    return <LoadingSpinner />;
+    return <LoadingSpinner fullScreen />;
   }
 
   if (!article?.data) {
     return (
-      <div className="px-4 py-6 sm:px-0">
-        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
-          Article non trouvé
-        </div>
-      </div>
+      <>
+        <PageHeader
+          title="Article non trouvÃ©"
+          breadcrumb={[
+            { label: 'Dashboard', path: '/responsable' },
+            { label: 'Articles', path: '/responsable/articles' },
+            { label: 'DÃ©tails' }
+          ]}
+        />
+        <Card>
+          <CardBody>
+            <div className="bg-danger/10 border border-danger/20 text-danger px-4 py-3 rounded-lg">
+              Article non trouvÃ©
+            </div>
+          </CardBody>
+        </Card>
+      </>
     );
   }
 
@@ -92,152 +108,161 @@ const ArticleDetailsPage = () => {
   };
 
   return (
-    <div className="px-4 py-6 sm:px-0">
-      <div className="mb-6">
-        <Link
-          to="/responsable/articles"
-          className="text-primary-600 hover:text-primary-800 text-sm font-medium"
-        >
-          ← Retour aux articles
-        </Link>
-      </div>
-
-      <div className="mb-8 flex justify-between items-center">
-        <h1 className="text-3xl font-bold text-gray-900">{articleData.nom}</h1>
-        <div className="flex space-x-2">
-          <button
-            onClick={() => navigate(`/responsable/articles/${articleId}/edit`)}
-            className="bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-md text-sm font-medium"
-          >
-            Modifier
-          </button>
-          <button
-            onClick={handleDelete}
-            disabled={deleteMutation.isPending}
-            className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md text-sm font-medium disabled:opacity-50"
-          >
-            {deleteMutation.isPending ? 'Suppression...' : 'Supprimer'}
-          </button>
-        </div>
-      </div>
+    <>
+      <PageHeader
+        title={articleData.nom}
+        subtitle={`RÃ©fÃ©rence: ${articleData.reference}`}
+        breadcrumb={[
+          { label: 'Dashboard', path: '/responsable' },
+          { label: 'Articles', path: '/responsable/articles' },
+          { label: articleData.nom }
+        ]}
+        actions={
+          <div className="flex gap-3">
+            <Button
+              variant="primary"
+              onClick={() => navigate(`/responsable/articles/${articleId}/edit`)}
+            >
+              <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+              </svg>
+              Modifier
+            </Button>
+            <Button
+              variant="danger"
+              onClick={handleDelete}
+              loading={deleteMutation.isPending}
+            >
+              <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+              </svg>
+              Supprimer
+            </Button>
+          </div>
+        }
+      />
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="bg-white shadow rounded-lg">
-          <div className="px-4 py-5 sm:p-6">
-            <h2 className="text-lg font-medium text-gray-900 mb-4">Informations</h2>
+        <Card>
+          <CardHeader title="Informations" />
+          <CardBody>
             <dl className="space-y-4">
-              <div>
-                <dt className="text-sm font-medium text-gray-500">Référence</dt>
-                <dd className="mt-1 text-sm text-gray-900">{articleData.reference}</dd>
+              <div className="flex justify-between py-3 border-b border-stroke">
+                <dt className="text-sm font-medium text-bodydark2">RÃ©fÃ©rence</dt>
+                <dd className="text-sm text-black font-semibold">{articleData.reference}</dd>
               </div>
-              <div>
-                <dt className="text-sm font-medium text-gray-500">Catégorie</dt>
-                <dd className="mt-1 text-sm text-gray-900">{articleData.categorie}</dd>
+              <div className="flex justify-between py-3 border-b border-stroke">
+                <dt className="text-sm font-medium text-bodydark2">CatÃ©gorie</dt>
+                <dd className="text-sm text-black">{articleData.categorie}</dd>
               </div>
-              <div>
-                <dt className="text-sm font-medium text-gray-500">Prix de vente</dt>
-                <dd className="mt-1 text-sm text-gray-900">{formatCurrency(articleData.prixVente)}</dd>
+              <div className="flex justify-between py-3 border-b border-stroke">
+                <dt className="text-sm font-medium text-bodydark2">Prix de vente</dt>
+                <dd className="text-sm text-primary font-bold">{formatCurrency(articleData.prixVente)}</dd>
               </div>
-              <div>
-                <dt className="text-sm font-medium text-gray-500">Durée de garantie</dt>
-                <dd className="mt-1 text-sm text-gray-900">{articleData.dureeGarantie} mois</dd>
+              <div className="flex justify-between py-3 border-b border-stroke">
+                <dt className="text-sm font-medium text-bodydark2">DurÃ©e de garantie</dt>
+                <dd className="text-sm text-black">{articleData.dureeGarantie} mois</dd>
               </div>
-              <div>
-                <dt className="text-sm font-medium text-gray-500">Date de création</dt>
-                <dd className="mt-1 text-sm text-gray-900">{formatDate(articleData.createdAt)}</dd>
+              <div className="flex justify-between py-3">
+                <dt className="text-sm font-medium text-bodydark2">Date de crÃ©ation</dt>
+                <dd className="text-sm text-black">{formatDate(articleData.createdAt)}</dd>
               </div>
             </dl>
-          </div>
-        </div>
+          </CardBody>
+        </Card>
 
-        <div className="bg-white shadow rounded-lg">
-          <div className="px-4 py-5 sm:p-6">
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-lg font-medium text-gray-900">Pièces détachées</h2>
-              <button
+        <Card>
+          <CardHeader
+            title="PiÃ¨ces dÃ©tachÃ©es"
+            action={
+              <Button
+                variant="primary"
+                size="sm"
                 onClick={() => setShowAddPiece(!showAddPiece)}
-                className="bg-primary-600 hover:bg-primary-700 text-white px-3 py-1 rounded text-xs font-medium"
               >
                 + Ajouter
-              </button>
-            </div>
-
+              </Button>
+            }
+          />
+          <CardBody>
             {showAddPiece && (
-              <div className="mb-4 p-4 bg-gray-50 rounded-lg">
+              <div className="mb-4 p-4 bg-bodydark/5 rounded-lg border border-stroke">
                 <form onSubmit={handleSubmitPiece(onSubmitPiece)} className="space-y-3">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700">Nom *</label>
+                    <label className="form-label">Nom *</label>
                     <input
                       {...registerPiece('nom', { required: 'Nom requis' })}
                       type="text"
-                      className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
+                      className="form-input"
                     />
                     {errorsPiece.nom && (
-                      <p className="mt-1 text-sm text-red-600">{errorsPiece.nom.message}</p>
+                      <p className="mt-1 text-sm text-danger">{errorsPiece.nom.message}</p>
                     )}
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700">Référence *</label>
+                    <label className="form-label">RÃ©fÃ©rence *</label>
                     <input
-                      {...registerPiece('reference', { required: 'Référence requise' })}
+                      {...registerPiece('reference', { required: 'RÃ©fÃ©rence requise' })}
                       type="text"
-                      className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
+                      className="form-input"
                     />
                     {errorsPiece.reference && (
-                      <p className="mt-1 text-sm text-red-600">{errorsPiece.reference.message}</p>
+                      <p className="mt-1 text-sm text-danger">{errorsPiece.reference.message}</p>
                     )}
                   </div>
                   <div className="grid grid-cols-2 gap-3">
                     <div>
-                      <label className="block text-sm font-medium text-gray-700">Prix (€) *</label>
+                      <label className="form-label">Prix (â‚¬) *</label>
                       <input
                         {...registerPiece('prix', {
                           required: 'Prix requis',
-                          min: { value: 0, message: 'Le prix doit être positif' },
+                          min: { value: 0, message: 'Le prix doit Ãªtre positif' },
                           valueAsNumber: true,
                         })}
                         type="number"
                         step="0.01"
-                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
+                        className="form-input"
                       />
                       {errorsPiece.prix && (
-                        <p className="mt-1 text-sm text-red-600">{errorsPiece.prix.message}</p>
+                        <p className="mt-1 text-sm text-danger">{errorsPiece.prix.message}</p>
                       )}
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700">Stock *</label>
+                      <label className="form-label">Stock *</label>
                       <input
                         {...registerPiece('stock', {
                           required: 'Stock requis',
-                          min: { value: 0, message: 'Le stock doit être positif' },
+                          min: { value: 0, message: 'Le stock doit Ãªtre positif' },
                           valueAsNumber: true,
                         })}
                         type="number"
-                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
+                        className="form-input"
                       />
                       {errorsPiece.stock && (
-                        <p className="mt-1 text-sm text-red-600">{errorsPiece.stock.message}</p>
+                        <p className="mt-1 text-sm text-danger">{errorsPiece.stock.message}</p>
                       )}
                     </div>
                   </div>
-                  <div className="flex space-x-2">
-                    <button
+                  <div className="flex gap-2">
+                    <Button
                       type="submit"
-                      disabled={createPieceMutation.isPending}
-                      className="bg-primary-600 hover:bg-primary-700 text-white px-3 py-1 rounded text-xs font-medium disabled:opacity-50"
+                      variant="primary"
+                      size="sm"
+                      loading={createPieceMutation.isPending}
                     >
-                      {createPieceMutation.isPending ? 'Création...' : 'Créer'}
-                    </button>
-                    <button
+                      CrÃ©er
+                    </Button>
+                    <Button
                       type="button"
+                      variant="outline"
+                      size="sm"
                       onClick={() => {
                         setShowAddPiece(false);
                         resetPiece();
                       }}
-                      className="bg-gray-300 hover:bg-gray-400 text-gray-700 px-3 py-1 rounded text-xs font-medium"
                     >
                       Annuler
-                    </button>
+                    </Button>
                   </div>
                 </form>
               </div>
@@ -246,12 +271,14 @@ const ArticleDetailsPage = () => {
             {pieces?.data && pieces.data.length > 0 ? (
               <div className="space-y-4">
                 {pieces.data.map((piece) => (
-                  <div key={piece.id} className="border border-gray-200 rounded-lg p-4">
-                    <p className="text-sm font-medium text-gray-900">{piece.nom}</p>
-                    <p className="text-sm text-gray-600">Ref: {piece.reference}</p>
-                    <div className="mt-2 flex justify-between">
-                      <p className="text-sm text-gray-600">Stock: {piece.stock}</p>
-                      <p className="text-sm font-medium text-gray-900">
+                  <div key={piece.id} className="border border-stroke rounded-lg p-4 hover:bg-bodydark/5 transition-colors">
+                    <p className="text-sm font-semibold text-black">{piece.nom}</p>
+                    <p className="text-sm text-bodydark2">Ref: {piece.reference}</p>
+                    <div className="mt-2 flex justify-between items-center">
+                      <span className={`text-xs px-2 py-1 rounded-full ${piece.stock > 0 ? 'bg-success/10 text-success' : 'bg-danger/10 text-danger'}`}>
+                        Stock: {piece.stock}
+                      </span>
+                      <p className="text-sm font-bold text-primary">
                         {formatCurrency(piece.prix)}
                       </p>
                     </div>
@@ -259,12 +286,20 @@ const ArticleDetailsPage = () => {
                 ))}
               </div>
             ) : (
-              <p className="text-gray-500 text-sm">Aucune pièce détachée</p>
+              <EmptyState
+                title="Aucune piÃ¨ce dÃ©tachÃ©e"
+                description="Ajoutez des piÃ¨ces dÃ©tachÃ©es pour cet article"
+                icon={
+                  <svg className="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
+                  </svg>
+                }
+              />
             )}
-          </div>
-        </div>
+          </CardBody>
+        </Card>
       </div>
-    </div>
+    </>
   );
 };
 

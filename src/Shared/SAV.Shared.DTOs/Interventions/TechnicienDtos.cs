@@ -90,19 +90,6 @@ public class UpdateInterventionTechnicienDto
     public int TechnicienId { get; set; }
 }
 
-public class InterventionStatsDto
-{
-    public int NombreTotal { get; set; }
-    public int NombrePlanifiees { get; set; }
-    public int NombreEnCours { get; set; }
-    public int NombreTerminees { get; set; }
-    public int NombreAnnulees { get; set; }
-    public decimal MontantTotalGenere { get; set; }
-    public decimal MontantMoyen { get; set; }
-    public decimal DureeMoyenneJours { get; set; }
-    public List<InterventionStatsByMonthDto> ParMois { get; set; } = new();
-}
-
 public class InterventionStatsByMonthDto
 {
     public int Annee { get; set; }

@@ -1,10 +1,12 @@
-import { useNavigate } from 'react-router-dom';
+﻿import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { techniciensApi } from '../../api/techniciens';
 import { CreateTechnicienDto } from '../../types';
-import LoadingSpinner from '../../components/common/LoadingSpinner';
 import { toast } from 'react-toastify';
+import PageHeader from '../../components/common/PageHeader';
+import { Card, CardBody } from '../../components/common/Card';
+import Button from '../../components/common/Button';
 
 const CreateTechnicienPage = () => {
   const navigate = useNavigate();
@@ -14,7 +16,7 @@ const CreateTechnicienPage = () => {
     mutationFn: (data: CreateTechnicienDto) => techniciensApi.createTechnicien(data),
     onSuccess: (response) => {
       queryClient.invalidateQueries({ queryKey: ['techniciens'] });
-      toast.success('Technicien créé avec succès');
+      toast.success('Technicien crÃ©Ã© avec succÃ¨s');
       navigate(`/responsable/techniciens/${response.data?.id}`);
     },
   });
@@ -34,54 +36,51 @@ const CreateTechnicienPage = () => {
   };
 
   return (
-    <div className="px-4 py-6 sm:px-0">
-      <div className="mb-6">
-        <button
-          onClick={() => navigate('/responsable/techniciens')}
-          className="text-primary-600 hover:text-primary-800 text-sm font-medium"
-        >
-          ← Retour aux techniciens
-        </button>
-      </div>
+    <>
+      <PageHeader
+        title="CrÃ©er un technicien"
+        subtitle="Ajouter un nouveau technicien Ã  l'Ã©quipe"
+        breadcrumb={[
+          { label: 'Dashboard', path: '/responsable' },
+          { label: 'Techniciens', path: '/responsable/techniciens' },
+          { label: 'CrÃ©er' }
+        ]}
+      />
 
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900">Créer un technicien</h1>
-      </div>
-
-      <div className="bg-white shadow rounded-lg">
-        <div className="px-4 py-5 sm:p-6">
+      <Card>
+        <CardBody>
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
               <div>
-                <label htmlFor="nom" className="block text-sm font-medium text-gray-700">
+                <label htmlFor="nom" className="form-label">
                   Nom *
                 </label>
                 <input
                   {...register('nom', { required: 'Nom requis' })}
                   type="text"
-                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
+                  className="form-input"
                 />
                 {errors.nom && (
-                  <p className="mt-1 text-sm text-red-600">{errors.nom.message}</p>
+                  <p className="mt-1 text-sm text-danger">{errors.nom.message}</p>
                 )}
               </div>
 
               <div>
-                <label htmlFor="prenom" className="block text-sm font-medium text-gray-700">
-                  Prénom *
+                <label htmlFor="prenom" className="form-label">
+                  PrÃ©nom *
                 </label>
                 <input
-                  {...register('prenom', { required: 'Prénom requis' })}
+                  {...register('prenom', { required: 'PrÃ©nom requis' })}
                   type="text"
-                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
+                  className="form-input"
                 />
                 {errors.prenom && (
-                  <p className="mt-1 text-sm text-red-600">{errors.prenom.message}</p>
+                  <p className="mt-1 text-sm text-danger">{errors.prenom.message}</p>
                 )}
               </div>
 
               <div>
-                <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+                <label htmlFor="email" className="form-label">
                   Email *
                 </label>
                 <input
@@ -93,73 +92,73 @@ const CreateTechnicienPage = () => {
                     },
                   })}
                   type="email"
-                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
+                  className="form-input"
                 />
                 {errors.email && (
-                  <p className="mt-1 text-sm text-red-600">{errors.email.message}</p>
+                  <p className="mt-1 text-sm text-danger">{errors.email.message}</p>
                 )}
               </div>
 
               <div>
-                <label htmlFor="telephone" className="block text-sm font-medium text-gray-700">
-                  Téléphone *
+                <label htmlFor="telephone" className="form-label">
+                  TÃ©lÃ©phone *
                 </label>
                 <input
-                  {...register('telephone', { required: 'Téléphone requis' })}
+                  {...register('telephone', { required: 'TÃ©lÃ©phone requis' })}
                   type="tel"
-                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
+                  className="form-input"
                 />
                 {errors.telephone && (
-                  <p className="mt-1 text-sm text-red-600">{errors.telephone.message}</p>
+                  <p className="mt-1 text-sm text-danger">{errors.telephone.message}</p>
                 )}
               </div>
 
               <div>
-                <label htmlFor="specialite" className="block text-sm font-medium text-gray-700">
-                  Spécialité *
+                <label htmlFor="specialite" className="form-label">
+                  SpÃ©cialitÃ© *
                 </label>
                 <input
-                  {...register('specialite', { required: 'Spécialité requise' })}
+                  {...register('specialite', { required: 'SpÃ©cialitÃ© requise' })}
                   type="text"
-                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
+                  className="form-input"
                 />
                 {errors.specialite && (
-                  <p className="mt-1 text-sm text-red-600">{errors.specialite.message}</p>
+                  <p className="mt-1 text-sm text-danger">{errors.specialite.message}</p>
                 )}
               </div>
 
               <div>
-                <label htmlFor="dateEmbauche" className="block text-sm font-medium text-gray-700">
+                <label htmlFor="dateEmbauche" className="form-label">
                   Date d'embauche
                 </label>
                 <input
                   {...register('dateEmbauche')}
                   type="date"
-                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
+                  className="form-input"
                 />
               </div>
             </div>
 
-            <div className="flex justify-end space-x-4">
-              <button
+            <div className="flex justify-end gap-3">
+              <Button
                 type="button"
+                variant="outline"
                 onClick={() => navigate('/responsable/techniciens')}
-                className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
               >
                 Annuler
-              </button>
-              <button
+              </Button>
+              <Button
                 type="submit"
-                disabled={createMutation.isPending}
-                className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 disabled:opacity-50"
+                variant="primary"
+                loading={createMutation.isPending}
               >
-                {createMutation.isPending ? 'Création...' : 'Créer le technicien'}
-              </button>
+                CrÃ©er le technicien
+              </Button>
             </div>
           </form>
-        </div>
-      </div>
-    </div>
+        </CardBody>
+      </Card>
+    </>
   );
 };
 

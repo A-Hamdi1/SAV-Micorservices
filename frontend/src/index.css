@@ -1,30 +1,286 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+@layer base {
+  body {
+    @apply font-inter antialiased bg-whiter text-bodydark;
+  }
 }
 
-body {
-  margin: 0;
-  min-width: 320px;
-  min-height: 100vh;
+@layer components {
+  /* Sidebar Styles */
+  .sidebar-menu-item {
+    @apply flex items-center gap-3.5 rounded-lg py-3 px-4 text-bodydark1 duration-300 ease-in-out hover:bg-sidebar-hover;
+  }
+
+  .sidebar-menu-item.active {
+    @apply bg-sidebar-hover text-white;
+  }
+
+  /* Card Styles */
+  .card {
+    @apply rounded-xl border border-stroke bg-white shadow-card;
+  }
+
+  .card-header {
+    @apply flex items-center justify-between border-b border-stroke px-6 py-4;
+  }
+
+  .card-title {
+    @apply text-title-sm font-semibold text-black;
+  }
+
+  .card-body {
+    @apply p-6;
+  }
+
+  /* Form Styles */
+  .form-input {
+    @apply w-full rounded-lg border border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary-500 focus:ring-1 focus:ring-primary-500 disabled:cursor-default disabled:bg-whiter text-black;
+  }
+
+  .form-label {
+    @apply mb-2.5 block font-medium text-black;
+  }
+
+  .form-select {
+    @apply relative z-20 w-full appearance-none rounded-lg border border-stroke bg-transparent py-3 px-5 pr-12 outline-none transition focus:border-primary-500 focus:ring-1 focus:ring-primary-500 text-black;
+  }
+
+  .form-textarea {
+    @apply w-full rounded-lg border border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary-500 focus:ring-1 focus:ring-primary-500 text-black;
+  }
+
+  /* Button Styles */
+  .btn {
+    @apply inline-flex items-center justify-center gap-2.5 rounded-lg px-6 py-3 font-medium transition duration-200;
+  }
+
+  .btn-primary {
+    @apply bg-primary-600 text-white hover:bg-primary-700 shadow-sm;
+  }
+
+  .btn-secondary {
+    @apply bg-gray-600 text-white hover:bg-gray-700;
+  }
+
+  .btn-success {
+    @apply bg-success text-white hover:bg-green-600;
+  }
+
+  .btn-danger {
+    @apply bg-danger text-white hover:bg-red-600;
+  }
+
+  .btn-warning {
+    @apply bg-warning text-white hover:bg-amber-600;
+  }
+
+  .btn-outline {
+    @apply border border-stroke bg-transparent text-black hover:bg-gray-50;
+  }
+
+  .btn-sm {
+    @apply px-4 py-2 text-sm;
+  }
+
+  .btn-lg {
+    @apply px-8 py-4 text-lg;
+  }
+
+  /* Table Styles */
+  .table-container {
+    @apply overflow-x-auto rounded-lg border border-stroke bg-white;
+  }
+
+  .table {
+    @apply w-full table-auto;
+  }
+
+  .table thead {
+    @apply bg-gray-50;
+  }
+
+  .table th {
+    @apply px-4 py-4 font-medium text-black text-left;
+  }
+
+  .table td {
+    @apply border-b border-stroke px-4 py-5;
+  }
+
+  .table tbody tr {
+    @apply hover:bg-gray-50 transition duration-200;
+  }
+
+  /* Badge Styles */
+  .badge {
+    @apply inline-flex items-center rounded-full px-3 py-1 text-sm font-medium;
+  }
+
+  .badge-primary {
+    @apply bg-primary-100 text-primary-700;
+  }
+
+  .badge-success {
+    @apply bg-green-100 text-green-700;
+  }
+
+  .badge-warning {
+    @apply bg-amber-100 text-amber-700;
+  }
+
+  .badge-danger {
+    @apply bg-red-100 text-red-700;
+  }
+
+  .badge-info {
+    @apply bg-blue-100 text-blue-700;
+  }
+
+  .badge-purple {
+    @apply bg-purple-100 text-purple-700;
+  }
+
+  /* Stats Card */
+  .stat-card {
+    @apply flex items-center gap-4 rounded-xl border border-stroke bg-white p-6 shadow-card;
+  }
+
+  .stat-icon {
+    @apply flex h-14 w-14 items-center justify-center rounded-full;
+  }
+
+  /* Data Table Pagination */
+  .pagination-btn {
+    @apply flex items-center justify-center rounded-md border border-stroke bg-white px-4 py-2 text-sm font-medium text-black transition duration-200 hover:border-primary-500 hover:bg-primary-50 disabled:cursor-not-allowed disabled:opacity-50;
+  }
+
+  /* Dropdown */
+  .dropdown {
+    @apply absolute right-0 top-full z-40 mt-2 w-max rounded-lg border border-stroke bg-white shadow-default;
+  }
+
+  .dropdown-item {
+    @apply flex items-center gap-3 px-4 py-2 text-sm text-bodydark2 hover:bg-gray-50;
+  }
+
+  /* Modal */
+  .modal-overlay {
+    @apply fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50;
+  }
+
+  .modal-content {
+    @apply w-full max-w-lg rounded-xl bg-white p-6 shadow-lg;
+  }
+
+  /* Empty State */
+  .empty-state {
+    @apply flex flex-col items-center justify-center py-12 text-center;
+  }
+
+  .empty-state-icon {
+    @apply mb-4 h-16 w-16 text-gray-300;
+  }
+
+  .empty-state-title {
+    @apply text-lg font-medium text-gray-600;
+  }
+
+  .empty-state-text {
+    @apply text-sm text-gray-400;
+  }
+
+  /* Page Header */
+  .page-header {
+    @apply mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between;
+  }
+
+  .page-title {
+    @apply text-title-md font-bold text-black;
+  }
+
+  .page-subtitle {
+    @apply text-sm text-bodydark2;
+  }
+
+  /* Breadcrumb */
+  .breadcrumb {
+    @apply flex items-center gap-3 text-sm;
+  }
+
+  .breadcrumb-item {
+    @apply text-bodydark2;
+  }
+
+  .breadcrumb-item.active {
+    @apply text-primary-600;
+  }
+
+  .breadcrumb-separator {
+    @apply text-gray-400;
+  }
+
+  /* Custom scrollbar */
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  /* Animations */
+  .animate-fade-in {
+    animation: fadeIn 0.3s ease-in-out;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .animate-slide-in {
+    animation: slideIn 0.3s ease-out;
+  }
+
+  @keyframes slideIn {
+    from {
+      transform: translateX(-100%);
+    }
+    to {
+      transform: translateX(0);
+    }
+  }
 }
 
-#root {
-  width: 100%;
-  min-height: 100vh;
+/* Custom scrollbar for webkit browsers */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
 }
 

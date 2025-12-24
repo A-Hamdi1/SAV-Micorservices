@@ -22,6 +22,131 @@ namespace SAV.Interventions.Infrastructure.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("SAV.Interventions.Domain.Entities.CreneauDisponible", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DateDebut")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DateFin")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("EstReserve")
+                        .HasColumnType("bit");
+
+                    b.Property<int?>("InterventionId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TechnicienId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EstReserve");
+
+                    b.HasIndex("InterventionId");
+
+                    b.HasIndex("TechnicienId", "DateDebut");
+
+                    b.ToTable("CreneauxDisponibles");
+                });
+
+            modelBuilder.Entity("SAV.Interventions.Domain.Entities.DemandeRdv", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ClientId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Commentaire")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("CreneauId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("DateSouhaitee")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("PreferenceMoment")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<int>("ReclamationId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Statut")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime?>("TraiteeAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ClientId");
+
+                    b.HasIndex("CreneauId");
+
+                    b.HasIndex("ReclamationId");
+
+                    b.HasIndex("Statut");
+
+                    b.ToTable("DemandesRdv");
+                });
+
+            modelBuilder.Entity("SAV.Interventions.Domain.Entities.Evaluation", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ClientId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Commentaire")
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("InterventionId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Note")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("RecommandeTechnicien")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ClientId");
+
+                    b.HasIndex("InterventionId")
+                        .IsUnique();
+
+                    b.ToTable("Evaluations");
+                });
+
             modelBuilder.Entity("SAV.Interventions.Domain.Entities.Intervention", b =>
                 {
                     b.Property<int>("Id")
@@ -142,6 +267,45 @@ namespace SAV.Interventions.Infrastructure.Migrations
                         .IsUnique();
 
                     b.ToTable("Techniciens");
+                });
+
+            modelBuilder.Entity("SAV.Interventions.Domain.Entities.CreneauDisponible", b =>
+                {
+                    b.HasOne("SAV.Interventions.Domain.Entities.Intervention", "Intervention")
+                        .WithMany()
+                        .HasForeignKey("InterventionId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("SAV.Interventions.Domain.Entities.Technicien", "Technicien")
+                        .WithMany()
+                        .HasForeignKey("TechnicienId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Intervention");
+
+                    b.Navigation("Technicien");
+                });
+
+            modelBuilder.Entity("SAV.Interventions.Domain.Entities.DemandeRdv", b =>
+                {
+                    b.HasOne("SAV.Interventions.Domain.Entities.CreneauDisponible", "Creneau")
+                        .WithMany()
+                        .HasForeignKey("CreneauId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("Creneau");
+                });
+
+            modelBuilder.Entity("SAV.Interventions.Domain.Entities.Evaluation", b =>
+                {
+                    b.HasOne("SAV.Interventions.Domain.Entities.Intervention", "Intervention")
+                        .WithMany()
+                        .HasForeignKey("InterventionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Intervention");
                 });
 
             modelBuilder.Entity("SAV.Interventions.Domain.Entities.Intervention", b =>

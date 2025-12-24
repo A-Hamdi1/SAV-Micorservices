@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+﻿import { useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -6,6 +6,9 @@ import { clientsApi } from '../../api/clients';
 import { UpdateClientDto } from '../../types';
 import LoadingSpinner from '../../components/common/LoadingSpinner';
 import { toast } from 'react-toastify';
+import PageHeader from '../../components/common/PageHeader';
+import { Card, CardBody } from '../../components/common/Card';
+import Button from '../../components/common/Button';
 
 const EditClientPage = () => {
   const navigate = useNavigate();
@@ -24,7 +27,7 @@ const EditClientPage = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['client', clientId] });
       queryClient.invalidateQueries({ queryKey: ['clients'] });
-      toast.success('Client mis à jour avec succès');
+      toast.success('Client mis Ã  jour avec succÃ¨s');
       navigate(`/responsable/clients/${clientId}`);
     },
   });
@@ -35,10 +38,6 @@ const EditClientPage = () => {
     formState: { errors },
     reset,
   } = useForm<UpdateClientDto>();
-
-  if (isLoading) {
-    return <LoadingSpinner />;
-  }
 
   useEffect(() => {
     if (client?.data) {
@@ -51,13 +50,29 @@ const EditClientPage = () => {
     }
   }, [client?.data, reset]);
 
+  if (isLoading) {
+    return <LoadingSpinner fullScreen />;
+  }
+
   if (!client?.data) {
     return (
-      <div className="px-4 py-6 sm:px-0">
-        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
-          Client non trouvé
-        </div>
-      </div>
+      <>
+        <PageHeader
+          title="Client non trouvÃ©"
+          breadcrumb={[
+            { label: 'Dashboard', path: '/responsable' },
+            { label: 'Clients', path: '/responsable/clients' },
+            { label: 'Modifier' }
+          ]}
+        />
+        <Card>
+          <CardBody>
+            <div className="bg-danger/10 border border-danger/20 text-danger px-4 py-3 rounded-lg">
+              Client non trouvÃ©
+            </div>
+          </CardBody>
+        </Card>
+      </>
     );
   }
 
@@ -70,101 +85,99 @@ const EditClientPage = () => {
   };
 
   return (
-    <div className="px-4 py-6 sm:px-0">
-      <div className="mb-6">
-        <button
-          onClick={() => navigate(`/responsable/clients/${clientId}`)}
-          className="text-primary-600 hover:text-primary-800 text-sm font-medium"
-        >
-          ← Retour au client
-        </button>
-      </div>
+    <>
+      <PageHeader
+        title="Modifier le client"
+        subtitle={`Modification de ${client.data.prenom} ${client.data.nom}`}
+        breadcrumb={[
+          { label: 'Dashboard', path: '/responsable' },
+          { label: 'Clients', path: '/responsable/clients' },
+          { label: `${client.data.prenom} ${client.data.nom}`, path: `/responsable/clients/${clientId}` },
+          { label: 'Modifier' }
+        ]}
+      />
 
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900">Modifier le client</h1>
-      </div>
-
-      <div className="bg-white shadow rounded-lg">
-        <div className="px-4 py-5 sm:p-6">
+      <Card>
+        <CardBody>
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
               <div>
-                <label htmlFor="nom" className="block text-sm font-medium text-gray-700">
+                <label htmlFor="nom" className="form-label">
                   Nom *
                 </label>
                 <input
                   {...register('nom', { required: 'Nom requis' })}
                   type="text"
-                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
+                  className="form-input"
                 />
                 {errors.nom && (
-                  <p className="mt-1 text-sm text-red-600">{errors.nom.message}</p>
+                  <p className="mt-1 text-sm text-danger">{errors.nom.message}</p>
                 )}
               </div>
 
               <div>
-                <label htmlFor="prenom" className="block text-sm font-medium text-gray-700">
-                  Prénom *
+                <label htmlFor="prenom" className="form-label">
+                  PrÃ©nom *
                 </label>
                 <input
-                  {...register('prenom', { required: 'Prénom requis' })}
+                  {...register('prenom', { required: 'PrÃ©nom requis' })}
                   type="text"
-                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
+                  className="form-input"
                 />
                 {errors.prenom && (
-                  <p className="mt-1 text-sm text-red-600">{errors.prenom.message}</p>
+                  <p className="mt-1 text-sm text-danger">{errors.prenom.message}</p>
                 )}
               </div>
 
               <div>
-                <label htmlFor="telephone" className="block text-sm font-medium text-gray-700">
-                  Téléphone *
+                <label htmlFor="telephone" className="form-label">
+                  TÃ©lÃ©phone *
                 </label>
                 <input
-                  {...register('telephone', { required: 'Téléphone requis' })}
+                  {...register('telephone', { required: 'TÃ©lÃ©phone requis' })}
                   type="tel"
-                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
+                  className="form-input"
                 />
                 {errors.telephone && (
-                  <p className="mt-1 text-sm text-red-600">{errors.telephone.message}</p>
+                  <p className="mt-1 text-sm text-danger">{errors.telephone.message}</p>
                 )}
               </div>
 
               <div>
-                <label htmlFor="adresse" className="block text-sm font-medium text-gray-700">
+                <label htmlFor="adresse" className="form-label">
                   Adresse *
                 </label>
                 <input
                   {...register('adresse', { required: 'Adresse requise' })}
                   type="text"
-                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
+                  className="form-input"
                 />
                 {errors.adresse && (
-                  <p className="mt-1 text-sm text-red-600">{errors.adresse.message}</p>
+                  <p className="mt-1 text-sm text-danger">{errors.adresse.message}</p>
                 )}
               </div>
             </div>
 
-            <div className="flex justify-end space-x-4">
-              <button
+            <div className="flex justify-end gap-3">
+              <Button
                 type="button"
+                variant="outline"
                 onClick={() => navigate(`/responsable/clients/${clientId}`)}
-                className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
               >
                 Annuler
-              </button>
-              <button
+              </Button>
+              <Button
                 type="submit"
-                disabled={updateMutation.isPending}
-                className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 disabled:opacity-50"
+                variant="primary"
+                loading={updateMutation.isPending}
               >
-                {updateMutation.isPending ? 'Mise à jour...' : 'Mettre à jour'}
-              </button>
+                Mettre Ã  jour
+              </Button>
             </div>
           </form>
-        </div>
-      </div>
-    </div>
+        </CardBody>
+      </Card>
+    </>
   );
 };
 

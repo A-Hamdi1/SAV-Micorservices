@@ -1,10 +1,12 @@
-import { useQuery } from '@tanstack/react-query';
+﻿import { useQuery } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
 import { clientsApi } from '../../api/clients';
 import { reclamationsApi } from '../../api/reclamations';
 import { articlesAchetesApi } from '../../api/articlesAchetes';
 import LoadingSpinner from '../../components/common/LoadingSpinner';
 import StatusBadge from '../../components/common/StatusBadge';
+import StatCard from '../../components/common/StatCard';
+import { Card, CardHeader, CardBody } from '../../components/common/Card';
 import { formatDate } from '../../utils/formatters';
 
 const ClientDashboard = () => {
@@ -29,163 +31,286 @@ const ClientDashboard = () => {
 
   const recentReclamations = reclamations?.data?.slice(0, 5) || [];
   const recentArticles = articles?.data?.slice(0, 5) || [];
+  const articlesEnGarantie = articles?.data?.filter((a) => a.sousGarantie).length || 0;
+  const reclamationsEnCours = reclamations?.data?.filter((r) => r.statut === 'EnCours' || r.statut === 'EnAttente').length || 0;
 
   return (
-    <div className="px-4 py-6 sm:px-0">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900">Tableau de bord</h1>
-        {profile?.data && (
-          <p className="mt-2 text-gray-600">
-            Bienvenue, {profile.data.prenom} {profile.data.nom}
-          </p>
-        )}
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        <div className="bg-white overflow-hidden shadow rounded-lg">
-          <div className="p-5">
-            <div className="flex items-center">
-              <div className="flex-shrink-0">
-                <div className="text-2xl font-bold text-primary-600">
-                  {articles?.data?.length || 0}
-                </div>
-              </div>
-              <div className="ml-5 w-0 flex-1">
-                <dl>
-                  <dt className="text-sm font-medium text-gray-500 truncate">Articles achetés</dt>
-                </dl>
-              </div>
-            </div>
+    <div className="space-y-6">
+      {/* Welcome Section */}
+      <div className="rounded-xl bg-gradient-to-r from-primary-600 to-primary-700 p-6 text-white shadow-lg">
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between">
+          <div>
+            <h1 className="text-2xl font-bold mb-2">
+              Bienvenue{profile?.data ? `, ${profile.data.prenom}` : ''} ! ðŸ‘‹
+            </h1>
+            <p className="text-primary-100">
+              Voici un aperÃ§u de votre activitÃ© sur SAV Pro
+            </p>
           </div>
-        </div>
-
-        <div className="bg-white overflow-hidden shadow rounded-lg">
-          <div className="p-5">
-            <div className="flex items-center">
-              <div className="flex-shrink-0">
-                <div className="text-2xl font-bold text-primary-600">
-                  {reclamations?.data?.length || 0}
-                </div>
-              </div>
-              <div className="ml-5 w-0 flex-1">
-                <dl>
-                  <dt className="text-sm font-medium text-gray-500 truncate">Réclamations</dt>
-                </dl>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-white overflow-hidden shadow rounded-lg">
-          <div className="p-5">
-            <div className="flex items-center">
-              <div className="flex-shrink-0">
-                <div className="text-2xl font-bold text-primary-600">
-                  {reclamations?.data?.filter((r) => r.statut === 'En Cours').length || 0}
-                </div>
-              </div>
-              <div className="ml-5 w-0 flex-1">
-                <dl>
-                  <dt className="text-sm font-medium text-gray-500 truncate">En cours</dt>
-                </dl>
-              </div>
-            </div>
+          <div className="mt-4 md:mt-0 flex gap-3">
+            <Link
+              to="/client/reclamations"
+              className="inline-flex items-center gap-2 rounded-lg bg-white/10 backdrop-blur-sm px-4 py-2 text-sm font-medium text-white hover:bg-white/20 transition-colors"
+            >
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+              </svg>
+              Nouvelle rÃ©clamation
+            </Link>
           </div>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="bg-white shadow rounded-lg">
-          <div className="px-4 py-5 sm:p-6">
-            <h3 className="text-lg leading-6 font-medium text-gray-900 mb-4">
-              Mes réclamations récentes
-            </h3>
+      {/* Stats Cards */}
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <StatCard
+          title="Articles achetÃ©s"
+          value={articles?.data?.length || 0}
+          color="primary"
+          icon={
+            <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+            </svg>
+          }
+        />
+        <StatCard
+          title="Sous garantie"
+          value={articlesEnGarantie}
+          color="success"
+          icon={
+            <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+            </svg>
+          }
+        />
+        <StatCard
+          title="RÃ©clamations"
+          value={reclamations?.data?.length || 0}
+          color="info"
+          icon={
+            <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+            </svg>
+          }
+        />
+        <StatCard
+          title="En cours"
+          value={reclamationsEnCours}
+          color="warning"
+          icon={
+            <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          }
+        />
+      </div>
+
+      {/* Content Grid */}
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+        {/* Recent Reclamations */}
+        <Card>
+          <CardHeader
+            title="RÃ©clamations rÃ©centes"
+            action={
+              <Link
+                to="/client/reclamations"
+                className="text-sm font-medium text-primary-600 hover:text-primary-700 flex items-center gap-1"
+              >
+                Voir tout
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </Link>
+            }
+          />
+          <CardBody className="p-0">
             {recentReclamations.length === 0 ? (
-              <p className="text-gray-500">Aucune réclamation</p>
+              <div className="flex flex-col items-center justify-center py-12 px-4">
+                <div className="w-16 h-16 rounded-full bg-gray-2 flex items-center justify-center mb-4">
+                  <svg className="w-8 h-8 text-bodydark2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                  </svg>
+                </div>
+                <p className="text-bodydark2 text-sm">Aucune rÃ©clamation</p>
+                <Link
+                  to="/client/reclamations"
+                  className="mt-4 text-sm font-medium text-primary-600 hover:text-primary-700"
+                >
+                  CrÃ©er une rÃ©clamation
+                </Link>
+              </div>
             ) : (
-              <div className="space-y-4">
+              <div className="divide-y divide-stroke">
                 {recentReclamations.map((reclamation) => (
-                  <div
+                  <Link
                     key={reclamation.id}
-                    className="border-b border-gray-200 pb-4 last:border-0 last:pb-0"
+                    to={`/client/reclamations/${reclamation.id}`}
+                    className="flex items-center justify-between p-4 hover:bg-gray-2 transition-colors"
                   >
-                    <div className="flex justify-between items-start">
-                      <div>
-                        <Link
-                          to={`/client/reclamations/${reclamation.id}`}
-                          className="text-primary-600 hover:text-primary-800 font-medium"
-                        >
-                          Réclamation #{reclamation.id}
-                        </Link>
-                        <p className="text-sm text-gray-600 mt-1">{reclamation.description}</p>
-                        <p className="text-xs text-gray-500 mt-1">
-                          {formatDate(reclamation.dateCreation)}
-                        </p>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-3">
+                        <div className="flex-shrink-0 w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
+                          <svg className="w-5 h-5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" />
+                          </svg>
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-medium text-black truncate">
+                            RÃ©clamation #{reclamation.id}
+                          </p>
+                          <p className="text-xs text-bodydark2 truncate mt-0.5">
+                            {reclamation.description}
+                          </p>
+                          <p className="text-xs text-bodydark2 mt-1">
+                            {formatDate(reclamation.dateCreation)}
+                          </p>
+                        </div>
                       </div>
-                      <StatusBadge status={reclamation.statut} />
                     </div>
-                  </div>
+                    <div className="ml-4 flex-shrink-0">
+                      <StatusBadge status={reclamation.statut} size="sm" />
+                    </div>
+                  </Link>
                 ))}
               </div>
             )}
-            <div className="mt-4">
-              <Link
-                to="/client/reclamations"
-                className="text-primary-600 hover:text-primary-800 text-sm font-medium"
-              >
-                Voir toutes les réclamations →
-              </Link>
-            </div>
-          </div>
-        </div>
+          </CardBody>
+        </Card>
 
-        <div className="bg-white shadow rounded-lg">
-          <div className="px-4 py-5 sm:p-6">
-            <h3 className="text-lg leading-6 font-medium text-gray-900 mb-4">
-              Mes articles récents
-            </h3>
+        {/* Recent Articles */}
+        <Card>
+          <CardHeader
+            title="Articles rÃ©cents"
+            action={
+              <Link
+                to="/client/articles"
+                className="text-sm font-medium text-primary-600 hover:text-primary-700 flex items-center gap-1"
+              >
+                Voir tout
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </Link>
+            }
+          />
+          <CardBody className="p-0">
             {recentArticles.length === 0 ? (
-              <p className="text-gray-500">Aucun article enregistré</p>
+              <div className="flex flex-col items-center justify-center py-12 px-4">
+                <div className="w-16 h-16 rounded-full bg-gray-2 flex items-center justify-center mb-4">
+                  <svg className="w-8 h-8 text-bodydark2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                  </svg>
+                </div>
+                <p className="text-bodydark2 text-sm">Aucun article enregistrÃ©</p>
+              </div>
             ) : (
-              <div className="space-y-4">
+              <div className="divide-y divide-stroke">
                 {recentArticles.map((article) => (
                   <div
                     key={article.id}
-                    className="border-b border-gray-200 pb-4 last:border-0 last:pb-0"
+                    className="flex items-center justify-between p-4 hover:bg-gray-2 transition-colors"
                   >
-                    <div className="flex justify-between items-start">
-                      <div>
-                        <p className="font-medium text-gray-900">{article.articleNom}</p>
-                        <p className="text-sm text-gray-600">Ref: {article.articleReference}</p>
-                        <p className="text-xs text-gray-500 mt-1">
-                          Acheté le {formatDate(article.dateAchat)}
+                    <div className="flex items-center gap-3 flex-1 min-w-0">
+                      <div className="flex-shrink-0 w-10 h-10 rounded-lg bg-gray-2 flex items-center justify-center">
+                        <svg className="w-5 h-5 text-bodydark2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                        </svg>
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-medium text-black truncate">
+                          {article.articleNom}
+                        </p>
+                        <p className="text-xs text-bodydark2 mt-0.5">
+                          Ref: {article.articleReference}
+                        </p>
+                        <p className="text-xs text-bodydark2 mt-1">
+                          AchetÃ© le {formatDate(article.dateAchat)}
                         </p>
                       </div>
+                    </div>
+                    <div className="ml-4 flex-shrink-0">
                       <span
-                        className={`px-2 py-1 text-xs rounded-full ${
+                        className={`inline-flex items-center rounded-full px-2.5 py-1 text-xs font-medium ${
                           article.sousGarantie
-                            ? 'bg-green-100 text-green-800'
-                            : 'bg-red-100 text-red-800'
+                            ? 'bg-green-100 text-green-700'
+                            : 'bg-red-100 text-red-700'
                         }`}
                       >
-                        {article.sousGarantie ? 'Sous garantie' : 'Hors garantie'}
+                        {article.sousGarantie ? 'âœ“ Garantie' : 'âœ— Hors garantie'}
                       </span>
                     </div>
                   </div>
                 ))}
               </div>
             )}
-            <div className="mt-4">
-              <Link
-                to="/client/articles"
-                className="text-primary-600 hover:text-primary-800 text-sm font-medium"
-              >
-                Voir tous les articles →
-              </Link>
+          </CardBody>
+        </Card>
+      </div>
+
+      {/* Quick Actions */}
+      <Card>
+        <CardHeader title="Actions rapides" />
+        <CardBody>
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            <Link
+              to="/client/reclamations"
+              className="flex items-center gap-4 rounded-xl border border-stroke bg-white p-4 hover:border-primary-500 hover:shadow-md transition-all"
+            >
+              <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary-50">
+                <svg className="w-6 h-6 text-primary-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                </svg>
+              </div>
+              <div>
+                <p className="text-sm font-medium text-black">Nouvelle rÃ©clamation</p>
+                <p className="text-xs text-bodydark2">Signaler un problÃ¨me</p>
+              </div>
+            </Link>
+
+            <Link
+              to="/client/articles"
+              className="flex items-center gap-4 rounded-xl border border-stroke bg-white p-4 hover:border-primary-500 hover:shadow-md transition-all"
+            >
+              <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-green-50">
+                <svg className="w-6 h-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                </svg>
+              </div>
+              <div>
+                <p className="text-sm font-medium text-black">Mes articles</p>
+                <p className="text-xs text-bodydark2">Consulter mes produits</p>
+              </div>
+            </Link>
+
+            <Link
+              to="/client/profile"
+              className="flex items-center gap-4 rounded-xl border border-stroke bg-white p-4 hover:border-primary-500 hover:shadow-md transition-all"
+            >
+              <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-blue-50">
+                <svg className="w-6 h-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                </svg>
+              </div>
+              <div>
+                <p className="text-sm font-medium text-black">Mon profil</p>
+                <p className="text-xs text-bodydark2">Modifier mes infos</p>
+              </div>
+            </Link>
+
+            <div className="flex items-center gap-4 rounded-xl border border-stroke bg-white p-4 hover:border-primary-500 hover:shadow-md transition-all cursor-pointer">
+              <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-amber-50">
+                <svg className="w-6 h-6 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <div>
+                <p className="text-sm font-medium text-black">Aide & Support</p>
+                <p className="text-xs text-bodydark2">Besoin d'assistance ?</p>
+              </div>
             </div>
           </div>
-        </div>
-      </div>
+        </CardBody>
+      </Card>
     </div>
   );
 };

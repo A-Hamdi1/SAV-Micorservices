@@ -62,6 +62,49 @@ namespace SAV.Articles.Infrastructure.Migrations
                     b.ToTable("Articles");
                 });
 
+            modelBuilder.Entity("SAV.Articles.Domain.Entities.MouvementStock", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("InterventionId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PieceDetacheeId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Quantite")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Raison")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<int>("StockApres")
+                        .HasColumnType("int");
+
+                    b.Property<int>("StockAvant")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedAt");
+
+                    b.HasIndex("PieceDetacheeId");
+
+                    b.ToTable("MouvementsStock");
+                });
+
             modelBuilder.Entity("SAV.Articles.Domain.Entities.PieceDetachee", b =>
                 {
                     b.Property<int>("Id")
@@ -72,6 +115,9 @@ namespace SAV.Articles.Infrastructure.Migrations
 
                     b.Property<int>("ArticleId")
                         .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Nom")
                         .IsRequired()
@@ -86,8 +132,14 @@ namespace SAV.Articles.Infrastructure.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
+                    b.Property<int>("SeuilAlerte")
+                        .HasColumnType("int");
+
                     b.Property<int>("Stock")
                         .HasColumnType("int");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
@@ -96,6 +148,17 @@ namespace SAV.Articles.Infrastructure.Migrations
                     b.HasIndex("Reference");
 
                     b.ToTable("PiecesDetachees");
+                });
+
+            modelBuilder.Entity("SAV.Articles.Domain.Entities.MouvementStock", b =>
+                {
+                    b.HasOne("SAV.Articles.Domain.Entities.PieceDetachee", "PieceDetachee")
+                        .WithMany("MouvementsStock")
+                        .HasForeignKey("PieceDetacheeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("PieceDetachee");
                 });
 
             modelBuilder.Entity("SAV.Articles.Domain.Entities.PieceDetachee", b =>
@@ -112,6 +175,11 @@ namespace SAV.Articles.Infrastructure.Migrations
             modelBuilder.Entity("SAV.Articles.Domain.Entities.Article", b =>
                 {
                     b.Navigation("PiecesDetachees");
+                });
+
+            modelBuilder.Entity("SAV.Articles.Domain.Entities.PieceDetachee", b =>
+                {
+                    b.Navigation("MouvementsStock");
                 });
 #pragma warning restore 612, 618
         }

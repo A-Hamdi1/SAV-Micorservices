@@ -1,12 +1,16 @@
-import { useState } from 'react';
+﻿import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { useParams, Link, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { interventionsApi } from '../../api/interventions';
 import { articlesApi } from '../../api/articles';
 import { techniciensApi } from '../../api/techniciens';
 import { reclamationsApi } from '../../api/reclamations';
 import { articlesAchetesApi } from '../../api/articlesAchetes';
+import { pdfApi } from '../../api/newFeatures';
+import PageHeader from '../../components/common/PageHeader';
+import { Card, CardHeader, CardBody } from '../../components/common/Card';
+import Button from '../../components/common/Button';
 import LoadingSpinner from '../../components/common/LoadingSpinner';
 import StatusBadge from '../../components/common/StatusBadge';
 import { formatDate, formatCurrency } from '../../utils/formatters';
@@ -25,6 +29,7 @@ const InterventionDetailsPage = () => {
   const [showAddPiece, setShowAddPiece] = useState(false);
   const [showChangeStatus, setShowChangeStatus] = useState(false);
   const [showAssignTechnicien, setShowAssignTechnicien] = useState(false);
+  const [isDownloadingPdf, setIsDownloadingPdf] = useState(false);
 
   const { data: intervention, isLoading } = useQuery({
     queryKey: ['intervention', interventionId],
@@ -70,7 +75,7 @@ const InterventionDetailsPage = () => {
       interventionsApi.updateInterventionStatut(interventionId, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['intervention', interventionId] });
-      toast.success('Statut mis à jour');
+      toast.success('Statut mis Ã  jour');
       setShowChangeStatus(false);
     },
   });
@@ -80,7 +85,7 @@ const InterventionDetailsPage = () => {
       interventionsApi.addPieceUtilisee(interventionId, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['intervention', interventionId] });
-      toast.success('Pièce ajoutée avec succès');
+      toast.success('PiÃ¨ce ajoutÃ©e avec succÃ¨s');
       setShowAddPiece(false);
     },
   });
@@ -90,7 +95,7 @@ const InterventionDetailsPage = () => {
       interventionsApi.updateInterventionTechnicien(interventionId, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['intervention', interventionId] });
-      toast.success('Technicien assigné avec succès');
+      toast.success('Technicien assignÃ© avec succÃ¨s');
       setShowAssignTechnicien(false);
     },
   });
@@ -99,7 +104,7 @@ const InterventionDetailsPage = () => {
     mutationFn: () => interventionsApi.deleteIntervention(interventionId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['interventions'] });
-      toast.success('Intervention supprimée avec succès');
+      toast.success('Intervention supprimÃ©e avec succÃ¨s');
       navigate('/responsable/interventions');
     },
   });
@@ -124,14 +129,14 @@ const InterventionDetailsPage = () => {
   } = useForm<UpdateInterventionTechnicienDto>();
 
   if (isLoading) {
-    return <LoadingSpinner />;
+    return <LoadingSpinner fullScreen />;
   }
 
   if (!intervention?.data) {
     return (
-      <div className="px-4 py-6 sm:px-0">
-        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
-          Intervention non trouvée
+      <div className="p-6">
+        <div className="bg-red-50 border border-red-200 text-danger px-4 py-3 rounded-lg">
+          Intervention non trouvÃ©e
         </div>
       </div>
     );
@@ -165,7 +170,7 @@ const InterventionDetailsPage = () => {
   };
 
   const handleDelete = async () => {
-    if (window.confirm('Êtes-vous sûr de vouloir supprimer cette intervention ?')) {
+    if (window.confirm('ÃŠtes-vous sÃ»r de vouloir supprimer cette intervention ?')) {
       try {
         await deleteMutation.mutateAsync();
       } catch (error) {
@@ -174,116 +179,158 @@ const InterventionDetailsPage = () => {
     }
   };
 
-  return (
-    <div className="px-4 py-6 sm:px-0">
-      <div className="mb-6">
-        <Link
-          to="/responsable/interventions"
-          className="text-primary-600 hover:text-primary-800 text-sm font-medium"
-        >
-          ← Retour aux interventions
-        </Link>
-      </div>
+  const handleDownloadFacturePdf = async () => {
+    setIsDownloadingPdf(true);
+    try {
+      const response = await pdfApi.downloadFacture(interventionId);
+      const blob = new Blob([response.data], { type: 'application/pdf' });
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `facture-intervention-${interventionId}.pdf`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+      toast.success('Facture PDF tÃ©lÃ©chargÃ©e');
+    } catch (error) {
+      console.error('Error downloading PDF:', error);
+      toast.error('Erreur lors du tÃ©lÃ©chargement de la facture PDF');
+    } finally {
+      setIsDownloadingPdf(false);
+    }
+  };
 
-      <div className="mb-8 flex justify-between items-center">
-        <div>
-          <h1 className="text-3xl font-bold text-gray-900">Intervention #{interv.id}</h1>
-          <div className="mt-2 flex items-center">
-            <StatusBadge status={interv.statut} />
+  const handleDownloadRapportPdf = async () => {
+    setIsDownloadingPdf(true);
+    try {
+      const response = await pdfApi.downloadRapportIntervention(interventionId);
+      const blob = new Blob([response.data], { type: 'application/pdf' });
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `rapport-intervention-${interventionId}.pdf`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+      toast.success('Rapport PDF tÃ©lÃ©chargÃ©');
+    } catch (error) {
+      console.error('Error downloading PDF:', error);
+      toast.error('Erreur lors du tÃ©lÃ©chargement du rapport PDF');
+    } finally {
+      setIsDownloadingPdf(false);
+    }
+  };
+
+  return (
+    <div className="p-6">
+      <PageHeader
+        title={`Intervention #${interv.id}`}
+        subtitle={<StatusBadge status={interv.statut} />}
+        breadcrumb={[
+          { label: 'Dashboard', path: '/responsable' },
+          { label: 'Interventions', path: '/responsable/interventions' },
+          { label: `Intervention #${interv.id}` },
+        ]}
+        actions={
+          <div className="flex gap-3">
+            <Button
+              variant="primary"
+              onClick={() => navigate(`/responsable/interventions/${interventionId}/edit`)}
+            >
+              Modifier
+            </Button>
+            <Button
+              variant="danger"
+              onClick={handleDelete}
+              disabled={deleteMutation.isPending}
+              loading={deleteMutation.isPending}
+            >
+              Supprimer
+            </Button>
           </div>
-        </div>
-        <div className="flex space-x-2">
-          <button
-            onClick={() => navigate(`/responsable/interventions/${interventionId}/edit`)}
-            className="bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-md text-sm font-medium"
-          >
-            Modifier
-          </button>
-          <button
-            onClick={handleDelete}
-            disabled={deleteMutation.isPending}
-            className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md text-sm font-medium disabled:opacity-50"
-          >
-            {deleteMutation.isPending ? 'Suppression...' : 'Supprimer'}
-          </button>
-        </div>
-      </div>
+        }
+      />
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2 space-y-6">
-          <div className="bg-white shadow rounded-lg">
-            <div className="px-4 py-5 sm:p-6">
-              <h2 className="text-lg font-medium text-gray-900 mb-4">Informations</h2>
+          <Card>
+            <CardHeader title="Informations" />
+            <CardBody>
               <dl className="space-y-4">
                 <div>
-                  <dt className="text-sm font-medium text-gray-500">Réclamation ID</dt>
-                  <dd className="mt-1 text-sm text-gray-900">{interv.reclamationId}</dd>
+                  <dt className="text-sm font-medium text-bodydark2">RÃ©clamation ID</dt>
+                  <dd className="mt-1 text-sm text-black">{interv.reclamationId}</dd>
                 </div>
                 <div>
-                  <dt className="text-sm font-medium text-gray-500">Technicien</dt>
-                  <dd className="mt-1 text-sm text-gray-900">{interv.technicienNom}</dd>
+                  <dt className="text-sm font-medium text-bodydark2">Technicien</dt>
+                  <dd className="mt-1 text-sm text-black">{interv.technicienNom}</dd>
                 </div>
                 <div>
-                  <dt className="text-sm font-medium text-gray-500">Date d'intervention</dt>
-                  <dd className="mt-1 text-sm text-gray-900">{formatDate(interv.dateIntervention)}</dd>
+                  <dt className="text-sm font-medium text-bodydark2">Date d'intervention</dt>
+                  <dd className="mt-1 text-sm text-black">{formatDate(interv.dateIntervention)}</dd>
                 </div>
                 <div>
-                  <dt className="text-sm font-medium text-gray-500">Gratuite</dt>
-                  <dd className="mt-1 text-sm text-gray-900">
+                  <dt className="text-sm font-medium text-bodydark2">Gratuite</dt>
+                  <dd className="mt-1 text-sm text-black">
                     {interv.estGratuite ? 'Oui' : 'Non'}
                   </dd>
                 </div>
                 {interv.montantMainOeuvre && (
                   <div>
-                    <dt className="text-sm font-medium text-gray-500">Main d'œuvre</dt>
-                    <dd className="mt-1 text-sm text-gray-900">
+                    <dt className="text-sm font-medium text-bodydark2">Main d'Å“uvre</dt>
+                    <dd className="mt-1 text-sm text-black">
                       {formatCurrency(interv.montantMainOeuvre)}
                     </dd>
                   </div>
                 )}
                 <div>
-                  <dt className="text-sm font-medium text-gray-500">Montant total</dt>
-                  <dd className="mt-1 text-sm font-bold text-gray-900">
+                  <dt className="text-sm font-medium text-bodydark2">Montant total</dt>
+                  <dd className="mt-1 text-sm font-bold text-black">
                     {formatCurrency(interv.montantTotal)}
                   </dd>
                 </div>
                 {interv.commentaire && (
                   <div>
-                    <dt className="text-sm font-medium text-gray-500">Commentaire</dt>
-                    <dd className="mt-1 text-sm text-gray-900">{interv.commentaire}</dd>
+                    <dt className="text-sm font-medium text-bodydark2">Commentaire</dt>
+                    <dd className="mt-1 text-sm text-black">{interv.commentaire}</dd>
                   </div>
                 )}
               </dl>
-            </div>
-          </div>
+            </CardBody>
+          </Card>
 
-          <div className="bg-white shadow rounded-lg">
-            <div className="px-4 py-5 sm:p-6">
-              <div className="flex justify-between items-center mb-4">
-                <h2 className="text-lg font-medium text-gray-900">Pièces utilisées</h2>
-                <button
+          <Card>
+            <CardHeader
+              title="PiÃ¨ces utilisÃ©es"
+              action={
+                <Button
+                  variant="primary"
+                  size="sm"
                   onClick={() => setShowAddPiece(!showAddPiece)}
-                  className="bg-primary-600 hover:bg-primary-700 text-white px-3 py-1 rounded text-xs font-medium"
                 >
                   + Ajouter
-                </button>
-              </div>
+                </Button>
+              }
+            />
+            <CardBody>
 
               {showAddPiece && (
-                <div className="mb-4 p-4 bg-gray-50 rounded-lg">
+                <div className="mb-4 p-4 bg-gray-2 rounded-lg">
                   <form onSubmit={handleSubmitPiece(onSubmitPiece)} className="space-y-3">
                     <div>
-                      <label className="block text-sm font-medium text-gray-700">
-                        Pièce détachée
+                      <label className="form-label">
+                        PiÃ¨ce dÃ©tachÃ©e
                       </label>
                       <select
                         {...registerPiece('pieceDetacheeId', {
-                          required: 'Pièce requise',
+                          required: 'PiÃ¨ce requise',
                           valueAsNumber: true,
                         })}
-                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
+                        className="form-select"
                       >
-                        <option value="">Sélectionner une pièce</option>
+                        <option value="">SÃ©lectionner une piÃ¨ce</option>
                         {piecesDetachees?.data?.map((piece) => (
                           <option key={piece.id} value={piece.id}>
                             {piece.nom} - {piece.reference} ({formatCurrency(piece.prix)}) - Stock: {piece.stock}
@@ -291,49 +338,52 @@ const InterventionDetailsPage = () => {
                         ))}
                       </select>
                       {(!piecesDetachees?.data || piecesDetachees.data.length === 0) && (
-                        <p className="mt-1 text-sm text-yellow-600">
-                          Aucune pièce détachée disponible pour cet article
+                        <p className="mt-1 text-sm text-warning">
+                          Aucune piÃ¨ce dÃ©tachÃ©e disponible pour cet article
                         </p>
                       )}
                       {errorsPiece.pieceDetacheeId && (
-                        <p className="mt-1 text-sm text-red-600">
+                        <p className="mt-1 text-sm text-danger">
                           {errorsPiece.pieceDetacheeId.message}
                         </p>
                       )}
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700">Quantité</label>
+                      <label className="form-label">QuantitÃ©</label>
                       <input
                         {...registerPiece('quantite', {
-                          required: 'Quantité requise',
-                          min: { value: 1, message: 'La quantité doit être au moins 1' },
+                          required: 'QuantitÃ© requise',
+                          min: { value: 1, message: 'La quantitÃ© doit Ãªtre au moins 1' },
                           valueAsNumber: true,
                         })}
                         type="number"
-                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
+                        className="form-input"
                       />
                       {errorsPiece.quantite && (
-                        <p className="mt-1 text-sm text-red-600">{errorsPiece.quantite.message}</p>
+                        <p className="mt-1 text-sm text-danger">{errorsPiece.quantite.message}</p>
                       )}
                     </div>
-                    <div className="flex space-x-2">
-                      <button
+                    <div className="flex gap-2">
+                      <Button
                         type="submit"
+                        variant="primary"
+                        size="sm"
                         disabled={addPieceMutation.isPending}
-                        className="bg-primary-600 hover:bg-primary-700 text-white px-3 py-1 rounded text-xs font-medium disabled:opacity-50"
+                        loading={addPieceMutation.isPending}
                       >
-                        {addPieceMutation.isPending ? 'Ajout...' : 'Ajouter'}
-                      </button>
-                      <button
+                        Ajouter
+                      </Button>
+                      <Button
                         type="button"
+                        variant="outline"
+                        size="sm"
                         onClick={() => {
                           setShowAddPiece(false);
                           resetPiece();
                         }}
-                        className="bg-gray-300 hover:bg-gray-400 text-gray-700 px-3 py-1 rounded text-xs font-medium"
                       >
                         Annuler
-                      </button>
+                      </Button>
                     </div>
                   </form>
                 </div>
@@ -342,12 +392,12 @@ const InterventionDetailsPage = () => {
               {interv.piecesUtilisees && interv.piecesUtilisees.length > 0 ? (
                 <div className="space-y-4">
                   {interv.piecesUtilisees.map((piece) => (
-                    <div key={piece.id} className="border border-gray-200 rounded-lg p-4">
-                      <p className="text-sm font-medium text-gray-900">{piece.pieceNom}</p>
-                      <p className="text-sm text-gray-600">Ref: {piece.pieceReference}</p>
+                    <div key={piece.id} className="border border-stroke rounded-lg p-4">
+                      <p className="text-sm font-medium text-black">{piece.pieceNom}</p>
+                      <p className="text-sm text-bodydark2">Ref: {piece.pieceReference}</p>
                       <div className="mt-2 flex justify-between">
-                        <p className="text-sm text-gray-600">Quantité: {piece.quantite}</p>
-                        <p className="text-sm font-medium text-gray-900">
+                        <p className="text-sm text-bodydark2">QuantitÃ©: {piece.quantite}</p>
+                        <p className="text-sm font-medium text-black">
                           {formatCurrency(piece.sousTotal)}
                         </p>
                       </div>
@@ -355,102 +405,138 @@ const InterventionDetailsPage = () => {
                   ))}
                 </div>
               ) : (
-                <p className="text-gray-500 text-sm">Aucune pièce utilisée</p>
+                <p className="text-bodydark2 text-sm">Aucune piÃ¨ce utilisÃ©e</p>
               )}
-            </div>
-          </div>
+            </CardBody>
+          </Card>
 
           {interv.statut === 'Terminee' && facture?.data && (
-            <div className="bg-white shadow rounded-lg">
-              <div className="px-4 py-5 sm:p-6">
-                <h2 className="text-lg font-medium text-gray-900 mb-4">Facture</h2>
-                <pre className="whitespace-pre-wrap text-sm text-gray-700 bg-gray-50 p-4 rounded">
+            <Card>
+              <CardHeader
+                title="Facture"
+                action={
+                  <div className="flex gap-2">
+                    <Button
+                      variant="success"
+                      size="sm"
+                      onClick={handleDownloadFacturePdf}
+                      disabled={isDownloadingPdf}
+                      loading={isDownloadingPdf}
+                      icon={
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                        </svg>
+                      }
+                    >
+                      Facture PDF
+                    </Button>
+                    <Button
+                      variant="primary"
+                      size="sm"
+                      onClick={handleDownloadRapportPdf}
+                      disabled={isDownloadingPdf}
+                      loading={isDownloadingPdf}
+                      icon={
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                        </svg>
+                      }
+                    >
+                      Rapport PDF
+                    </Button>
+                  </div>
+                }
+              />
+              <CardBody>
+                <pre className="whitespace-pre-wrap text-sm text-bodydark2 bg-gray-2 p-4 rounded-lg">
                   {facture.data}
                 </pre>
-              </div>
-            </div>
+              </CardBody>
+            </Card>
           )}
         </div>
 
         <div className="space-y-6">
-          <div className="bg-white shadow rounded-lg">
-            <div className="px-4 py-5 sm:p-6">
-              <div className="flex justify-between items-center mb-4">
-                <h2 className="text-lg font-medium text-gray-900">Actions</h2>
-              </div>
+          <Card>
+            <CardHeader title="Actions" />
+            <CardBody>
               <div className="space-y-3">
-                <button
+                <Button
+                  variant="warning"
+                  fullWidth
                   onClick={() => setShowChangeStatus(!showChangeStatus)}
-                  className="w-full bg-yellow-600 hover:bg-yellow-700 text-white px-4 py-2 rounded-md text-sm font-medium"
                 >
                   Changer le statut
-                </button>
-                <button
+                </Button>
+                <Button
+                  variant="primary"
+                  fullWidth
                   onClick={() => setShowAssignTechnicien(!showAssignTechnicien)}
-                  className="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium"
                 >
                   {interv.technicienNom ? 'Changer de technicien' : 'Assigner technicien'}
-                </button>
+                </Button>
               </div>
-            </div>
-          </div>
+            </CardBody>
+          </Card>
 
           {showChangeStatus && (
-            <div className="bg-white shadow rounded-lg">
-              <div className="px-4 py-5 sm:p-6">
-                <h2 className="text-lg font-medium text-gray-900 mb-4">Changer le statut</h2>
+            <Card>
+              <CardHeader title="Changer le statut" />
+              <CardBody>
                 <form onSubmit={handleSubmitStatus(onSubmitStatus)} className="space-y-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700">Statut</label>
+                    <label className="form-label">Statut</label>
                     <select
                       {...registerStatus('statut', { required: 'Statut requis' })}
-                      className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
+                      className="form-select"
                     >
-                      <option value="Planifiee">Planifiée</option>
+                      <option value="Planifiee">PlanifiÃ©e</option>
                       <option value="EnCours">En Cours</option>
-                      <option value="Terminee">Terminée</option>
-                      <option value="Annulee">Annulée</option>
+                      <option value="Terminee">TerminÃ©e</option>
+                      <option value="Annulee">AnnulÃ©e</option>
                     </select>
                     {errorsStatus.statut && (
-                      <p className="mt-1 text-sm text-red-600">{errorsStatus.statut.message}</p>
+                      <p className="mt-1 text-sm text-danger">{errorsStatus.statut.message}</p>
                     )}
                   </div>
-                  <div className="flex space-x-2">
-                    <button
+                  <div className="flex gap-2">
+                    <Button
                       type="submit"
+                      variant="primary"
                       disabled={updateStatusMutation.isPending}
-                      className="flex-1 bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-md text-sm font-medium disabled:opacity-50"
+                      loading={updateStatusMutation.isPending}
+                      fullWidth
                     >
-                      {updateStatusMutation.isPending ? 'Mise à jour...' : 'Mettre à jour'}
-                    </button>
-                    <button
+                      Mettre Ã  jour
+                    </Button>
+                    <Button
                       type="button"
+                      variant="outline"
                       onClick={() => setShowChangeStatus(false)}
-                      className="bg-gray-300 hover:bg-gray-400 text-gray-700 px-4 py-2 rounded-md text-sm font-medium"
                     >
                       Annuler
-                    </button>
+                    </Button>
                   </div>
                 </form>
-              </div>
-            </div>
+              </CardBody>
+            </Card>
           )}
 
           {showAssignTechnicien && (
-            <div className="bg-white shadow rounded-lg">
-              <div className="px-4 py-5 sm:p-6">
-                <h2 className="text-lg font-medium text-gray-900 mb-4">Assigner technicien</h2>
+            <Card>
+              <CardHeader title="Assigner technicien" />
+              <CardBody>
                 <form onSubmit={handleSubmitTechnicien(onSubmitTechnicien)} className="space-y-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700">Technicien</label>
+                    <label className="form-label">Technicien</label>
                     <select
                       {...registerTechnicien('technicienId', {
                         required: 'Technicien requis',
                         valueAsNumber: true,
                       })}
-                      className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
+                      className="form-select"
                     >
-                      <option value="">Sélectionner un technicien</option>
+                      <option value="">SÃ©lectionner un technicien</option>
                       {techniciens?.data?.map((tech) => (
                         <option key={tech.id} value={tech.id}>
                           {tech.nomComplet} - {tech.specialite}
@@ -458,30 +544,32 @@ const InterventionDetailsPage = () => {
                       ))}
                     </select>
                     {errorsTechnicien.technicienId && (
-                      <p className="mt-1 text-sm text-red-600">
+                      <p className="mt-1 text-sm text-danger">
                         {errorsTechnicien.technicienId.message}
                       </p>
                     )}
                   </div>
-                  <div className="flex space-x-2">
-                    <button
+                  <div className="flex gap-2">
+                    <Button
                       type="submit"
+                      variant="primary"
                       disabled={assignTechnicienMutation.isPending}
-                      className="flex-1 bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-md text-sm font-medium disabled:opacity-50"
+                      loading={assignTechnicienMutation.isPending}
+                      fullWidth
                     >
-                      {assignTechnicienMutation.isPending ? 'Assignation...' : 'Assigner'}
-                    </button>
-                    <button
+                      Assigner
+                    </Button>
+                    <Button
                       type="button"
+                      variant="outline"
                       onClick={() => setShowAssignTechnicien(false)}
-                      className="bg-gray-300 hover:bg-gray-400 text-gray-700 px-4 py-2 rounded-md text-sm font-medium"
                     >
                       Annuler
-                    </button>
+                    </Button>
                   </div>
                 </form>
-              </div>
-            </div>
+              </CardBody>
+            </Card>
           )}
         </div>
       </div>

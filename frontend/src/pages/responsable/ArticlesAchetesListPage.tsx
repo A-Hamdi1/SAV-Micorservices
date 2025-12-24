@@ -1,11 +1,17 @@
-import { useState } from 'react';
+﻿import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { articlesAchetesApi } from '../../api/articlesAchetes';
 import { clientsApi } from '../../api/clients';
 import LoadingSpinner from '../../components/common/LoadingSpinner';
 import { toast } from 'react-toastify';
-import { formatDate, formatCurrency } from '../../utils/formatters';
+import { formatDate } from '../../utils/formatters';
+import PageHeader from '../../components/common/PageHeader';
+import { Card, CardBody } from '../../components/common/Card';
+import Button from '../../components/common/Button';
+import StatusBadge from '../../components/common/StatusBadge';
+import EmptyState from '../../components/common/EmptyState';
+import Pagination from '../../components/common/Pagination';
 
 const ArticlesAchetesListPage = () => {
   const navigate = useNavigate();
@@ -30,13 +36,15 @@ const ArticlesAchetesListPage = () => {
     mutationFn: (id: number) => articlesAchetesApi.deleteArticleAchat(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['articles-achetes'] });
-      toast.success('Article acheté supprimé avec succès');
+      toast.success('Article achetÃ© supprimÃ© avec succÃ¨s');
     },
   });
 
-  const handleDelete = async (id: number, e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
+  const handleDelete = async (id: number, e?: React.MouseEvent) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
     if (window.confirm('Êtes-vous sûr de vouloir supprimer cet article acheté ?')) {
       try {
         await deleteMutation.mutateAsync(id);
@@ -47,96 +55,146 @@ const ArticlesAchetesListPage = () => {
   };
 
   if (isLoading) {
-    return <LoadingSpinner />;
+    return <LoadingSpinner fullScreen />;
   }
 
   const articlesList = articles?.data || [];
+  const totalPages = Math.ceil((articles?.data?.length || 0) / pageSize);
 
   return (
-    <div className="px-4 py-6 sm:px-0">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900">Articles achetés</h1>
-        <p className="mt-2 text-gray-600">Gestion des articles achetés par les clients</p>
-      </div>
+    <>
+      <PageHeader
+        title="Articles achetÃ©s"
+        subtitle="Gestion des articles achetÃ©s par les clients"
+        breadcrumb={[
+          { label: 'Dashboard', path: '/responsable' },
+          { label: 'Articles achetÃ©s' }
+        ]}
+      />
 
-      <div className="mb-4 flex flex-col sm:flex-row gap-4">
-        <select
-          value={clientId || ''}
-          onChange={(e) => {
-            setClientId(e.target.value ? parseInt(e.target.value) : undefined);
-            setPage(1);
-          }}
-          className="block w-full sm:w-auto border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
-        >
-          <option value="">Tous les clients</option>
-          {clients?.data?.map((client) => (
-            <option key={client.id} value={client.id}>
-              {client.prenom} {client.nom}
-            </option>
-          ))}
-        </select>
-        <select
-          value={sousGarantie === undefined ? '' : sousGarantie.toString()}
-          onChange={(e) => {
-            setSousGarantie(e.target.value === '' ? undefined : e.target.value === 'true');
-            setPage(1);
-          }}
-          className="block w-full sm:w-auto border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
-        >
-          <option value="">Tous</option>
-          <option value="true">Sous garantie</option>
-          <option value="false">Hors garantie</option>
-        </select>
-      </div>
+      {/* Filters */}
+      <Card className="mb-6">
+        <CardBody className="py-4">
+          <div className="flex flex-col sm:flex-row gap-4">
+            <div className="flex-1">
+              <label className="form-label">Client</label>
+              <select
+                value={clientId || ''}
+                onChange={(e) => {
+                  setClientId(e.target.value ? parseInt(e.target.value) : undefined);
+                  setPage(1);
+                }}
+                className="form-select"
+              >
+                <option value="">Tous les clients</option>
+                {clients?.data?.map((client) => (
+                  <option key={client.id} value={client.id}>
+                    {client.prenom} {client.nom}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="flex-1">
+              <label className="form-label">Garantie</label>
+              <select
+                value={sousGarantie === undefined ? '' : sousGarantie.toString()}
+                onChange={(e) => {
+                  setSousGarantie(e.target.value === '' ? undefined : e.target.value === 'true');
+                  setPage(1);
+                }}
+                className="form-select"
+              >
+                <option value="">Tous</option>
+                <option value="true">Sous garantie</option>
+                <option value="false">Hors garantie</option>
+              </select>
+            </div>
+          </div>
+        </CardBody>
+      </Card>
 
-      <div className="bg-white shadow overflow-hidden sm:rounded-md">
-        <ul className="divide-y divide-gray-200">
-          {articlesList.map((article) => (
-            <li key={article.id} className="px-4 py-4 sm:px-6 hover:bg-gray-50">
-              <div className="flex items-center justify-between">
-                <div className="flex-1">
-                  <p className="text-sm font-medium text-primary-600">{article.articleNom}</p>
-                  <p className="text-sm text-gray-600">Ref: {article.articleReference}</p>
-                  <p className="text-sm text-gray-500">N° série: {article.numeroSerie}</p>
-                  <p className="text-xs text-gray-400 mt-1">
-                    Acheté le {formatDate(article.dateAchat)}
-                  </p>
-                </div>
-                <div className="ml-4 flex items-center space-x-4">
-                  <span
-                    className={`px-2 py-1 text-xs rounded-full ${
-                      article.sousGarantie
-                        ? 'bg-green-100 text-green-800'
-                        : 'bg-red-100 text-red-800'
-                    }`}
-                  >
-                    {article.sousGarantie ? 'Sous garantie' : 'Hors garantie'}
-                  </span>
-                  <div className="flex space-x-2">
-                    <button
-                      onClick={() => navigate(`/responsable/articles-achetes/${article.id}`)}
-                      className="text-primary-600 hover:text-primary-800 text-sm font-medium"
-                    >
-                      Détails
-                    </button>
-                    <button
-                      onClick={(e) => handleDelete(article.id, e)}
-                      className="text-red-600 hover:text-red-800 text-sm font-medium"
-                      disabled={deleteMutation.isPending}
-                    >
-                      Supprimer
-                    </button>
+      <Card>
+        <CardBody className="p-0">
+          {articlesList.length > 0 ? (
+            <div className="divide-y divide-stroke">
+              {articlesList.map((article) => (
+                <div key={article.id} className="p-4 sm:p-6 hover:bg-bodydark/5 transition-colors">
+                  <div className="flex items-center justify-between">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-3 mb-2">
+                        <span className="inline-flex items-center justify-center w-10 h-10 rounded-lg bg-primary/10">
+                          <svg className="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                          </svg>
+                        </span>
+                        <div>
+                          <p className="text-sm font-semibold text-black">{article.articleNom}</p>
+                          <p className="text-xs text-bodydark2">Ref: {article.articleReference}</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-4 text-sm text-bodydark2 ml-13">
+                        <span>NÂ° sÃ©rie: {article.numeroSerie}</span>
+                        <span>â€¢</span>
+                        <span>AchetÃ© le {formatDate(article.dateAchat)}</span>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-4">
+                      <StatusBadge
+                        status={article.sousGarantie ? 'success' : 'danger'}
+                        label={article.sousGarantie ? 'Sous garantie' : 'Hors garantie'}
+                      />
+                      <div className="flex gap-2">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => navigate(`/responsable/articles-achetes/${article.id}`)}
+                        >
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                          </svg>
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={(e) => handleDelete(article.id, e)}
+                          disabled={deleteMutation.isPending}
+                          className="text-danger hover:bg-danger/10"
+                        >
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                          </svg>
+                        </Button>
+                      </div>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </li>
-          ))}
-        </ul>
-        {articlesList.length === 0 && (
-          <div className="px-4 py-8 text-center text-gray-500">Aucun article acheté</div>
-        )}
-      </div>
-    </div>
+              ))}
+            </div>
+          ) : (
+            <EmptyState
+              title="Aucun article achetÃ©"
+              description="Aucun article achetÃ© ne correspond Ã  vos critÃ¨res de recherche"
+              icon={
+                <svg className="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                </svg>
+              }
+            />
+          )}
+        </CardBody>
+      </Card>
+
+      {totalPages > 1 && (
+        <div className="mt-6">
+          <Pagination
+            currentPage={page}
+            totalPages={totalPages}
+            onPageChange={setPage}
+          />
+        </div>
+      )}
+    </>
   );
 };
 

@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { User, AuthResponse } from '../types';
+import { User } from '../types';
 import { authApi } from '../api/auth';
 import { toast } from 'react-toastify';
 
@@ -65,8 +65,9 @@ export const useAuthStore = create<AuthState>()(
           } else {
             throw new Error(response.message || 'Échec de la connexion');
           }
-        } catch (error: any) {
-          toast.error(error.message || 'Erreur lors de la connexion');
+        } catch (error) {
+          const errMsg = error instanceof Error ? error.message : 'Erreur lors de la connexion';
+          toast.error(errMsg);
           throw error;
         }
       },
@@ -110,8 +111,9 @@ export const useAuthStore = create<AuthState>()(
           } else {
             throw new Error(response.message || 'Échec de l\'inscription');
           }
-        } catch (error: any) {
-          toast.error(error.message || 'Erreur lors de l\'inscription');
+        } catch (error) {
+          const errMsg = error instanceof Error ? error.message : 'Erreur lors de l\'inscription';
+          toast.error(errMsg);
           throw error;
         }
       },

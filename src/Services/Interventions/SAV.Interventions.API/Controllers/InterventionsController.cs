@@ -317,4 +317,75 @@ public class InterventionsController : ControllerBase
             Message = "Statistiques récupérées avec succès"
         });
     }
+
+    /// <summary>
+    /// Télécharger la facture PDF d'une intervention
+    /// </summary>
+    [HttpGet("{id}/facture/pdf")]
+    [Authorize]
+    public async Task<IActionResult> DownloadFacturePdf(int id)
+    {
+        try
+        {
+            var pdfBytes = await _facturationService.GenererFacturePdfAsync(id);
+            return File(pdfBytes, "application/pdf", $"facture-{id}.pdf");
+        }
+        catch (KeyNotFoundException)
+        {
+            return NotFound(new ApiResponse { Success = false, Message = "Intervention non trouvée" });
+        }
+    }
+
+    /// <summary>
+    /// Télécharger le rapport PDF d'une intervention
+    /// </summary>
+    [HttpGet("{id}/rapport/pdf")]
+    [Authorize]
+    public async Task<IActionResult> DownloadRapportPdf(int id)
+    {
+        try
+        {
+            var pdfBytes = await _facturationService.GenererRapportInterventionPdfAsync(id);
+            return File(pdfBytes, "application/pdf", $"rapport-intervention-{id}.pdf");
+        }
+        catch (KeyNotFoundException)
+        {
+            return NotFound(new ApiResponse { Success = false, Message = "Intervention non trouvée" });
+        }
+    }
+
+    /// <summary>
+    /// Télécharger le rapport mensuel PDF
+    /// </summary>
+    [HttpGet("rapport-mensuel/{annee}/{mois}/pdf")]
+    [Authorize(Roles = "ResponsableSAV")]
+    public async Task<IActionResult> DownloadRapportMensuelPdf(int annee, int mois)
+    {
+        try
+        {
+            var pdfBytes = await _facturationService.GenererRapportMensuelPdfAsync(mois, annee);
+            return File(pdfBytes, "application/pdf", $"rapport-mensuel-{annee}-{mois:D2}.pdf");
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new ApiResponse { Success = false, Message = ex.Message });
+        }
+    }
+
+    /// <summary>
+    /// Obtenir les analytics avancées
+    /// </summary>
+    [HttpGet("analytics")]
+    [Authorize(Roles = "ResponsableSAV")]
+    public async Task<ActionResult<ApiResponse<AnalyticsDto>>> GetAnalytics([FromQuery] int? annee = null)
+    {
+        var analytics = await _interventionService.GetAnalyticsAsync(annee);
+
+        return Ok(new ApiResponse<AnalyticsDto>
+        {
+            Success = true,
+            Data = analytics,
+            Message = "Analytics récupérées avec succès"
+        });
+    }
 }
