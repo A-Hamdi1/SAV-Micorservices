@@ -279,7 +279,7 @@ const InterventionDetailsPage = () => {
                 </div>
                 {interv.montantMainOeuvre && (
                   <div>
-                    <dt className="text-sm font-medium text-bodydark2">Main d'Å“uvre</dt>
+                    <dt className="text-sm font-medium text-bodydark2">Main d'œuvre</dt>
                     <dd className="mt-1 text-sm text-black">
                       {formatCurrency(interv.montantMainOeuvre)}
                     </dd>

@@ -135,7 +135,7 @@ const PaymentPage = () => {
               </div>
               {interv.montantMainOeuvre && interv.montantMainOeuvre > 0 && (
                 <div className="flex justify-between items-center py-2 border-b border-stroke">
-                  <dt className="text-sm text-bodydark2">Main d'Å“uvre</dt>
+                  <dt className="text-sm text-bodydark2">Main d'œuvre</dt>
                   <dd className="text-sm font-medium text-black">{formatCurrency(interv.montantMainOeuvre)}</dd>
                 </div>
               )}
