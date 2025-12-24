@@ -223,6 +223,9 @@ const InterventionDetailsPage = () => {
     }
   };
 
+  // Vérifier si l'intervention est terminée ou annulée
+  const isInterventionClosed = interv.statut === 'Terminee' || interv.statut === 'Annulee';
+
   return (
     <div className="p-6">
       <PageHeader
@@ -234,22 +237,24 @@ const InterventionDetailsPage = () => {
           { label: `Intervention #${interv.id}` },
         ]}
         actions={
-          <div className="flex gap-3">
-            <Button
-              variant="primary"
-              onClick={() => navigate(`/responsable/interventions/${interventionId}/edit`)}
-            >
-              Modifier
-            </Button>
-            <Button
-              variant="danger"
-              onClick={handleDelete}
-              disabled={deleteMutation.isPending}
-              loading={deleteMutation.isPending}
-            >
-              Supprimer
-            </Button>
-          </div>
+          !isInterventionClosed ? (
+            <div className="flex gap-3">
+              <Button
+                variant="primary"
+                onClick={() => navigate(`/responsable/interventions/${interventionId}/edit`)}
+              >
+                Modifier
+              </Button>
+              <Button
+                variant="danger"
+                onClick={handleDelete}
+                disabled={deleteMutation.isPending}
+                loading={deleteMutation.isPending}
+              >
+                Supprimer
+              </Button>
+            </div>
+          ) : undefined
         }
       />
 
@@ -305,18 +310,20 @@ const InterventionDetailsPage = () => {
             <CardHeader
               title="Pièces utilisées"
               action={
-                <Button
-                  variant="primary"
-                  size="sm"
-                  onClick={() => setShowAddPiece(!showAddPiece)}
-                >
-                  + Ajouter
-                </Button>
+                !isInterventionClosed && (
+                  <Button
+                    variant="primary"
+                    size="sm"
+                    onClick={() => setShowAddPiece(!showAddPiece)}
+                  >
+                    + Ajouter
+                  </Button>
+                )
               }
             />
             <CardBody>
 
-              {showAddPiece && (
+              {!isInterventionClosed && showAddPiece && (
                 <div className="mb-4 p-4 bg-gray-2 rounded-lg">
                   <form onSubmit={handleSubmitPiece(onSubmitPiece)} className="space-y-3">
                     <div>
@@ -457,29 +464,31 @@ const InterventionDetailsPage = () => {
         </div>
 
         <div className="space-y-6">
-          <Card>
-            <CardHeader title="Actions" />
-            <CardBody>
-              <div className="space-y-3">
-                <Button
-                  variant="warning"
-                  fullWidth
-                  onClick={() => setShowChangeStatus(!showChangeStatus)}
-                >
-                  Changer le statut
-                </Button>
-                <Button
-                  variant="primary"
-                  fullWidth
-                  onClick={() => setShowAssignTechnicien(!showAssignTechnicien)}
-                >
-                  {interv.technicienNom ? 'Changer de technicien' : 'Assigner technicien'}
-                </Button>
-              </div>
-            </CardBody>
-          </Card>
+          {!isInterventionClosed && (
+            <Card>
+              <CardHeader title="Actions" />
+              <CardBody>
+                <div className="space-y-3">
+                  <Button
+                    variant="warning"
+                    fullWidth
+                    onClick={() => setShowChangeStatus(!showChangeStatus)}
+                  >
+                    Changer le statut
+                  </Button>
+                  <Button
+                    variant="primary"
+                    fullWidth
+                    onClick={() => setShowAssignTechnicien(!showAssignTechnicien)}
+                  >
+                    {interv.technicienNom ? 'Changer de technicien' : 'Assigner technicien'}
+                  </Button>
+                </div>
+              </CardBody>
+            </Card>
+          )}
 
-          {showChangeStatus && (
+          {!isInterventionClosed && showChangeStatus && (
             <Card>
               <CardHeader title="Changer le statut" />
               <CardBody>
@@ -522,7 +531,7 @@ const InterventionDetailsPage = () => {
             </Card>
           )}
 
-          {showAssignTechnicien && (
+          {!isInterventionClosed && showAssignTechnicien && (
             <Card>
               <CardHeader title="Assigner technicien" />
               <CardBody>

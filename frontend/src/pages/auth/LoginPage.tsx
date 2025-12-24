@@ -186,9 +186,9 @@ const LoginPage = () => {
                 <input type="checkbox" className="w-4 h-4 rounded border-stroke text-primary-600 focus:ring-primary-500" />
                 <span className="text-sm text-bodydark2">Se souvenir de moi</span>
               </label>
-              <a href="#" className="text-sm font-medium text-primary-600 hover:text-primary-700">
+              <Link to="/forgot-password" className="text-sm font-medium text-primary-600 hover:text-primary-700">
                 Mot de passe oublié ?
-              </a>
+              </Link>
             </div>
 
             <button

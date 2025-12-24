@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import { User, UserRole } from '../types';
 import { authApi } from '../api/auth';
+import { clientsApi } from '../api/clients';
 import { toast } from 'react-toastify';
 
 interface AuthState {
@@ -75,11 +76,26 @@ export const useAuthStore = create<AuthState>()(
               console.warn('Could not fetch user info:', err);
             }
 
-            const user: User = userInfo || {
+            let user: User = userInfo || {
               id: '',
               email: authData.email,
               role: authData.role,
             };
+
+            // Si l'utilisateur est un client, récupérer son clientId
+            if (authData.role === 'Client') {
+              try {
+                const clientResponse = await clientsApi.getMyProfile();
+                if (clientResponse.success && clientResponse.data) {
+                  user = {
+                    ...user,
+                    clientId: clientResponse.data.id
+                  };
+                }
+              } catch (err) {
+                console.warn('Could not fetch client profile:', err);
+              }
+            }
 
             set({
               user,
@@ -122,6 +138,9 @@ export const useAuthStore = create<AuthState>()(
               email: authData.email,
               role: authData.role,
             };
+
+            // Si l'utilisateur est un client, le clientId sera récupéré après création du profil
+            // Pour l'instant on set l'utilisateur sans clientId
 
             set({
               user,

@@ -242,7 +242,7 @@ const MyReclamationsPage = () => {
                       <p className="text-sm font-semibold text-black">
                         Réclamation #{reclamation.id}
                       </p>
-                      <span className="text-xs text-bodydark2">'¢</span>
+                      <span className="text-xs text-bodydark2">•</span>
                       <p className="text-sm text-primary font-medium">
                         {reclamation.articleNom}
                       </p>

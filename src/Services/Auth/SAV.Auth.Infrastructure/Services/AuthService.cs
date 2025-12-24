@@ -11,15 +11,18 @@ public class AuthService : IAuthService
 {
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly ITokenService _tokenService;
+    private readonly IEmailService _emailService;
     private readonly AuthDbContext _context;
 
     public AuthService(
         UserManager<ApplicationUser> userManager,
         ITokenService tokenService,
+        IEmailService emailService,
         AuthDbContext context)
     {
         _userManager = userManager;
         _tokenService = tokenService;
+        _emailService = emailService;
         _context = context;
     }
 
@@ -200,5 +203,113 @@ public class AuthService : IAuthService
         await _context.SaveChangesAsync();
 
         return true;
+    }
+
+    // Password Reset Methods
+    public async Task<bool> SendPasswordResetOtpAsync(string email)
+    {
+        var user = await _userManager.FindByEmailAsync(email);
+        if (user == null)
+        {
+            // Pour des raisons de sécurité, on retourne true même si l'utilisateur n'existe pas
+            return true;
+        }
+
+        // Invalider tous les OTP précédents pour cet utilisateur
+        var existingOtps = await _context.PasswordResetOtps
+            .Where(o => o.Email == email && !o.IsUsed)
+            .ToListAsync();
+        
+        foreach (var existingOtp in existingOtps)
+        {
+            existingOtp.IsUsed = true;
+        }
+
+        // Générer un nouveau code OTP à 6 chiffres
+        var otp = GenerateOtp();
+
+        var otpEntity = new PasswordResetOtp
+        {
+            UserId = user.Id,
+            Email = email,
+            Otp = otp,
+            CreatedAt = DateTime.UtcNow,
+            ExpiresAt = DateTime.UtcNow.AddMinutes(10), // Valide 10 minutes
+            IsUsed = false
+        };
+
+        _context.PasswordResetOtps.Add(otpEntity);
+        await _context.SaveChangesAsync();
+
+        // Envoyer l'email avec le code OTP
+        return await _emailService.SendOtpEmailAsync(email, otp);
+    }
+
+    public async Task<bool> VerifyOtpAsync(string email, string otp)
+    {
+        var otpEntity = await _context.PasswordResetOtps
+            .Where(o => o.Email == email && o.Otp == otp && !o.IsUsed && o.ExpiresAt > DateTime.UtcNow)
+            .OrderByDescending(o => o.CreatedAt)
+            .FirstOrDefaultAsync();
+
+        return otpEntity != null;
+    }
+
+    public async Task<(bool Success, List<string> Errors)> ResetPasswordAsync(string email, string otp, string newPassword)
+    {
+        var errors = new List<string>();
+        
+        var otpEntity = await _context.PasswordResetOtps
+            .Where(o => o.Email == email && o.Otp == otp && !o.IsUsed && o.ExpiresAt > DateTime.UtcNow)
+            .OrderByDescending(o => o.CreatedAt)
+            .FirstOrDefaultAsync();
+
+        if (otpEntity == null)
+        {
+            errors.Add("Code OTP invalide ou expiré");
+            return (false, errors);
+        }
+
+        var user = await _userManager.FindByEmailAsync(email);
+        if (user == null)
+        {
+            errors.Add("Utilisateur non trouvé");
+            return (false, errors);
+        }
+
+        // Réinitialiser le mot de passe
+        var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+        var result = await _userManager.ResetPasswordAsync(user, token, newPassword);
+
+        if (result.Succeeded)
+        {
+            // Marquer l'OTP comme utilisé
+            otpEntity.IsUsed = true;
+            await _context.SaveChangesAsync();
+            return (true, errors);
+        }
+
+        // Collecter les erreurs de validation du mot de passe
+        foreach (var error in result.Errors)
+        {
+            var errorMessage = error.Code switch
+            {
+                "PasswordTooShort" => "Le mot de passe doit contenir au moins 8 caractères",
+                "PasswordRequiresDigit" => "Le mot de passe doit contenir au moins un chiffre",
+                "PasswordRequiresLower" => "Le mot de passe doit contenir au moins une minuscule",
+                "PasswordRequiresUpper" => "Le mot de passe doit contenir au moins une majuscule",
+                "PasswordRequiresNonAlphanumeric" => "Le mot de passe doit contenir au moins un caractère spécial (!@#$%^&*)",
+                _ => error.Description
+            };
+            errors.Add(errorMessage);
+        }
+
+        return (false, errors);
+    }
+
+    private static string GenerateOtp()
+    {
+        var random = new Random();
+        return random.Next(100000, 999999).ToString();
     }
 }

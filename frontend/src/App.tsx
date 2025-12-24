@@ -3,8 +3,10 @@ import { useAuthStore } from './store/authStore';
 import Layout from './components/layout/Layout';
 import ProtectedRoute from './components/common/ProtectedRoute';
 import AuthInitializer from './components/common/AuthInitializer';
+import ClientProfileCheck from './components/common/ClientProfileCheck';
 import LoginPage from './pages/auth/LoginPage';
 import RegisterPage from './pages/auth/RegisterPage';
+import ForgotPasswordPage from './pages/auth/ForgotPasswordPage';
 
 // Client Pages
 import ClientDashboard from './pages/client/ClientDashboard';
@@ -67,6 +69,7 @@ function App() {
       {/* Public Routes */}
       <Route path="/login" element={<LoginPage />} />
       <Route path="/register" element={<RegisterPage />} />
+      <Route path="/forgot-password" element={<ForgotPasswordPage />} />
 
       {/* Client Routes */}
       <Route
@@ -74,19 +77,21 @@ function App() {
         element={
           <ProtectedRoute requiredRole="Client">
             <Layout>
-              <Routes>
-                <Route path="dashboard" element={<ClientDashboard />} />
-                <Route path="profile" element={<ClientProfilePage />} />
-                <Route path="articles" element={<MyArticlesPage />} />
-                <Route path="reclamations" element={<MyReclamationsPage />} />
-                <Route path="reclamations/:id" element={<ReclamationDetailsPage />} />
-                <Route path="evaluation/:interventionId" element={<EvaluationPage />} />
-                <Route path="rdv/:reclamationId" element={<DemandeRdvPage />} />
-                <Route path="payment/:interventionId" element={<PaymentPage />} />
-                <Route path="payment/:interventionId/success" element={<PaymentSuccessPage />} />
-                <Route path="payment/:interventionId/cancel" element={<PaymentCancelPage />} />
-                <Route path="*" element={<Navigate to="/client/dashboard" replace />} />
-              </Routes>
+              <ClientProfileCheck>
+                <Routes>
+                  <Route path="dashboard" element={<ClientDashboard />} />
+                  <Route path="profile" element={<ClientProfilePage />} />
+                  <Route path="articles" element={<MyArticlesPage />} />
+                  <Route path="reclamations" element={<MyReclamationsPage />} />
+                  <Route path="reclamations/:id" element={<ReclamationDetailsPage />} />
+                  <Route path="evaluation/:interventionId" element={<EvaluationPage />} />
+                  <Route path="rdv/:reclamationId" element={<DemandeRdvPage />} />
+                  <Route path="payment/:interventionId" element={<PaymentPage />} />
+                  <Route path="payment/:interventionId/success" element={<PaymentSuccessPage />} />
+                  <Route path="payment/:interventionId/cancel" element={<PaymentCancelPage />} />
+                  <Route path="*" element={<Navigate to="/client/dashboard" replace />} />
+                </Routes>
+              </ClientProfileCheck>
             </Layout>
           </ProtectedRoute>
         }

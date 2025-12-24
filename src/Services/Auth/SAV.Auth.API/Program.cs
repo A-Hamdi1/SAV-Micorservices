@@ -99,6 +99,7 @@ builder.Services.AddAuthentication(options =>
 // Register application services
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddScoped<IEmailService, EmailService>();
 
 // Configure CORS
 builder.Services.AddCors(options =>

@@ -129,21 +129,29 @@ public class FacturationService : IFacturationService
         if (intervention == null)
             throw new KeyNotFoundException("Intervention non trouvée");
 
-        var document = Document.Create(container =>
+        try
         {
-            container.Page(page =>
+            var document = Document.Create(container =>
             {
-                page.Size(PageSizes.A4);
-                page.Margin(50);
-                page.DefaultTextStyle(x => x.FontSize(11));
+                container.Page(page =>
+                {
+                    page.Size(PageSizes.A4);
+                    page.Margin(50);
+                    page.DefaultTextStyle(x => x.FontSize(11));
 
-                page.Header().Element(c => ComposeHeader(c, "FACTURE"));
-                page.Content().Element(c => ComposeFactureContent(c, intervention));
-                page.Footer().Element(ComposeFooter);
+                    page.Header().Element(c => ComposeHeader(c, "FACTURE"));
+                    page.Content().Element(c => ComposeFactureContent(c, intervention));
+                    page.Footer().Element(ComposeFooter);
+                });
             });
-        });
 
-        return document.GeneratePdf();
+            return document.GeneratePdf();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Erreur lors de la génération de la facture PDF pour l'intervention {InterventionId}", interventionId);
+            throw;
+        }
     }
 
     public async Task<byte[]> GenererRapportInterventionPdfAsync(int interventionId)
@@ -156,21 +164,29 @@ public class FacturationService : IFacturationService
         if (intervention == null)
             throw new KeyNotFoundException("Intervention non trouvée");
 
-        var document = Document.Create(container =>
+        try
         {
-            container.Page(page =>
+            var document = Document.Create(container =>
             {
-                page.Size(PageSizes.A4);
-                page.Margin(50);
-                page.DefaultTextStyle(x => x.FontSize(11));
+                container.Page(page =>
+                {
+                    page.Size(PageSizes.A4);
+                    page.Margin(50);
+                    page.DefaultTextStyle(x => x.FontSize(11));
 
-                page.Header().Element(c => ComposeHeader(c, "RAPPORT D'INTERVENTION"));
-                page.Content().Element(c => ComposeRapportContent(c, intervention));
-                page.Footer().Element(ComposeFooter);
+                    page.Header().Element(c => ComposeHeader(c, "RAPPORT D'INTERVENTION"));
+                    page.Content().Element(c => ComposeRapportContent(c, intervention));
+                    page.Footer().Element(ComposeFooter);
+                });
             });
-        });
 
-        return document.GeneratePdf();
+            return document.GeneratePdf();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Erreur lors de la génération du rapport PDF pour l'intervention {InterventionId}", interventionId);
+            throw;
+        }
     }
 
     public async Task<byte[]> GenererRapportMensuelPdfAsync(int mois, int annee)
@@ -204,22 +220,25 @@ public class FacturationService : IFacturationService
 
     private void ComposeHeader(IContainer container, string title)
     {
-        container.Row(row =>
+        container.Column(column =>
         {
-            row.RelativeItem().Column(col =>
+            column.Item().Row(row =>
             {
-                col.Item().Text("SAV Pro").FontSize(20).Bold().FontColor(Colors.Blue.Darken2);
-                col.Item().Text("Service Après-Vente").FontSize(12).FontColor(Colors.Grey.Darken1);
+                row.RelativeItem().Column(col =>
+                {
+                    col.Item().Text("SAV Pro").FontSize(20).Bold().FontColor(Colors.Blue.Darken2);
+                    col.Item().Text("Service Après-Vente").FontSize(12).FontColor(Colors.Grey.Darken1);
+                });
+
+                row.RelativeItem().AlignRight().Column(col =>
+                {
+                    col.Item().Text(title).FontSize(18).Bold();
+                    col.Item().Text($"Date: {DateTime.Now:dd/MM/yyyy}").FontSize(10);
+                });
             });
 
-            row.RelativeItem().AlignRight().Column(col =>
-            {
-                col.Item().Text(title).FontSize(18).Bold();
-                col.Item().Text($"Date: {DateTime.Now:dd/MM/yyyy}").FontSize(10);
-            });
+            column.Item().PaddingBottom(20);
         });
-
-        container.PaddingBottom(20);
     }
 
     private void ComposeFooter(IContainer container)
