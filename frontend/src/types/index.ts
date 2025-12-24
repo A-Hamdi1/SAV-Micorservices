@@ -1,8 +1,11 @@
+// User Roles - Type-safe role definitions
+export type UserRole = 'Client' | 'ResponsableSAV' | 'Admin';
+
 // Auth Types
 export interface User {
   id: string;
   email: string;
-  role: string;
+  role: UserRole;
   clientId?: number; // ID du client si l'utilisateur est un client
 }
 
@@ -10,7 +13,7 @@ export interface AuthResponse {
   token: string;
   refreshToken: string;
   email: string;
-  role: string;
+  role: UserRole;
   expiresIn: number;
 }
 
@@ -376,4 +379,45 @@ export interface ApiResponse<T> {
   message?: string;
   errors?: string[];
 }
+
+// Reclamation Statuts - Type-safe status definitions
+export type ReclamationStatut = 'EnAttente' | 'EnCours' | 'Resolue' | 'Rejetee';
+
+// Intervention Statuts
+export type InterventionStatut = 'Planifiee' | 'EnCours' | 'Terminee' | 'Annulee';
+
+// Payment Statuts
+export type PaymentStatut = 'EnAttente' | 'EnCours' | 'Reussi' | 'Echoue' | 'Rembourse' | 'Annule';
+
+// Payment Methods
+export type PaymentMethode = 'Carte' | 'Virement' | 'Especes' | 'Cheque';
+
+// Status color mapping utility type
+export type StatusColorMap = {
+  [key: string]: 'warning' | 'primary' | 'success' | 'danger' | 'secondary';
+};
+
+// Status labels for display
+export const RECLAMATION_STATUS_LABELS: Record<ReclamationStatut, string> = {
+  EnAttente: 'En attente',
+  EnCours: 'En cours',
+  Resolue: 'Résolue',
+  Rejetee: 'Rejetée'
+};
+
+export const INTERVENTION_STATUS_LABELS: Record<InterventionStatut, string> = {
+  Planifiee: 'Planifiée',
+  EnCours: 'En cours',
+  Terminee: 'Terminée',
+  Annulee: 'Annulée'
+};
+
+export const PAYMENT_STATUS_LABELS: Record<PaymentStatut, string> = {
+  EnAttente: 'En attente',
+  EnCours: 'En cours',
+  Reussi: 'Réussi',
+  Echoue: 'Échoué',
+  Rembourse: 'Remboursé',
+  Annule: 'Annulé'
+};
 

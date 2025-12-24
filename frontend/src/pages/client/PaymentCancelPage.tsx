@@ -8,7 +8,7 @@ const PaymentCancelPage = () => {
   const { interventionId } = useParams<{ interventionId: string }>();
 
   useEffect(() => {
-    toast.warning('Le paiement a Ã©tÃ© annulÃ©');
+    toast.warning('Le paiement a été annulé');
   }, []);
 
   return (
@@ -21,26 +21,26 @@ const PaymentCancelPage = () => {
             </svg>
           </div>
           
-          <h1 className="text-2xl font-bold text-black mb-2">Paiement annulÃ©</h1>
+          <h1 className="text-2xl font-bold text-black mb-2">Paiement annulé</h1>
           <p className="text-bodydark2 mb-8">
-            Le paiement pour l'intervention #{interventionId} a Ã©tÃ© annulÃ©.
+            Le paiement pour l'intervention #{interventionId} a été annulé.
           </p>
 
           <div className="bg-warning/10 border border-warning/20 rounded-xl p-4 mb-8">
             <p className="text-warning">
-              Aucun montant n'a Ã©tÃ© dÃ©bitÃ© de votre compte.
+              Aucun montant n'a été débité de votre compte.
             </p>
           </div>
 
           <div className="flex flex-col sm:flex-row justify-center gap-4">
             <Link to={`/client/payment/${interventionId}`}>
               <Button variant="primary">
-                RÃ©essayer le paiement
+                Réessayer le paiement
               </Button>
             </Link>
             <Link to="/client/reclamations">
               <Button variant="outline">
-                Retour aux rÃ©clamations
+                Retour aux réclamations
               </Button>
             </Link>
           </div>

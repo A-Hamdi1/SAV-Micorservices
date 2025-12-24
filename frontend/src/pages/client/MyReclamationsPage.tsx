@@ -41,7 +41,7 @@ const MyReclamationsPage = () => {
     mutationFn: (data: CreateReclamationDto) => reclamationsApi.createReclamation(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['my-reclamations'] });
-      toast.success('RÃ©clamation crÃ©Ã©e avec succÃ¨s');
+      toast.success('Réclamation créée avec succès');
       setShowAddForm(false);
     },
   });
@@ -62,10 +62,10 @@ const MyReclamationsPage = () => {
     return (
       <div className="space-y-6">
         <PageHeader
-          title="Mes rÃ©clamations"
+          title="Mes réclamations"
           breadcrumb={[
             { label: 'Accueil', path: '/client/dashboard' },
-            { label: 'RÃ©clamations' },
+            { label: 'Réclamations' },
           ]}
         />
         <Card>
@@ -78,14 +78,14 @@ const MyReclamationsPage = () => {
               </div>
               <h2 className="text-xl font-semibold text-black mb-2">Profil requis</h2>
               <p className="text-bodydark2 text-center max-w-md mb-6">
-                Vous devez d'abord crÃ©er votre profil client avant de pouvoir crÃ©er des rÃ©clamations.
+                Vous devez d'abord créer votre profil client avant de pouvoir créer des réclamations.
               </p>
               <Link to="/client/profile">
                 <Button variant="primary">
                   <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                   </svg>
-                  CrÃ©er mon profil
+                  Créer mon profil
                 </Button>
               </Link>
             </div>
@@ -109,11 +109,11 @@ const MyReclamationsPage = () => {
   return (
     <div className="space-y-6">
       <PageHeader
-        title="Mes rÃ©clamations"
-        subtitle="Suivez l'Ã©tat de vos rÃ©clamations"
+        title="Mes réclamations"
+        subtitle="Suivez l'état de vos réclamations"
         breadcrumb={[
           { label: 'Accueil', path: '/client/dashboard' },
-          { label: 'RÃ©clamations' },
+          { label: 'Réclamations' },
         ]}
         actions={
           <Button
@@ -131,7 +131,7 @@ const MyReclamationsPage = () => {
               )
             }
           >
-            {showAddForm ? 'Annuler' : 'Nouvelle rÃ©clamation'}
+            {showAddForm ? 'Annuler' : 'Nouvelle réclamation'}
           </Button>
         }
       />
@@ -139,19 +139,19 @@ const MyReclamationsPage = () => {
       {/* Add Form */}
       {showAddForm && (
         <Card className="animate-fade-in">
-          <CardHeader title="CrÃ©er une rÃ©clamation" subtitle="DÃ©crivez le problÃ¨me rencontrÃ©" />
+          <CardHeader title="Créer une réclamation" subtitle="Décrivez le problème rencontré" />
           <CardBody>
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
               <div>
                 <label htmlFor="articleAchatId" className="form-label">
-                  Article concernÃ©
+                  Article concerné
                 </label>
                 <div className="relative">
                   <select
                     {...register('articleAchatId', { required: 'Article requis' })}
                     className="form-select"
                   >
-                    <option value="">SÃ©lectionner un article</option>
+                    <option value="">Sélectionner un article</option>
                     {articles?.data?.map((article) => (
                       <option key={article.id} value={article.id}>
                         {article.articleNom} - {article.numeroSerie}
@@ -171,13 +171,13 @@ const MyReclamationsPage = () => {
 
               <div>
                 <label htmlFor="description" className="form-label">
-                  Description du problÃ¨me
+                  Description du problème
                 </label>
                 <textarea
                   {...register('description', { required: 'Description requise' })}
                   rows={4}
                   className="form-textarea"
-                  placeholder="DÃ©crivez le problÃ¨me rencontrÃ© avec votre article..."
+                  placeholder="Décrivez le problème rencontré avec votre article..."
                 />
                 {errors.description && (
                   <p className="mt-2 text-sm text-danger">{errors.description.message}</p>
@@ -193,7 +193,7 @@ const MyReclamationsPage = () => {
                   variant="primary"
                   loading={createMutation.isPending}
                 >
-                  CrÃ©er la rÃ©clamation
+                  Créer la réclamation
                 </Button>
               </div>
             </form>
@@ -211,14 +211,14 @@ const MyReclamationsPage = () => {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
                 </svg>
               }
-              title="Aucune rÃ©clamation"
-              description="CrÃ©ez votre premiÃ¨re rÃ©clamation pour signaler un problÃ¨me avec un article"
+              title="Aucune réclamation"
+              description="Créez votre première réclamation pour signaler un problème avec un article"
               action={
                 <Button variant="primary" onClick={() => setShowAddForm(true)}>
                   <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
                   </svg>
-                  Nouvelle rÃ©clamation
+                  Nouvelle réclamation
                 </Button>
               }
             />
@@ -240,9 +240,9 @@ const MyReclamationsPage = () => {
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-3 mb-1">
                       <p className="text-sm font-semibold text-black">
-                        RÃ©clamation #{reclamation.id}
+                        Réclamation #{reclamation.id}
                       </p>
-                      <span className="text-xs text-bodydark2">â€¢</span>
+                      <span className="text-xs text-bodydark2">'¢</span>
                       <p className="text-sm text-primary font-medium">
                         {reclamation.articleNom}
                       </p>
@@ -262,7 +262,7 @@ const MyReclamationsPage = () => {
                           <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                           </svg>
-                          RÃ©solue le {formatDate(reclamation.dateResolution)}
+                          Résolue le {formatDate(reclamation.dateResolution)}
                         </p>
                       )}
                     </div>

@@ -41,10 +41,10 @@ const ClientDashboard = () => {
         <div className="flex flex-col md:flex-row md:items-center md:justify-between">
           <div>
             <h1 className="text-2xl font-bold mb-2">
-              Bienvenue{profile?.data ? `, ${profile.data.prenom}` : ''} ! ðŸ‘‹
+              Bienvenue{profile?.data ? `, ${profile.data.prenom}` : ''} ! 👋
             </h1>
             <p className="text-primary-100">
-              Voici un aperÃ§u de votre activitÃ© sur SAV Pro
+              Voici un aperçu de votre activité sur SAV Pro
             </p>
           </div>
           <div className="mt-4 md:mt-0 flex gap-3">
@@ -55,7 +55,7 @@ const ClientDashboard = () => {
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
               </svg>
-              Nouvelle rÃ©clamation
+              Nouvelle réclamation
             </Link>
           </div>
         </div>
@@ -64,7 +64,7 @@ const ClientDashboard = () => {
       {/* Stats Cards */}
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
         <StatCard
-          title="Articles achetÃ©s"
+          title="Articles achetés"
           value={articles?.data?.length || 0}
           color="primary"
           icon={
@@ -84,7 +84,7 @@ const ClientDashboard = () => {
           }
         />
         <StatCard
-          title="RÃ©clamations"
+          title="Réclamations"
           value={reclamations?.data?.length || 0}
           color="info"
           icon={
@@ -110,7 +110,7 @@ const ClientDashboard = () => {
         {/* Recent Reclamations */}
         <Card>
           <CardHeader
-            title="RÃ©clamations rÃ©centes"
+            title="Réclamations récentes"
             action={
               <Link
                 to="/client/reclamations"
@@ -131,12 +131,12 @@ const ClientDashboard = () => {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
                   </svg>
                 </div>
-                <p className="text-bodydark2 text-sm">Aucune rÃ©clamation</p>
+                <p className="text-bodydark2 text-sm">Aucune réclamation</p>
                 <Link
                   to="/client/reclamations"
                   className="mt-4 text-sm font-medium text-primary-600 hover:text-primary-700"
                 >
-                  CrÃ©er une rÃ©clamation
+                  Créer une réclamation
                 </Link>
               </div>
             ) : (
@@ -156,7 +156,7 @@ const ClientDashboard = () => {
                         </div>
                         <div className="flex-1 min-w-0">
                           <p className="text-sm font-medium text-black truncate">
-                            RÃ©clamation #{reclamation.id}
+                            Réclamation #{reclamation.id}
                           </p>
                           <p className="text-xs text-bodydark2 truncate mt-0.5">
                             {reclamation.description}
@@ -180,7 +180,7 @@ const ClientDashboard = () => {
         {/* Recent Articles */}
         <Card>
           <CardHeader
-            title="Articles rÃ©cents"
+            title="Articles récents"
             action={
               <Link
                 to="/client/articles"
@@ -201,7 +201,7 @@ const ClientDashboard = () => {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
                   </svg>
                 </div>
-                <p className="text-bodydark2 text-sm">Aucun article enregistrÃ©</p>
+                <p className="text-bodydark2 text-sm">Aucun article enregistré</p>
               </div>
             ) : (
               <div className="divide-y divide-stroke">
@@ -224,7 +224,7 @@ const ClientDashboard = () => {
                           Ref: {article.articleReference}
                         </p>
                         <p className="text-xs text-bodydark2 mt-1">
-                          AchetÃ© le {formatDate(article.dateAchat)}
+                          Acheté le {formatDate(article.dateAchat)}
                         </p>
                       </div>
                     </div>
@@ -262,8 +262,8 @@ const ClientDashboard = () => {
                 </svg>
               </div>
               <div>
-                <p className="text-sm font-medium text-black">Nouvelle rÃ©clamation</p>
-                <p className="text-xs text-bodydark2">Signaler un problÃ¨me</p>
+                <p className="text-sm font-medium text-black">Nouvelle réclamation</p>
+                <p className="text-xs text-bodydark2">Signaler un problème</p>
               </div>
             </Link>
 

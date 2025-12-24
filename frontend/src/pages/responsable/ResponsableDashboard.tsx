@@ -39,8 +39,8 @@ const ResponsableDashboard = () => {
       <div className="rounded-xl bg-gradient-to-r from-sidebar to-graydark p-6 text-white shadow-lg">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between">
           <div>
-            <h1 className="text-2xl font-bold mb-2">Tableau de bord SAV ðŸ“Š</h1>
-            <p className="text-bodydark1">Vue d'ensemble du service aprÃ¨s-vente</p>
+            <h1 className="text-2xl font-bold mb-2">Tableau de bord SAV 🛠️</h1>
+            <p className="text-bodydark1">Vue d'ensemble du service après-vente</p>
           </div>
           <div className="mt-4 md:mt-0 flex gap-3">
             <Link
@@ -50,7 +50,7 @@ const ResponsableDashboard = () => {
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
               </svg>
-              Voir rÃ©clamations
+              Voir réclamations
             </Link>
             <Link
               to="/responsable/interventions/new"
@@ -68,7 +68,7 @@ const ResponsableDashboard = () => {
       {/* Stats Cards */}
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
         <StatCard
-          title="Total rÃ©clamations"
+          title="Total réclamations"
           value={reclamations?.data?.totalCount || 0}
           color="primary"
           icon={
@@ -88,7 +88,7 @@ const ResponsableDashboard = () => {
           }
         />
         <StatCard
-          title="Interventions planifiÃ©es"
+          title="Interventions planifiées"
           value={interventions?.data?.length || 0}
           color="info"
           icon={
@@ -115,7 +115,7 @@ const ResponsableDashboard = () => {
         {/* Recent Reclamations */}
         <Card>
           <CardHeader
-            title="RÃ©clamations rÃ©centes"
+            title="Réclamations récentes"
             action={
               <Link
                 to="/responsable/reclamations"
@@ -136,7 +136,7 @@ const ResponsableDashboard = () => {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
                   </svg>
                 </div>
-                <p className="text-bodydark2 text-sm">Aucune rÃ©clamation</p>
+                <p className="text-bodydark2 text-sm">Aucune réclamation</p>
               </div>
             ) : (
               <div className="divide-y divide-stroke">
@@ -177,7 +177,7 @@ const ResponsableDashboard = () => {
         {/* Recent Interventions */}
         <Card>
           <CardHeader
-            title="Interventions planifiÃ©es"
+            title="Interventions planifiées"
             action={
               <Link
                 to="/responsable/interventions"
@@ -198,7 +198,7 @@ const ResponsableDashboard = () => {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
                   </svg>
                 </div>
-                <p className="text-bodydark2 text-sm">Aucune intervention planifiÃ©e</p>
+                <p className="text-bodydark2 text-sm">Aucune intervention planifiée</p>
               </div>
             ) : (
               <div className="divide-y divide-stroke">
@@ -253,7 +253,7 @@ const ResponsableDashboard = () => {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
                 </svg>
               </div>
-              <p className="text-xs font-medium text-black">RÃ©clamations</p>
+              <p className="text-xs font-medium text-black">Réclamations</p>
             </Link>
 
             <Link

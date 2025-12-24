@@ -43,7 +43,7 @@ const PaymentPage = () => {
   const checkoutMutation = useMutation({
     mutationFn: async () => {
       if (!intervention?.data || !profile?.data) {
-        throw new Error('DonnÃ©es manquantes');
+        throw new Error('Données manquantes');
       }
       
       const response = await paymentsApi.createCheckoutSession({
@@ -64,7 +64,7 @@ const PaymentPage = () => {
     },
     onError: (error) => {
       console.error('Error creating checkout session:', error);
-      toast.error('Erreur lors de la crÃ©ation de la session de paiement');
+      toast.error('Erreur lors de la création de la session de paiement');
       setIsProcessing(false);
     },
   });
@@ -84,12 +84,12 @@ const PaymentPage = () => {
         <PageHeader
           title="Paiement"
           breadcrumb={[
-            { label: 'Mes rÃ©clamations', path: '/client/reclamations' },
+            { label: 'Mes réclamations', path: '/client/reclamations' },
             { label: 'Paiement' },
           ]}
         />
         <div className="bg-danger/10 border border-danger/20 text-danger px-4 py-3 rounded-xl">
-          Intervention non trouvÃ©e
+          Intervention non trouvée
         </div>
       </div>
     );
@@ -98,7 +98,7 @@ const PaymentPage = () => {
   const interv = intervention.data;
   const payment = existingPayment?.data as Payment | undefined;
 
-  // VÃ©rifier si l'intervention est payable
+  // Vérifier si l'intervention est payable
   const isPayable = interv.statut === 'Terminee' && !interv.estGratuite && interv.montantTotal > 0;
   const isPaid = payment?.statut === 'Reussi';
 
@@ -108,7 +108,7 @@ const PaymentPage = () => {
         title="Paiement Intervention"
         subtitle={`Intervention #${interv.id}`}
         breadcrumb={[
-          { label: 'Mes rÃ©clamations', path: '/client/reclamations' },
+          { label: 'Mes réclamations', path: '/client/reclamations' },
           { label: 'Paiement' },
         ]}
       />
@@ -116,10 +116,10 @@ const PaymentPage = () => {
       <div className="max-w-2xl mx-auto">
         <Card>
           <CardHeader>
-            <h2 className="text-lg font-semibold text-black">RÃ©capitulatif</h2>
+            <h2 className="text-lg font-semibold text-black">Récapitulatif</h2>
           </CardHeader>
           <CardBody>
-            {/* DÃ©tails de l'intervention */}
+            {/* Détails de l'intervention */}
             <dl className="space-y-4">
               <div className="flex justify-between items-center py-2 border-b border-stroke">
                 <dt className="text-sm text-bodydark2">Date d'intervention</dt>
@@ -141,7 +141,7 @@ const PaymentPage = () => {
               )}
               {interv.piecesUtilisees && interv.piecesUtilisees.length > 0 && (
                 <div className="py-3 border-b border-stroke">
-                  <dt className="text-sm font-medium text-black mb-3">PiÃ¨ces utilisÃ©es</dt>
+                  <dt className="text-sm font-medium text-black mb-3">Pièces utilisées</dt>
                   <div className="space-y-2">
                     {interv.piecesUtilisees.map((piece) => (
                       <div key={piece.id} className="flex justify-between text-sm bg-gray-2 dark:bg-meta-4 rounded-lg px-3 py-2">
@@ -153,7 +153,7 @@ const PaymentPage = () => {
                 </div>
               )}
               <div className="flex justify-between items-center py-3 bg-primary/5 rounded-xl px-4 -mx-1">
-                <dt className="text-lg font-bold text-black">Total Ã  payer</dt>
+                <dt className="text-lg font-bold text-black">Total à payer</dt>
                 <dd className="text-xl font-bold text-primary">{formatCurrency(interv.montantTotal)}</dd>
               </div>
             </dl>
@@ -177,7 +177,7 @@ const PaymentPage = () => {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
                   <div>
-                    <p className="text-success font-medium">Paiement effectuÃ©</p>
+                    <p className="text-success font-medium">Paiement effectué</p>
                     {payment?.paidAt && (
                       <p className="text-success/80 text-sm">Le {formatDate(payment.paidAt)}</p>
                     )}
@@ -203,7 +203,7 @@ const PaymentPage = () => {
                   <svg className="w-5 h-5 text-danger mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
-                  <p className="text-danger font-medium">Le paiement a Ã©chouÃ©. Veuillez rÃ©essayer.</p>
+                  <p className="text-danger font-medium">Le paiement a échoué. Veuillez réessayer.</p>
                 </div>
               </div>
             )}
@@ -234,7 +234,7 @@ const PaymentPage = () => {
                   <svg className="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                   </svg>
-                  Paiement sÃ©curisÃ© par Stripe
+                  Paiement sécurisé par Stripe
                 </p>
               </div>
             )}
@@ -242,7 +242,7 @@ const PaymentPage = () => {
             {interv.statut !== 'Terminee' && (
               <div className="bg-bodydark1/10 border border-stroke rounded-xl p-4 mt-6 text-center">
                 <p className="text-bodydark2">
-                  Le paiement sera disponible une fois l'intervention terminÃ©e.
+                  Le paiement sera disponible une fois l'intervention terminée.
                 </p>
               </div>
             )}

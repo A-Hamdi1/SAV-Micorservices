@@ -27,7 +27,7 @@ const EditArticlePage = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['article', articleId] });
       queryClient.invalidateQueries({ queryKey: ['articles'] });
-      toast.success('Article mis Ã  jour avec succÃ¨s');
+      toast.success('Article mis à jour avec succès');
       navigate(`/responsable/articles/${articleId}`);
     },
   });
@@ -58,7 +58,7 @@ const EditArticlePage = () => {
     return (
       <>
         <PageHeader
-          title="Article non trouvÃ©"
+          title="Article non trouvé"
           breadcrumb={[
             { label: 'Dashboard', path: '/responsable' },
             { label: 'Articles', path: '/responsable/articles' },
@@ -68,7 +68,7 @@ const EditArticlePage = () => {
         <Card>
           <CardBody>
             <div className="bg-danger/10 border border-danger/20 text-danger px-4 py-3 rounded-lg">
-              Article non trouvÃ©
+              Article non trouvé
             </div>
           </CardBody>
         </Card>
@@ -117,10 +117,10 @@ const EditArticlePage = () => {
 
               <div>
                 <label htmlFor="categorie" className="form-label">
-                  CatÃ©gorie *
+                  Catégorie *
                 </label>
                 <input
-                  {...register('categorie', { required: 'CatÃ©gorie requise' })}
+                  {...register('categorie', { required: 'Catégorie requise' })}
                   type="text"
                   className="form-input"
                 />
@@ -131,12 +131,12 @@ const EditArticlePage = () => {
 
               <div>
                 <label htmlFor="prixVente" className="form-label">
-                  Prix de vente (â‚¬) *
+                  Prix de vente ($) *
                 </label>
                 <input
                   {...register('prixVente', {
                     required: 'Prix de vente requis',
-                    min: { value: 0, message: 'Le prix doit Ãªtre positif' },
+                    min: { value: 0, message: 'Le prix doit être positif' },
                     valueAsNumber: true,
                   })}
                   type="number"
@@ -150,12 +150,12 @@ const EditArticlePage = () => {
 
               <div>
                 <label htmlFor="dureeGarantie" className="form-label">
-                  DurÃ©e de garantie (mois) *
+                  Durée de garantie (mois) *
                 </label>
                 <input
                   {...register('dureeGarantie', {
-                    required: 'DurÃ©e de garantie requise',
-                    min: { value: 0, message: 'La durÃ©e doit Ãªtre positive' },
+                    required: 'Durée de garantie requise',
+                    min: { value: 0, message: 'La durée doit être positive' },
                     valueAsNumber: true,
                   })}
                   type="number"
@@ -180,7 +180,7 @@ const EditArticlePage = () => {
                 variant="primary"
                 loading={updateMutation.isPending}
               >
-                Mettre Ã  jour
+                Mettre à jour
               </Button>
             </div>
           </form>

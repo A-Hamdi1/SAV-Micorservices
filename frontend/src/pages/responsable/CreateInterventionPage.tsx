@@ -30,7 +30,7 @@ const CreateInterventionPage = () => {
     mutationFn: (data: CreateInterventionDto) => interventionsApi.createIntervention(data),
     onSuccess: (response) => {
       queryClient.invalidateQueries({ queryKey: ['interventions'] });
-      toast.success('Intervention crÃ©Ã©e avec succÃ¨s');
+      toast.success('Intervention créée avec succès');
       navigate(`/responsable/interventions/${response.data?.id}`);
     },
   });
@@ -56,12 +56,12 @@ const CreateInterventionPage = () => {
   return (
     <>
       <PageHeader
-        title="CrÃ©er une intervention"
-        subtitle="Planifier une nouvelle intervention pour une rÃ©clamation"
+        title="Créer une intervention"
+        subtitle="Planifier une nouvelle intervention pour une réclamation"
         breadcrumb={[
           { label: 'Dashboard', path: '/responsable' },
           { label: 'Interventions', path: '/responsable/interventions' },
-          { label: 'CrÃ©er' }
+          { label: 'Créer' }
         ]}
       />
 
@@ -71,7 +71,7 @@ const CreateInterventionPage = () => {
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
               <div>
                 <label htmlFor="reclamationId" className="form-label">
-                  RÃ©clamation ID *
+                  Réclamation ID *
                 </label>
                 {reclamationId ? (
                   <>
@@ -89,15 +89,15 @@ const CreateInterventionPage = () => {
                 ) : (
                   <select
                     {...register('reclamationId', {
-                      required: 'RÃ©clamation requise',
+                      required: 'Réclamation requise',
                       valueAsNumber: true,
                     })}
                     className="form-select"
                   >
-                    <option value="">SÃ©lectionner une rÃ©clamation</option>
+                    <option value="">Sélectionner une réclamation</option>
                     {reclamations?.data?.items?.map((rec) => (
                       <option key={rec.id} value={rec.id}>
-                        RÃ©clamation #{rec.id} - {rec.clientPrenom} {rec.clientNom} - {rec.articleNom}
+                        Réclamation #{rec.id} - {rec.clientPrenom} {rec.clientNom} - {rec.articleNom}
                       </option>
                     ))}
                   </select>
@@ -115,7 +115,7 @@ const CreateInterventionPage = () => {
                   {...register('technicienId', { required: 'Technicien requis', valueAsNumber: true })}
                   className="form-select"
                 >
-                  <option value="">SÃ©lectionner un technicien</option>
+                  <option value="">Sélectionner un technicien</option>
                   {techniciens?.data?.map((tech) => (
                     <option key={tech.id} value={tech.id}>
                       {tech.nomComplet} - {tech.specialite}
@@ -149,11 +149,11 @@ const CreateInterventionPage = () => {
                   htmlFor="montantMainOeuvre"
                   className="form-label"
                 >
-                  Main d'Å“uvre (â‚¬)
+                  Main d'œuvre ($)
                 </label>
                 <input
                   {...register('montantMainOeuvre', {
-                    min: { value: 0, message: 'Le montant doit Ãªtre positif' },
+                    min: { value: 0, message: 'Le montant doit être positif' },
                     valueAsNumber: true,
                   })}
                   type="number"
@@ -190,7 +190,7 @@ const CreateInterventionPage = () => {
                 variant="primary"
                 loading={createMutation.isPending}
               >
-                CrÃ©er l'intervention
+                Créer l'intervention
               </Button>
             </div>
           </form>

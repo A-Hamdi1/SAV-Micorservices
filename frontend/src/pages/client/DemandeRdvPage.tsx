@@ -53,7 +53,7 @@ const DemandeRdvPage = () => {
     e.preventDefault();
     
     if (!reclamationId || !user?.clientId) {
-      setError('DonnÃ©es manquantes');
+      setError('Données manquantes');
       return;
     }
 
@@ -98,9 +98,9 @@ const DemandeRdvPage = () => {
     <div>
       <PageHeader
         title="Demande de Rendez-vous"
-        subtitle={`RÃ©clamation #${reclamationId}`}
+        subtitle={`Réclamation #${reclamationId}`}
         breadcrumb={[
-          { label: 'Mes rÃ©clamations', path: '/client/reclamations' },
+          { label: 'Mes réclamations', path: '/client/reclamations' },
           { label: 'Demande de RDV' },
         ]}
       />
@@ -140,8 +140,8 @@ const DemandeRdvPage = () => {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                     </svg>
                   </div>
-                  <h2 className="text-xl font-bold text-success mb-2">Demande envoyÃ©e !</h2>
-                  <p className="text-bodydark2">Vous serez notifiÃ© une fois le RDV confirmÃ©.</p>
+                  <h2 className="text-xl font-bold text-success mb-2">Demande envoyée !</h2>
+                  <p className="text-bodydark2">Vous serez notifié une fois le RDV confirmé.</p>
                 </div>
               ) : existingDemandeForReclamation ? (
                 <div className="text-center py-8">
@@ -152,10 +152,10 @@ const DemandeRdvPage = () => {
                   </div>
                   <h2 className="text-xl font-bold text-warning mb-2">Demande en cours</h2>
                   <p className="text-bodydark2 mb-4">
-                    Vous avez dÃ©jÃ  une demande en attente pour cette rÃ©clamation.
+                    Vous avez déjà une demande en attente pour cette réclamation.
                   </p>
                   <p className="text-bodydark2 text-sm">
-                    Date demandÃ©e: {new Date(existingDemandeForReclamation.dateSouhaitee || existingDemandeForReclamation.datePreferee || '').toLocaleDateString('fr-FR')}
+                    Date demandée: {new Date(existingDemandeForReclamation.dateSouhaitee || existingDemandeForReclamation.datePreferee || '').toLocaleDateString('fr-FR')}
                   </p>
                 </div>
               ) : (
@@ -163,10 +163,10 @@ const DemandeRdvPage = () => {
                   {error && <ErrorMessage message={error} />}
 
                   <form onSubmit={handleSubmit} className="space-y-6">
-                    {/* Date prÃ©fÃ©rÃ©e */}
+                    {/* Date préférée */}
                     <div>
                       <label className="form-label">
-                        Date prÃ©fÃ©rÃ©e *
+                        Date préférée *
                       </label>
                       <input
                         type="date"
@@ -178,16 +178,16 @@ const DemandeRdvPage = () => {
                       />
                     </div>
 
-                    {/* CrÃ©neau prÃ©fÃ©rence */}
+                    {/* Créneau préférence */}
                     <div>
                       <label className="form-label">
-                        CrÃ©neau prÃ©fÃ©rÃ©
+                        Créneau préféré
                       </label>
                       <div className="grid grid-cols-3 gap-4">
                         {[
-                          { value: 'matin', label: 'ðŸŒ… Matin', desc: '8h - 12h' },
-                          { value: 'apres-midi', label: 'â˜€ï¸ AprÃ¨s-midi', desc: '14h - 18h' },
-                          { value: 'indifferent', label: 'ðŸ• IndiffÃ©rent', desc: 'Toute la journÃ©e' }
+                          { value: 'matin', label: '🌅 Matin', desc: '8h - 12h' },
+                          { value: 'apres-midi', label: '☀️ Après-midi', desc: '14h - 18h' },
+                          { value: 'indifferent', label: '🛈 Indifférent', desc: 'Toute la journée' }
                         ].map((option) => (
                           <button
                             key={option.value}
@@ -216,7 +216,7 @@ const DemandeRdvPage = () => {
                         onChange={(e) => setCommentaire(e.target.value)}
                         className="form-input"
                         rows={3}
-                        placeholder="PrÃ©cisions sur votre disponibilitÃ©, accÃ¨s au domicile..."
+                        placeholder="Précisions sur votre disponibilité, accès au domicile..."
                         maxLength={500}
                       />
                     </div>
@@ -270,16 +270,16 @@ const DemandeRdvPage = () => {
                       <div>
                         <div className="flex items-center gap-3 mb-2">
                           <span className="font-semibold text-black">
-                            RÃ©clamation #{demande.reclamationId}
+                            Réclamation #{demande.reclamationId}
                           </span>
                           <StatusBadge status={demande.statut} />
                         </div>
                         <div className="text-sm text-bodydark2">
-                          <strong>Date demandÃ©e:</strong> {new Date(demande.dateSouhaitee || demande.datePreferee || '').toLocaleDateString('fr-FR')}
+                          <strong>Date demandée:</strong> {new Date(demande.dateSouhaitee || demande.datePreferee || '').toLocaleDateString('fr-FR')}
                         </div>
                         {(demande.preferenceMoment || demande.creneauPreference) && (
                           <div className="text-sm text-bodydark2">
-                            <strong>PrÃ©fÃ©rence:</strong> {demande.preferenceMoment || demande.creneauPreference}
+                            <strong>Préférence:</strong> {demande.preferenceMoment || demande.creneauPreference}
                           </div>
                         )}
                         {demande.commentaire && (
@@ -289,7 +289,7 @@ const DemandeRdvPage = () => {
                         )}
                       </div>
                       <div className="text-right text-xs text-bodydark2">
-                        DemandÃ© le<br />
+                        Demandé le<br />
                         {new Date(demande.createdAt || demande.dateCreation || '').toLocaleDateString('fr-FR')}
                       </div>
                     </div>
@@ -299,7 +299,7 @@ const DemandeRdvPage = () => {
                         <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
-                        RDV confirmÃ© ! Le technicien vous contactera bientÃ´t.
+                        RDV confirmé ! Le technicien vous contactera bientôt.
                       </div>
                     )}
                   </CardBody>

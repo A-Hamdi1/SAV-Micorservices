@@ -42,7 +42,7 @@ const PaymentsManagementPage = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['payments'] });
       queryClient.invalidateQueries({ queryKey: ['payments', 'stats'] });
-      toast.success('Remboursement effectuÃ© avec succÃ¨s');
+      toast.success('Remboursement effectué avec succès');
     },
     onError: () => {
       toast.error('Erreur lors du remboursement');
@@ -64,7 +64,7 @@ const PaymentsManagementPage = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['payments'] });
       queryClient.invalidateQueries({ queryKey: ['payments', 'stats'] });
-      toast.success('Paiement manuel enregistrÃ©');
+      toast.success('Paiement manuel enregistré');
       setShowManualPayment(false);
       setManualPaymentData({
         interventionId: '',
@@ -81,7 +81,7 @@ const PaymentsManagementPage = () => {
   });
 
   const handleRefund = (payment: Payment) => {
-    if (window.confirm(`ÃŠtes-vous sÃ»r de vouloir rembourser ${formatCurrency(payment.montant)} ?`)) {
+    if (window.confirm(`Êtes-vous sûr de vouloir rembourser ${formatCurrency(payment.montant)} ?`)) {
       refundMutation.mutate(payment.id);
     }
   };
@@ -134,7 +134,7 @@ const PaymentsManagementPage = () => {
           </div>
 
           <div className="rounded-xl p-6 text-white" style={{ background: 'linear-gradient(135deg, #4f46e5, #6366f1)' }}>
-            <div className="text-sm opacity-80 mb-1">Paiements rÃ©ussis</div>
+            <div className="text-sm opacity-80 mb-1">Paiements réussis</div>
             <div className="text-3xl font-bold">
               {paymentStats.successfulPayments || 0}
             </div>
@@ -178,7 +178,7 @@ const PaymentsManagementPage = () => {
                 />
               </div>
               <div>
-                <label className="form-label">Montant (â‚¬) *</label>
+                <label className="form-label">Montant ($) *</label>
                 <input
                   type="number"
                   step="0.01"
@@ -189,14 +189,14 @@ const PaymentsManagementPage = () => {
                 />
               </div>
               <div>
-                <label className="form-label">MÃ©thode *</label>
+                <label className="form-label">Méthode *</label>
                 <select
                   value={manualPaymentData.methode}
                   onChange={(e) => setManualPaymentData({ ...manualPaymentData, methode: e.target.value })}
                   className="form-select"
                 >
-                  <option value="Especes">EspÃ¨ces</option>
-                  <option value="Cheque">ChÃ¨que</option>
+                  <option value="Especes">Espèces</option>
+                  <option value="Cheque">Chèque</option>
                   <option value="Virement">Virement</option>
                   <option value="CarteBancaire">Carte bancaire</option>
                 </select>
@@ -249,7 +249,7 @@ const PaymentsManagementPage = () => {
         <CardBody className="p-0">
           {paymentsList.length === 0 ? (
             <div className="p-6">
-              <p className="text-bodydark2">Aucun paiement enregistrÃ©</p>
+              <p className="text-bodydark2">Aucun paiement enregistré</p>
             </div>
           ) : (
             <div className="overflow-x-auto">
@@ -259,7 +259,7 @@ const PaymentsManagementPage = () => {
                     <th className="px-6 py-4 font-medium text-black">ID</th>
                     <th className="px-6 py-4 font-medium text-black">Intervention</th>
                     <th className="px-6 py-4 font-medium text-black">Montant</th>
-                    <th className="px-6 py-4 font-medium text-black">MÃ©thode</th>
+                    <th className="px-6 py-4 font-medium text-black">Méthode</th>
                     <th className="px-6 py-4 font-medium text-black">Statut</th>
                     <th className="px-6 py-4 font-medium text-black">Date</th>
                     <th className="px-6 py-4 font-medium text-black">Actions</th>

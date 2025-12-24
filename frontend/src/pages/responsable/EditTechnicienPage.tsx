@@ -28,7 +28,7 @@ const EditTechnicienPage = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['technicien', technicienId] });
       queryClient.invalidateQueries({ queryKey: ['techniciens'] });
-      toast.success('Technicien mis Ã  jour avec succÃ¨s');
+      toast.success('Technicien mis à jour avec succès');
       navigate(`/responsable/techniciens/${technicienId}`);
     },
   });
@@ -61,7 +61,7 @@ const EditTechnicienPage = () => {
     return (
       <>
         <PageHeader
-          title="Technicien non trouvÃ©"
+          title="Technicien non trouvé"
           breadcrumb={[
             { label: 'Dashboard', path: '/responsable' },
             { label: 'Techniciens', path: '/responsable/techniciens' },
@@ -71,7 +71,7 @@ const EditTechnicienPage = () => {
         <Card>
           <CardBody>
             <div className="bg-danger/10 border border-danger/20 text-danger px-4 py-3 rounded-lg">
-              Technicien non trouvÃ©
+              Technicien non trouvé
             </div>
           </CardBody>
         </Card>
@@ -120,10 +120,10 @@ const EditTechnicienPage = () => {
 
               <div>
                 <label htmlFor="prenom" className="form-label">
-                  PrÃ©nom *
+                  Prénom *
                 </label>
                 <input
-                  {...register('prenom', { required: 'PrÃ©nom requis' })}
+                  {...register('prenom', { required: 'Prénom requis' })}
                   type="text"
                   className="form-input"
                 />
@@ -154,10 +154,10 @@ const EditTechnicienPage = () => {
 
               <div>
                 <label htmlFor="telephone" className="form-label">
-                  TÃ©lÃ©phone *
+                  Téléphone *
                 </label>
                 <input
-                  {...register('telephone', { required: 'TÃ©lÃ©phone requis' })}
+                  {...register('telephone', { required: 'Téléphone requis' })}
                   type="tel"
                   className="form-input"
                 />
@@ -168,10 +168,10 @@ const EditTechnicienPage = () => {
 
               <div>
                 <label htmlFor="specialite" className="form-label">
-                  SpÃ©cialitÃ© *
+                  Spécialité *
                 </label>
                 <input
-                  {...register('specialite', { required: 'SpÃ©cialitÃ© requise' })}
+                  {...register('specialite', { required: 'Spécialité requise' })}
                   type="text"
                   className="form-input"
                 />
@@ -205,7 +205,7 @@ const EditTechnicienPage = () => {
                 variant="primary"
                 loading={updateMutation.isPending}
               >
-                Mettre Ã  jour
+                Mettre à jour
               </Button>
             </div>
           </form>

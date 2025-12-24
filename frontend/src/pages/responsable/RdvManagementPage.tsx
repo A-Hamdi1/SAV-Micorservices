@@ -18,7 +18,7 @@ const RdvManagementPage = () => {
   const [refusRaison, setRefusRaison] = useState('');
   const [showRefusModal, setShowRefusModal] = useState(false);
   
-  // GÃ©nÃ©ration de crÃ©neaux
+  // Génération de créneaux
   const [genTechnicienId, setGenTechnicienId] = useState<number>(1);
   const [genDateDebut, setGenDateDebut] = useState<string>(new Date().toISOString().split('T')[0]);
   const [genDateFin, setGenDateFin] = useState<string>(() => {
@@ -91,10 +91,10 @@ const RdvManagementPage = () => {
         genHeureFin,
         genDuree
       );
-      alert(`${result.data.data} crÃ©neaux gÃ©nÃ©rÃ©s avec succÃ¨s !`);
+      alert(`${result.data.data} créneaux générés avec succès !`);
       await fetchData();
     } catch (err) {
-      setError('Erreur lors de la gÃ©nÃ©ration');
+      setError('Erreur lors de la génération');
     }
   };
 
@@ -112,7 +112,7 @@ const RdvManagementPage = () => {
           { label: 'Responsable', path: '/responsable' },
           { label: 'Rendez-vous' }
         ]}
-        subtitle="GÃ©rez les demandes de rendez-vous et les crÃ©neaux disponibles"
+        subtitle="Gérez les demandes de rendez-vous et les créneaux disponibles"
       />
 
       {/* Stats */}
@@ -122,15 +122,15 @@ const RdvManagementPage = () => {
           <div className="text-3xl font-bold">{demandes.length}</div>
         </div>
         <div className="rounded-xl p-6 text-white" style={{ background: 'linear-gradient(135deg, #22c55e, #4ade80)' }}>
-          <div className="text-sm opacity-80 mb-1">CrÃ©neaux libres</div>
+          <div className="text-sm opacity-80 mb-1">Créneaux libres</div>
           <div className="text-3xl font-bold">{creneauxLibres.length}</div>
         </div>
         <div className="rounded-xl p-6 text-white" style={{ background: 'linear-gradient(135deg, #3b82f6, #60a5fa)' }}>
-          <div className="text-sm opacity-80 mb-1">CrÃ©neaux rÃ©servÃ©s</div>
+          <div className="text-sm opacity-80 mb-1">Créneaux réservés</div>
           <div className="text-3xl font-bold">{creneauxReserves.length}</div>
         </div>
         <div className="rounded-xl p-6 text-white" style={{ background: 'linear-gradient(135deg, #8b5cf6, #a78bfa)' }}>
-          <div className="text-sm opacity-80 mb-1">Total crÃ©neaux</div>
+          <div className="text-sm opacity-80 mb-1">Total créneaux</div>
           <div className="text-3xl font-bold">{creneaux.length}</div>
         </div>
       </div>
@@ -147,13 +147,13 @@ const RdvManagementPage = () => {
           onClick={() => setActiveTab('creneaux')}
           className={`px-6 py-3 font-medium transition-colors ${activeTab === 'creneaux' ? 'border-b-2 border-primary text-primary' : 'text-bodydark2 hover:text-black'}`}
         >
-          ðŸ“† CrÃ©neaux
+          📆 Créneaux
         </button>
         <button
           onClick={() => setActiveTab('generer')}
           className={`px-6 py-3 font-medium transition-colors ${activeTab === 'generer' ? 'border-b-2 border-primary text-primary' : 'text-bodydark2 hover:text-black'}`}
         >
-          âš™ï¸ GÃ©nÃ©rer CrÃ©neaux
+          ⚙️ Générer Créneaux
         </button>
       </div>
 
@@ -176,17 +176,17 @@ const RdvManagementPage = () => {
                   <div className="flex justify-between items-start">
                     <div>
                       <div className="font-medium text-black">
-                        Demande #{demande.id} - RÃ©clamation #{demande.reclamationId}
+                        Demande #{demande.id} - Réclamation #{demande.reclamationId}
                       </div>
                       <div className="text-sm text-bodydark2 mt-1">
                         Client ID: {demande.clientId}
                       </div>
                       <div className="text-sm text-bodydark2 mt-2">
-                        <strong>Date prÃ©fÃ©rÃ©e:</strong> {new Date(demande.dateSouhaitee || demande.datePreferee || '').toLocaleDateString('fr-FR')}
+                        <strong>Date préférée:</strong> {new Date(demande.dateSouhaitee || demande.datePreferee || '').toLocaleDateString('fr-FR')}
                       </div>
                       {(demande.preferenceMoment || demande.creneauPreference) && (
                         <div className="text-sm text-bodydark2">
-                          <strong>PrÃ©fÃ©rence:</strong> {demande.preferenceMoment || demande.creneauPreference}
+                          <strong>Préférence:</strong> {demande.preferenceMoment || demande.creneauPreference}
                         </div>
                       )}
                       {demande.commentaire && (
@@ -195,7 +195,7 @@ const RdvManagementPage = () => {
                         </div>
                       )}
                       <div className="text-xs text-bodydark2 mt-2">
-                        CrÃ©Ã©e le {new Date(demande.createdAt || demande.dateCreation || '').toLocaleString('fr-FR')}
+                        Créée le {new Date(demande.createdAt || demande.dateCreation || '').toLocaleString('fr-FR')}
                       </div>
                     </div>
                     <div className="flex gap-2">
@@ -220,7 +220,7 @@ const RdvManagementPage = () => {
         </div>
       )}
 
-      {/* CrÃ©neaux Tab */}
+      {/* Créneaux Tab */}
       {activeTab === 'creneaux' && (
         <Card>
           <CardBody className="p-0">
@@ -248,7 +248,7 @@ const RdvManagementPage = () => {
                         {new Date(creneau.dateFin).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}
                       </td>
                       <td className="px-6 py-4 text-center">
-                        <StatusBadge status={creneau.estReserve ? 'RÃ©servÃ©' : 'Libre'} />
+                        <StatusBadge status={creneau.estReserve ? 'Réservé' : 'Libre'} />
                       </td>
                       <td className="px-6 py-4 text-center text-sm text-bodydark2">
                         {creneau.interventionId || '-'}
@@ -260,18 +260,18 @@ const RdvManagementPage = () => {
             </div>
             {creneaux.length > 50 && (
               <div className="p-4 text-center text-bodydark2 border-t border-stroke">
-                Affichage limitÃ© aux 50 premiers crÃ©neaux
+                Affichage limité aux 50 premiers créneaux
               </div>
             )}
           </CardBody>
         </Card>
       )}
 
-      {/* GÃ©nÃ©rer Tab */}
+      {/* Générer Tab */}
       {activeTab === 'generer' && (
         <Card className="max-w-2xl">
           <CardHeader>
-            <h2 className="text-lg font-semibold text-black">GÃ©nÃ©rer des CrÃ©neaux Automatiquement</h2>
+            <h2 className="text-lg font-semibold text-black">Générer des Créneaux Automatiquement</h2>
           </CardHeader>
           <CardBody>
             <div className="grid grid-cols-2 gap-4 mb-6">
@@ -286,7 +286,7 @@ const RdvManagementPage = () => {
                 />
               </div>
               <div>
-                <label className="form-label">DurÃ©e crÃ©neau (min)</label>
+                <label className="form-label">Durée créneau (min)</label>
                 <select
                   value={genDuree}
                   onChange={(e) => setGenDuree(parseInt(e.target.value))}
@@ -300,7 +300,7 @@ const RdvManagementPage = () => {
                 </select>
               </div>
               <div>
-                <label className="form-label">Date dÃ©but</label>
+                <label className="form-label">Date début</label>
                 <input
                   type="date"
                   value={genDateDebut}
@@ -318,7 +318,7 @@ const RdvManagementPage = () => {
                 />
               </div>
               <div>
-                <label className="form-label">Heure dÃ©but</label>
+                <label className="form-label">Heure début</label>
                 <select
                   value={genHeureDebut}
                   onChange={(e) => setGenHeureDebut(parseInt(e.target.value))}
@@ -348,35 +348,35 @@ const RdvManagementPage = () => {
               className="w-full"
               onClick={handleGenererCreneaux}
             >
-              GÃ©nÃ©rer les CrÃ©neaux
+              Générer les Créneaux
             </Button>
           </CardBody>
         </Card>
       )}
 
-      {/* Modal SÃ©lection CrÃ©neau */}
+      {/* Modal Sélection Créneau */}
       {selectedDemande && !showRefusModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
           <Card className="w-full max-w-lg mx-4 max-h-[80vh] overflow-auto">
             <CardHeader>
-              <h2 className="text-xl font-bold text-black">Attribuer un CrÃ©neau</h2>
+              <h2 className="text-xl font-bold text-black">Attribuer un Créneau</h2>
             </CardHeader>
             <CardBody>
               <p className="text-bodydark2 mb-4">
-                Demande #{selectedDemande.id} - Date prÃ©fÃ©rÃ©e: {new Date(selectedDemande.dateSouhaitee || selectedDemande.datePreferee || '').toLocaleDateString('fr-FR')}
+                Demande #{selectedDemande.id} - Date préférée: {new Date(selectedDemande.dateSouhaitee || selectedDemande.datePreferee || '').toLocaleDateString('fr-FR')}
               </p>
               
               <div className="space-y-2 mb-4">
-                <label className="form-label">SÃ©lectionner un crÃ©neau libre</label>
+                <label className="form-label">Sélectionner un créneau libre</label>
                 {creneauxLibres.length === 0 ? (
-                  <p className="text-meta-1">Aucun crÃ©neau libre disponible</p>
+                  <p className="text-meta-1">Aucun créneau libre disponible</p>
                 ) : (
                   <select
                     value={selectedCreneau || ''}
                     onChange={(e) => setSelectedCreneau(parseInt(e.target.value))}
                     className="form-select"
                   >
-                    <option value="">-- Choisir un crÃ©neau --</option>
+                    <option value="">-- Choisir un créneau --</option>
                     {creneauxLibres.map((c) => (
                       <option key={c.id} value={c.id}>
                         {new Date(c.dateDebut).toLocaleString('fr-FR')} - {c.technicienNom || `Tech #${c.technicienId}`}

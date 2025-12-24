@@ -8,7 +8,7 @@ const PaymentSuccessPage = () => {
   const { interventionId } = useParams<{ interventionId: string }>();
 
   useEffect(() => {
-    toast.success('Paiement effectuÃ© avec succÃ¨s !');
+    toast.success('Paiement effectué avec succès !');
   }, []);
 
   return (
@@ -21,9 +21,9 @@ const PaymentSuccessPage = () => {
             </svg>
           </div>
           
-          <h1 className="text-2xl font-bold text-black mb-2">Paiement rÃ©ussi !</h1>
+          <h1 className="text-2xl font-bold text-black mb-2">Paiement réussi !</h1>
           <p className="text-bodydark2 mb-8">
-            Votre paiement pour l'intervention #{interventionId} a Ã©tÃ© effectuÃ© avec succÃ¨s.
+            Votre paiement pour l'intervention #{interventionId} a été effectué avec succès.
           </p>
 
           <div className="bg-success/10 border border-success/20 rounded-xl p-4 mb-8">
@@ -35,7 +35,7 @@ const PaymentSuccessPage = () => {
           <div className="flex flex-col sm:flex-row justify-center gap-4">
             <Link to="/client/reclamations">
               <Button variant="primary">
-                Voir mes rÃ©clamations
+                Voir mes réclamations
               </Button>
             </Link>
             <Link to="/client/dashboard">

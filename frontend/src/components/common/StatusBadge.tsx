@@ -1,71 +1,71 @@
+import { 
+  RECLAMATION_STATUS_LABELS, 
+  INTERVENTION_STATUS_LABELS, 
+  PAYMENT_STATUS_LABELS 
+} from '../../types';
+
 interface StatusBadgeProps {
   status: string;
   size?: 'sm' | 'md' | 'lg';
   text?: string;
   label?: string;
+  type?: 'reclamation' | 'intervention' | 'payment' | 'general';
 }
 
-const StatusBadge = ({ status, size = 'md', text, label }: StatusBadgeProps) => {
+const StatusBadge = ({ status, size = 'md', text, label, type = 'general' }: StatusBadgeProps) => {
   const getStatusColor = (status: string) => {
     const statusLower = status.toLowerCase();
-    // Success
-    if (statusLower === 'success' || statusLower === 'succès') {
+    // Success states
+    if (['success', 'succès', 'reussi', 'terminee', 'resolue', 'paye'].some(s => statusLower.includes(s))) {
       return 'bg-green-100 text-green-700 border-green-200';
     }
-    // Danger
-    if (statusLower === 'danger' || statusLower === 'error' || statusLower === 'erreur') {
+    // Danger states
+    if (['danger', 'error', 'erreur', 'annulee', 'rejetee', 'echoue', 'rembourse'].some(s => statusLower.includes(s))) {
       return 'bg-red-100 text-red-700 border-red-200';
     }
-    // Warning
-    if (statusLower === 'warning' || statusLower === 'avertissement') {
+    // Warning states
+    if (['warning', 'avertissement', 'enattente', 'attente'].some(s => statusLower.includes(s))) {
       return 'bg-amber-100 text-amber-700 border-amber-200';
     }
-    // En Attente / EnAttente
-    if (statusLower === 'enattente' || statusLower.includes('attente')) {
-      return 'bg-amber-100 text-amber-700 border-amber-200';
-    }
-    // En Cours / EnCours
-    if (statusLower === 'encours' || statusLower.includes('cours')) {
+    // Progress states
+    if (['encours', 'cours'].some(s => statusLower.includes(s))) {
       return 'bg-blue-100 text-blue-700 border-blue-200';
     }
-    // Terminée / Terminee
-    if (statusLower === 'terminee' || statusLower.includes('terminé')) {
-      return 'bg-green-100 text-green-700 border-green-200';
-    }
-    // Resolue
-    if (statusLower === 'resolue' || statusLower.includes('résolu')) {
-      return 'bg-green-100 text-green-700 border-green-200';
-    }
-    // Annulée / Annulee
-    if (statusLower === 'annulee' || statusLower.includes('annulé')) {
-      return 'bg-red-100 text-red-700 border-red-200';
-    }
-    // Rejetée / Rejetee
-    if (statusLower === 'rejetee' || statusLower.includes('rejeté')) {
-      return 'bg-red-100 text-red-700 border-red-200';
-    }
-    // Planifiée / Planifiee
-    if (statusLower === 'planifiee' || statusLower.includes('planifié')) {
+    // Planned states
+    if (['planifiee', 'planifié'].some(s => statusLower.includes(s))) {
       return 'bg-purple-100 text-purple-700 border-purple-200';
-    }
-    // Payé / Payee
-    if (statusLower === 'paye' || statusLower.includes('payé')) {
-      return 'bg-emerald-100 text-emerald-700 border-emerald-200';
     }
     return 'bg-gray-2 text-bodydark2 border-stroke';
   };
 
   const getStatusLabel = (status: string): string => {
-    const statusLower = status.toLowerCase();
-    if (statusLower === 'enattente') return 'En Attente';
-    if (statusLower === 'encours') return 'En Cours';
-    if (statusLower === 'terminee') return 'Terminée';
-    if (statusLower === 'resolue') return 'Résolue';
-    if (statusLower === 'annulee') return 'Annulée';
-    if (statusLower === 'rejetee') return 'Rejetée';
-    if (statusLower === 'planifiee') return 'Planifiée';
-    if (statusLower === 'paye') return 'Payé';
-    return status;
+    // Try to get label from type-specific maps
+    if (type === 'reclamation' && status in RECLAMATION_STATUS_LABELS) {
+      return RECLAMATION_STATUS_LABELS[status as keyof typeof RECLAMATION_STATUS_LABELS];
+    }
+    if (type === 'intervention' && status in INTERVENTION_STATUS_LABELS) {
+      return INTERVENTION_STATUS_LABELS[status as keyof typeof INTERVENTION_STATUS_LABELS];
+    }
+    if (type === 'payment' && status in PAYMENT_STATUS_LABELS) {
+      return PAYMENT_STATUS_LABELS[status as keyof typeof PAYMENT_STATUS_LABELS];
+    }
+    
+    // Fallback to manual mapping
+    const statusMap: Record<string, string> = {
+      enattente: 'En Attente',
+      encours: 'En Cours',
+      terminee: 'Terminée',
+      resolue: 'Résolue',
+      annulee: 'Annulée',
+      rejetee: 'Rejetée',
+      planifiee: 'Planifiée',
+      paye: 'Payé',
+      reussi: 'Réussi',
+      echoue: 'Échoué',
+      rembourse: 'Remboursé',
+    };
+    
+    return statusMap[status.toLowerCase()] || status;
   };
 
   const getDotColor = (status: string) => {

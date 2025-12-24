@@ -57,7 +57,7 @@ const StatsPage = () => {
                 <dd className="text-sm font-medium text-black">{interventionsStats?.data?.totalInterventions ?? 0}</dd>
               </div>
               <div className="flex justify-between items-center">
-                <dt className="text-sm text-bodydark2">TerminÃ©es</dt>
+                <dt className="text-sm text-bodydark2">Terminées</dt>
                 <dd className="text-sm font-medium text-black">
                   {interventionsStats?.data?.interventionsTerminees ?? 0}
                 </dd>
@@ -95,7 +95,7 @@ const StatsPage = () => {
                 </dd>
               </div>
               <div className="flex justify-between items-center pt-2 border-t border-stroke">
-                <dt className="text-sm text-bodydark2">Taux de rÃ©ussite moyen</dt>
+                <dt className="text-sm text-bodydark2">Taux de réussite moyen</dt>
                 <dd className="text-sm font-bold text-success">
                   {(techniciensStats?.data?.tauxReussiteMoyen ?? 0).toFixed(1)}%
                 </dd>
@@ -115,7 +115,7 @@ const StatsPage = () => {
                 <dd className="text-sm font-medium text-black">{articlesStats?.data?.nombreTotalArticles ?? 0}</dd>
               </div>
               <div className="flex justify-between items-center">
-                <dt className="text-sm text-bodydark2">PiÃ¨ces dÃ©tachÃ©es</dt>
+                <dt className="text-sm text-bodydark2">Pièces détachées</dt>
                 <dd className="text-sm font-medium text-black">{articlesStats?.data?.nombrePiecesDetachees ?? 0}</dd>
               </div>
               <div className="flex justify-between items-center pt-2 border-t border-stroke">
@@ -135,7 +135,7 @@ const StatsPage = () => {
           <CardBody>
             <dl className="space-y-3">
               <div className="flex justify-between items-center">
-                <dt className="text-sm text-bodydark2">Articles achetÃ©s total</dt>
+                <dt className="text-sm text-bodydark2">Articles achetés total</dt>
                 <dd className="text-sm font-medium text-black">{garantieStats?.data?.nombreTotalArticles ?? 0}</dd>
               </div>
               <div className="flex justify-between items-center">
@@ -182,7 +182,7 @@ const StatsPage = () => {
                         Article
                       </th>
                       <th className="px-6 py-4 text-left text-xs font-medium text-bodydark2 uppercase tracking-wider">
-                        NÂ° SÃ©rie
+                        N° Série
                       </th>
                       <th className="px-6 py-4 text-left text-xs font-medium text-bodydark2 uppercase tracking-wider">
                         Expiration

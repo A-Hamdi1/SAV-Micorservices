@@ -16,7 +16,7 @@ const CreateArticlePage = () => {
     mutationFn: (data: CreateArticleDto) => articlesApi.createArticle(data),
     onSuccess: (response) => {
       queryClient.invalidateQueries({ queryKey: ['articles'] });
-      toast.success('Article crÃ©Ã© avec succÃ¨s');
+      toast.success('Article créé avec succès');
       navigate(`/responsable/articles/${response.data?.id}`);
     },
   });
@@ -38,12 +38,12 @@ const CreateArticlePage = () => {
   return (
     <>
       <PageHeader
-        title="CrÃ©er un article"
+        title="Créer un article"
         subtitle="Ajouter un nouvel article au catalogue"
         breadcrumb={[
           { label: 'Dashboard', path: '/responsable' },
           { label: 'Articles', path: '/responsable/articles' },
-          { label: 'CrÃ©er' }
+          { label: 'Créer' }
         ]}
       />
 
@@ -53,10 +53,10 @@ const CreateArticlePage = () => {
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
               <div>
                 <label htmlFor="reference" className="form-label">
-                  RÃ©fÃ©rence *
+                  Référence *
                 </label>
                 <input
-                  {...register('reference', { required: 'RÃ©fÃ©rence requise' })}
+                  {...register('reference', { required: 'Référence requise' })}
                   type="text"
                   className="form-input"
                 />
@@ -81,10 +81,10 @@ const CreateArticlePage = () => {
 
               <div>
                 <label htmlFor="categorie" className="form-label">
-                  CatÃ©gorie *
+                  Catégorie *
                 </label>
                 <input
-                  {...register('categorie', { required: 'CatÃ©gorie requise' })}
+                  {...register('categorie', { required: 'Catégorie requise' })}
                   type="text"
                   className="form-input"
                 />
@@ -95,12 +95,12 @@ const CreateArticlePage = () => {
 
               <div>
                 <label htmlFor="prixVente" className="form-label">
-                  Prix de vente (â‚¬) *
+                  Prix de vente ($) *
                 </label>
                 <input
                   {...register('prixVente', {
                     required: 'Prix de vente requis',
-                    min: { value: 0, message: 'Le prix doit Ãªtre positif' },
+                    min: { value: 0, message: 'Le prix doit être positif' },
                     valueAsNumber: true,
                   })}
                   type="number"
@@ -114,12 +114,12 @@ const CreateArticlePage = () => {
 
               <div>
                 <label htmlFor="dureeGarantie" className="form-label">
-                  DurÃ©e de garantie (mois) *
+                  Durée de garantie (mois) *
                 </label>
                 <input
                   {...register('dureeGarantie', {
-                    required: 'DurÃ©e de garantie requise',
-                    min: { value: 0, message: 'La durÃ©e doit Ãªtre positive' },
+                    required: 'Durée de garantie requise',
+                    min: { value: 0, message: 'La durée doit être positive' },
                     valueAsNumber: true,
                   })}
                   type="number"
@@ -144,7 +144,7 @@ const CreateArticlePage = () => {
                 variant="primary"
                 loading={createMutation.isPending}
               >
-                CrÃ©er l'article
+                Créer l'article
               </Button>
             </div>
           </form>

@@ -28,14 +28,14 @@ const ArticlesListPage = () => {
     mutationFn: (id: number) => articlesApi.deleteArticle(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['articles'] });
-      toast.success('Article supprimÃ© avec succÃ¨s');
+      toast.success('Article supprimé avec succès');
     },
   });
 
   const handleDelete = async (id: number, e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    if (window.confirm('ÃŠtes-vous sÃ»r de vouloir supprimer cet article ?')) {
+    if (window.confirm('Êtes-vous sûr de vouloir supprimer cet article ?')) {
       try {
         await deleteMutation.mutateAsync(id);
       } catch (error) {
@@ -107,9 +107,9 @@ const ArticlesListPage = () => {
                 }}
                 className="form-select min-w-[180px]"
               >
-                <option value="">Toutes les catÃ©gories</option>
-                <option value="Ã‰lectronique">Ã‰lectronique</option>
-                <option value="Ã‰lectromÃ©nager">Ã‰lectromÃ©nager</option>
+                <option value="">Toutes les catégories</option>
+                <option value="électronique">électronique</option>
+                <option value="électroménager">électroménager</option>
                 <option value="Informatique">Informatique</option>
               </select>
             </div>

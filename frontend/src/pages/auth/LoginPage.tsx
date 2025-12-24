@@ -14,7 +14,7 @@ const LoginPage = () => {
     formState: { errors },
   } = useForm<LoginDto>();
 
-  // Rediriger si dÃ©jÃ  connectÃ©
+  // Rediriger si déja connecté
   useEffect(() => {
     if (isAuthenticated) {
       if (role === 'Client') {
@@ -29,7 +29,7 @@ const LoginPage = () => {
     setIsLoading(true);
     try {
       await login(data.email, data.password);
-      // La redirection sera gÃ©rÃ©e par le useEffect qui surveille isAuthenticated et role
+      // La redirection sera générée par le useEffect qui surveille isAuthenticated et role
     } catch (error) {
       console.error('Login error:', error);
     } finally {
@@ -64,7 +64,7 @@ const LoginPage = () => {
                 </svg>
               </div>
               <h1 className="text-4xl font-bold text-white mb-2">SAV Pro</h1>
-              <p className="text-primary-200 text-lg">SystÃ¨me de Gestion SAV</p>
+              <p className="text-primary-200 text-lg">Systéme de Gestion SAV</p>
             </div>
             
             {/* Features */}
@@ -75,7 +75,7 @@ const LoginPage = () => {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                   </svg>
                 </div>
-                <span>Gestion complÃ¨te des rÃ©clamations</span>
+                <span>Gestion compléte des réclamations</span>
               </div>
               <div className="flex items-center gap-3 text-white/90">
                 <div className="flex-shrink-0 w-8 h-8 rounded-full bg-white/10 flex items-center justify-center">
@@ -83,7 +83,7 @@ const LoginPage = () => {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                   </svg>
                 </div>
-                <span>Suivi des interventions en temps rÃ©el</span>
+                <span>Suivi des interventions en temps réel</span>
               </div>
               <div className="flex items-center gap-3 text-white/90">
                 <div className="flex-shrink-0 w-8 h-8 rounded-full bg-white/10 flex items-center justify-center">
@@ -116,8 +116,8 @@ const LoginPage = () => {
           </div>
 
           <div className="mb-8">
-            <h2 className="text-2xl font-bold text-black mb-2">Bienvenue ! ðŸ‘‹</h2>
-            <p className="text-bodydark2">Connectez-vous Ã  votre compte pour continuer</p>
+            <h2 className="text-2xl font-bold text-black mb-2">Bienvenue !</h2>
+            <p className="text-bodydark2">Connectez-vous à  votre compte pour continuer</p>
           </div>
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
@@ -162,7 +162,7 @@ const LoginPage = () => {
                 <input
                   {...register('password', { required: 'Mot de passe requis' })}
                   type="password"
-                  placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"
+                  placeholder="************"
                   className="form-input pl-12"
                 />
                 <span className="absolute left-4 top-1/2 -translate-y-1/2 text-bodydark2">
@@ -187,7 +187,7 @@ const LoginPage = () => {
                 <span className="text-sm text-bodydark2">Se souvenir de moi</span>
               </label>
               <a href="#" className="text-sm font-medium text-primary-600 hover:text-primary-700">
-                Mot de passe oubliÃ© ?
+                Mot de passe oublié ?
               </a>
             </div>
 
@@ -227,7 +227,7 @@ const LoginPage = () => {
               <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
               </svg>
-              CrÃ©er un compte
+              Créer un compte
             </Link>
           </div>
 
@@ -235,7 +235,7 @@ const LoginPage = () => {
             En vous connectant, vous acceptez nos{' '}
             <a href="#" className="text-primary-600 hover:underline">Conditions d'utilisation</a>
             {' '}et notre{' '}
-            <a href="#" className="text-primary-600 hover:underline">Politique de confidentialitÃ©</a>
+            <a href="#" className="text-primary-600 hover:underline">Politique de confidentialité</a>
           </p>
         </div>
       </div>
