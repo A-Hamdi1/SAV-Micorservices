@@ -11,6 +11,7 @@ public class AuthDbContext : IdentityDbContext<ApplicationUser>
     }
 
     public DbSet<RefreshToken> RefreshTokens { get; set; }
+    public DbSet<PasswordResetOtp> PasswordResetOtps { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -27,6 +28,15 @@ public class AuthDbContext : IdentityDbContext<ApplicationUser>
         builder.Entity<ApplicationUser>(entity =>
         {
             entity.Property(e => e.Role).IsRequired().HasMaxLength(50);
+        });
+
+        builder.Entity<PasswordResetOtp>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.UserId).IsRequired().HasMaxLength(450);
+            entity.Property(e => e.Email).IsRequired().HasMaxLength(256);
+            entity.Property(e => e.Otp).IsRequired().HasMaxLength(6);
+            entity.HasIndex(e => new { e.Email, e.Otp });
         });
     }
 }

@@ -222,4 +222,141 @@ public class AuthController : ControllerBase
             });
         }
     }
+
+    [HttpPost("forgot-password")]
+    public async Task<ActionResult<ApiResponse>> ForgotPassword([FromBody] ForgotPasswordDto dto)
+    {
+        try
+        {
+            if (string.IsNullOrWhiteSpace(dto.Email))
+            {
+                return BadRequest(new ApiResponse
+                {
+                    Success = false,
+                    Message = "Email requis",
+                    Errors = new List<string> { "Email is required" }
+                });
+            }
+
+            await _authService.SendPasswordResetOtpAsync(dto.Email);
+
+            // Toujours retourner succès pour des raisons de sécurité (ne pas révéler si l'email existe)
+            return Ok(new ApiResponse
+            {
+                Success = true,
+                Message = "Si cet email existe, un code de vérification a été envoyé"
+            });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error sending password reset OTP");
+            return StatusCode(500, new ApiResponse
+            {
+                Success = false,
+                Message = "Une erreur s'est produite",
+                Errors = new List<string> { ex.Message }
+            });
+        }
+    }
+
+    [HttpPost("verify-otp")]
+    public async Task<ActionResult<ApiResponse>> VerifyOtp([FromBody] VerifyOtpDto dto)
+    {
+        try
+        {
+            if (string.IsNullOrWhiteSpace(dto.Email) || string.IsNullOrWhiteSpace(dto.Otp))
+            {
+                return BadRequest(new ApiResponse
+                {
+                    Success = false,
+                    Message = "Email et code OTP requis",
+                    Errors = new List<string> { "Email and OTP are required" }
+                });
+            }
+
+            var isValid = await _authService.VerifyOtpAsync(dto.Email, dto.Otp);
+
+            if (!isValid)
+            {
+                return BadRequest(new ApiResponse
+                {
+                    Success = false,
+                    Message = "Code OTP invalide ou expiré",
+                    Errors = new List<string> { "Invalid or expired OTP" }
+                });
+            }
+
+            return Ok(new ApiResponse
+            {
+                Success = true,
+                Message = "Code OTP vérifié avec succès"
+            });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error verifying OTP");
+            return StatusCode(500, new ApiResponse
+            {
+                Success = false,
+                Message = "Une erreur s'est produite",
+                Errors = new List<string> { ex.Message }
+            });
+        }
+    }
+
+    [HttpPost("reset-password")]
+    public async Task<ActionResult<ApiResponse>> ResetPassword([FromBody] ResetPasswordDto dto)
+    {
+        try
+        {
+            if (string.IsNullOrWhiteSpace(dto.Email) || string.IsNullOrWhiteSpace(dto.Otp) || 
+                string.IsNullOrWhiteSpace(dto.NewPassword))
+            {
+                return BadRequest(new ApiResponse
+                {
+                    Success = false,
+                    Message = "Tous les champs sont requis",
+                    Errors = new List<string> { "All fields are required" }
+                });
+            }
+
+            if (dto.NewPassword != dto.ConfirmPassword)
+            {
+                return BadRequest(new ApiResponse
+                {
+                    Success = false,
+                    Message = "Les mots de passe ne correspondent pas",
+                    Errors = new List<string> { "Passwords do not match" }
+                });
+            }
+
+            var (success, errors) = await _authService.ResetPasswordAsync(dto.Email, dto.Otp, dto.NewPassword);
+
+            if (!success)
+            {
+                return BadRequest(new ApiResponse
+                {
+                    Success = false,
+                    Message = errors.FirstOrDefault() ?? "Erreur lors de la réinitialisation",
+                    Errors = errors
+                });
+            }
+
+            return Ok(new ApiResponse
+            {
+                Success = true,
+                Message = "Mot de passe réinitialisé avec succès"
+            });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error resetting password");
+            return StatusCode(500, new ApiResponse
+            {
+                Success = false,
+                Message = "Une erreur s'est produite",
+                Errors = new List<string> { ex.Message }
+            });
+        }
+    }
 }

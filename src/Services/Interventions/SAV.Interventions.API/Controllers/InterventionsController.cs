@@ -334,6 +334,11 @@ public class InterventionsController : ControllerBase
         {
             return NotFound(new ApiResponse { Success = false, Message = "Intervention non trouvée" });
         }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Erreur lors de la génération de la facture PDF pour l'intervention {Id}", id);
+            return StatusCode(500, new ApiResponse { Success = false, Message = "Erreur lors de la génération du PDF: " + ex.Message });
+        }
     }
 
     /// <summary>
@@ -351,6 +356,11 @@ public class InterventionsController : ControllerBase
         catch (KeyNotFoundException)
         {
             return NotFound(new ApiResponse { Success = false, Message = "Intervention non trouvée" });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Erreur lors de la génération du rapport PDF pour l'intervention {Id}", id);
+            return StatusCode(500, new ApiResponse { Success = false, Message = "Erreur lors de la génération du PDF: " + ex.Message });
         }
     }
 

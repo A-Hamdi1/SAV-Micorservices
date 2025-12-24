@@ -1,6 +1,7 @@
 ﻿import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { evaluationsApi, Evaluation, CreateEvaluationRequest } from '../../api/newFeatures';
+import { clientsApi } from '../../api/clients';
 import { useAuthStore } from '../../store/authStore';
 import LoadingSpinner from '../../components/common/LoadingSpinner';
 import ErrorMessage from '../../components/common/ErrorMessage';
@@ -11,7 +12,7 @@ import Button from '../../components/common/Button';
 const EvaluationPage = () => {
   const { interventionId } = useParams<{ interventionId: string }>();
   const navigate = useNavigate();
-  const { user } = useAuthStore();
+  const { user, setUser } = useAuthStore();
   
   const [existingEvaluation, setExistingEvaluation] = useState<Evaluation | null>(null);
   const [loading, setLoading] = useState(true);
@@ -52,8 +53,27 @@ const EvaluationPage = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!interventionId || !user?.clientId) {
-      setError('Données manquantes');
+    let clientId = user?.clientId;
+    
+    // Si clientId n'est pas disponible, essayer de le récupérer
+    if (!clientId && user) {
+      try {
+        const clientResponse = await clientsApi.getMyProfile();
+        if (clientResponse.success && clientResponse.data) {
+          clientId = clientResponse.data.id;
+          // Mettre à jour le store avec le clientId
+          setUser({
+            ...user,
+            clientId: clientId
+          });
+        }
+      } catch (err) {
+        console.warn('Could not fetch client profile:', err);
+      }
+    }
+    
+    if (!interventionId || !clientId) {
+      setError('Données manquantes. Veuillez vous assurer d\'avoir un profil client créé.');
       return;
     }
 
@@ -63,7 +83,7 @@ const EvaluationPage = () => {
       
       const data: CreateEvaluationRequest = {
         interventionId: parseInt(interventionId),
-        clientId: user.clientId,
+        clientId: clientId,
         note,
         commentaire: commentaire.trim() || undefined,
         recommandeTechnicien: recommande

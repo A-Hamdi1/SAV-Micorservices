@@ -134,7 +134,7 @@ const ArticlesAchetesListPage = () => {
                       </div>
                       <div className="flex items-center gap-4 text-sm text-bodydark2 ml-13">
                         <span>N° série: {article.numeroSerie}</span>
-                        <span>'¢</span>
+                        <span>•</span>
                         <span>Acheté le {formatDate(article.dateAchat)}</span>
                       </div>
                     </div>
