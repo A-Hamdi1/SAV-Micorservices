@@ -65,6 +65,10 @@ export const useAuthStore = create<AuthState>()(
           if (response.success && response.data) {
             const authData = response.data;
             
+            // IMPORTANT: Set token in localStorage FIRST so subsequent API calls can use it
+            localStorage.setItem('token', authData.token);
+            localStorage.setItem('refreshToken', authData.refreshToken);
+            
             // Récupérer les infos utilisateur complètes
             let userInfo: User | null = null;
             try {
@@ -121,6 +125,10 @@ export const useAuthStore = create<AuthState>()(
           const response = await authApi.register({ email, password, confirmPassword, role });
           if (response.success && response.data) {
             const authData = response.data;
+            
+            // IMPORTANT: Set token in localStorage FIRST so subsequent API calls can use it
+            localStorage.setItem('token', authData.token);
+            localStorage.setItem('refreshToken', authData.refreshToken);
             
             // Récupérer les infos utilisateur complètes
             let userInfo: User | null = null;

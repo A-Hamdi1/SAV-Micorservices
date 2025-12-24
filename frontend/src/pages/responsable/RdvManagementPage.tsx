@@ -9,14 +9,22 @@ import StatusBadge from '../../components/common/StatusBadge';
 
 const RdvManagementPage = () => {
   const [demandes, setDemandes] = useState<DemandeRdv[]>([]);
+  const [historique, setHistorique] = useState<DemandeRdv[]>([]);
   const [creneaux, setCreneaux] = useState<CreneauDisponible[]>([]);
+  const [creneauxStats, setCreneauxStats] = useState({
+    totalCount: 0,
+    totalLibres: 0,
+    totalReserves: 0,
+    totalPages: 1
+  });
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize] = useState(20);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState<'demandes' | 'creneaux' | 'generer'>('demandes');
-  const [selectedDemande, setSelectedDemande] = useState<DemandeRdv | null>(null);
-  const [selectedCreneau, setSelectedCreneau] = useState<number | null>(null);
+  const [activeTab, setActiveTab] = useState<'demandes' | 'historique' | 'creneaux' | 'generer'>('demandes');
   const [refusRaison, setRefusRaison] = useState('');
   const [showRefusModal, setShowRefusModal] = useState(false);
+  const [demandeToRefuse, setDemandeToRefuse] = useState<DemandeRdv | null>(null);
   
   // Génération de créneaux
   const [genTechnicienId, setGenTechnicienId] = useState<number>(1);
@@ -35,14 +43,30 @@ const RdvManagementPage = () => {
       setLoading(true);
       setError(null);
       
+      // Demandes en attente
       const demandesRes = await rdvApi.getDemandesEnAttente();
       setDemandes(demandesRes.data.data || []);
+      
+      // Toutes les demandes (pour l'historique)
+      const allDemandesRes = await rdvApi.getDemandesRdv();
+      const allDemandes = allDemandesRes.data.data || [];
+      // Filtrer pour n'avoir que les demandes non en attente (historique)
+      setHistorique(allDemandes.filter((d: DemandeRdv) => d.statut !== 'EnAttente'));
       
       const today = new Date().toISOString().split('T')[0];
       const nextMonth = new Date();
       nextMonth.setMonth(nextMonth.getMonth() + 1);
-      const creneauxRes = await rdvApi.getCreneauxDisponibles(today, nextMonth.toISOString().split('T')[0]);
-      setCreneaux(creneauxRes.data.data || []);
+      
+      // Récupérer tous les créneaux avec pagination pour les stats et l'affichage
+      const creneauxRes = await rdvApi.getAllCreneaux(today, nextMonth.toISOString().split('T')[0], currentPage, pageSize);
+      const result = creneauxRes.data.data;
+      setCreneaux(result.creneaux || []);
+      setCreneauxStats({
+        totalCount: result.totalCount,
+        totalLibres: result.totalLibres,
+        totalReserves: result.totalReserves,
+        totalPages: result.totalPages
+      });
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Erreur lors du chargement');
     } finally {
@@ -50,17 +74,39 @@ const RdvManagementPage = () => {
     }
   };
 
+  const fetchCreneauxPage = async (page: number) => {
+    try {
+      const today = new Date().toISOString().split('T')[0];
+      const nextMonth = new Date();
+      nextMonth.setMonth(nextMonth.getMonth() + 1);
+      
+      const creneauxRes = await rdvApi.getAllCreneaux(today, nextMonth.toISOString().split('T')[0], page, pageSize);
+      const result = creneauxRes.data.data;
+      setCreneaux(result.creneaux || []);
+      setCreneauxStats({
+        totalCount: result.totalCount,
+        totalLibres: result.totalLibres,
+        totalReserves: result.totalReserves,
+        totalPages: result.totalPages
+      });
+      setCurrentPage(page);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Erreur lors du chargement');
+    }
+  };
+
   useEffect(() => {
     fetchData();
   }, []);
 
-  const handleAccepterDemande = async () => {
-    if (!selectedDemande || !selectedCreneau) return;
+  const handleAccepterDemande = async (demande: DemandeRdv) => {
+    if (!demande.creneauId) {
+      setError('Cette demande n\'a pas de créneau sélectionné');
+      return;
+    }
     
     try {
-      await rdvApi.accepterDemande(selectedDemande.id, selectedCreneau);
-      setSelectedDemande(null);
-      setSelectedCreneau(null);
+      await rdvApi.accepterDemande(demande.id, demande.creneauId);
       await fetchData();
     } catch (err) {
       setError('Erreur lors de l\'acceptation');
@@ -68,12 +114,12 @@ const RdvManagementPage = () => {
   };
 
   const handleRefuserDemande = async () => {
-    if (!selectedDemande) return;
+    if (!demandeToRefuse) return;
     
     try {
-      await rdvApi.refuserDemande(selectedDemande.id, refusRaison);
+      await rdvApi.refuserDemande(demandeToRefuse.id, refusRaison);
       setShowRefusModal(false);
-      setSelectedDemande(null);
+      setDemandeToRefuse(null);
       setRefusRaison('');
       await fetchData();
     } catch (err) {
@@ -98,9 +144,6 @@ const RdvManagementPage = () => {
     }
   };
 
-  const creneauxLibres = creneaux.filter(c => !c.estReserve);
-  const creneauxReserves = creneaux.filter(c => c.estReserve);
-
   if (loading) return <LoadingSpinner fullScreen />;
   if (error) return <ErrorMessage message={error} />;
 
@@ -123,35 +166,41 @@ const RdvManagementPage = () => {
         </div>
         <div className="rounded-xl p-6 text-white" style={{ background: 'linear-gradient(135deg, #22c55e, #4ade80)' }}>
           <div className="text-sm opacity-80 mb-1">Créneaux libres</div>
-          <div className="text-3xl font-bold">{creneauxLibres.length}</div>
+          <div className="text-3xl font-bold">{creneauxStats.totalLibres}</div>
         </div>
         <div className="rounded-xl p-6 text-white" style={{ background: 'linear-gradient(135deg, #3b82f6, #60a5fa)' }}>
           <div className="text-sm opacity-80 mb-1">Créneaux réservés</div>
-          <div className="text-3xl font-bold">{creneauxReserves.length}</div>
+          <div className="text-3xl font-bold">{creneauxStats.totalReserves}</div>
         </div>
         <div className="rounded-xl p-6 text-white" style={{ background: 'linear-gradient(135deg, #8b5cf6, #a78bfa)' }}>
           <div className="text-sm opacity-80 mb-1">Total créneaux</div>
-          <div className="text-3xl font-bold">{creneaux.length}</div>
+          <div className="text-3xl font-bold">{creneauxStats.totalCount}</div>
         </div>
       </div>
 
       {/* Tabs */}
-      <div className="flex border-b border-stroke mb-6">
+      <div className="flex border-b border-stroke mb-6 overflow-x-auto">
         <button
           onClick={() => setActiveTab('demandes')}
-          className={`px-6 py-3 font-medium transition-colors ${activeTab === 'demandes' ? 'border-b-2 border-primary text-primary' : 'text-bodydark2 hover:text-black'}`}
+          className={`px-6 py-3 font-medium transition-colors whitespace-nowrap ${activeTab === 'demandes' ? 'border-b-2 border-primary text-primary' : 'text-bodydark2 hover:text-black'}`}
         >
           📨 Demandes ({demandes.length})
         </button>
         <button
+          onClick={() => setActiveTab('historique')}
+          className={`px-6 py-3 font-medium transition-colors whitespace-nowrap ${activeTab === 'historique' ? 'border-b-2 border-primary text-primary' : 'text-bodydark2 hover:text-black'}`}
+        >
+          📋 Historique ({historique.length})
+        </button>
+        <button
           onClick={() => setActiveTab('creneaux')}
-          className={`px-6 py-3 font-medium transition-colors ${activeTab === 'creneaux' ? 'border-b-2 border-primary text-primary' : 'text-bodydark2 hover:text-black'}`}
+          className={`px-6 py-3 font-medium transition-colors whitespace-nowrap ${activeTab === 'creneaux' ? 'border-b-2 border-primary text-primary' : 'text-bodydark2 hover:text-black'}`}
         >
           📆 Créneaux
         </button>
         <button
           onClick={() => setActiveTab('generer')}
-          className={`px-6 py-3 font-medium transition-colors ${activeTab === 'generer' ? 'border-b-2 border-primary text-primary' : 'text-bodydark2 hover:text-black'}`}
+          className={`px-6 py-3 font-medium transition-colors whitespace-nowrap ${activeTab === 'generer' ? 'border-b-2 border-primary text-primary' : 'text-bodydark2 hover:text-black'}`}
         >
           ⚙️ Générer Créneaux
         </button>
@@ -173,44 +222,129 @@ const RdvManagementPage = () => {
             demandes.map((demande) => (
               <Card key={demande.id}>
                 <CardBody>
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <div className="font-medium text-black">
-                        Demande #{demande.id} - Réclamation #{demande.reclamationId}
+                  <div className="flex justify-between items-start gap-4">
+                    <div className="flex-1">
+                      <div className="font-medium text-black text-lg">
+                        {demande.motif || 'Service SAV'}
                       </div>
                       <div className="text-sm text-bodydark2 mt-1">
+                        {demande.reclamationId ? (
+                          <span>🔗 Lié à la réclamation #{demande.reclamationId}</span>
+                        ) : (
+                          <span className="text-primary">📅 RDV indépendant</span>
+                        )}
+                        <span className="mx-2">•</span>
                         Client ID: {demande.clientId}
                       </div>
-                      <div className="text-sm text-bodydark2 mt-2">
-                        <strong>Date préférée:</strong> {new Date(demande.dateSouhaitee || demande.datePreferee || '').toLocaleDateString('fr-FR')}
-                      </div>
-                      {(demande.preferenceMoment || demande.creneauPreference) && (
-                        <div className="text-sm text-bodydark2">
-                          <strong>Préférence:</strong> {demande.preferenceMoment || demande.creneauPreference}
+                      
+                      {/* Affichage du créneau sélectionné par le client */}
+                      {demande.creneau ? (
+                        <div className="mt-3 p-3 bg-success/10 border border-success/20 rounded-lg">
+                          <div className="text-sm font-medium text-success mb-1">📅 Créneau sélectionné par le client</div>
+                          <div className="text-sm text-black">
+                            <strong>{new Date(demande.creneau.dateDebut).toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}</strong>
+                          </div>
+                          <div className="text-sm text-bodydark2">
+                            🕐 {new Date(demande.creneau.dateDebut).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })} - {new Date(demande.creneau.dateFin).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}
+                          </div>
+                          <div className="text-sm text-bodydark2">
+                            👨‍🔧 Technicien: {demande.creneau.technicienNom || `Tech #${demande.creneau.technicienId}`}
+                          </div>
+                        </div>
+                      ) : demande.creneauId ? (
+                        <div className="mt-3 p-3 bg-warning/10 border border-warning/20 rounded-lg">
+                          <div className="text-sm text-warning">⚠️ Créneau ID #{demande.creneauId} (détails non chargés)</div>
+                        </div>
+                      ) : (
+                        <div className="mt-3 p-3 bg-danger/10 border border-danger/20 rounded-lg">
+                          <div className="text-sm text-danger">❌ Aucun créneau sélectionné</div>
                         </div>
                       )}
+                      
                       {demande.commentaire && (
-                        <div className="text-sm text-bodydark2 mt-1">
-                          <strong>Commentaire:</strong> {demande.commentaire}
+                        <div className="text-sm text-bodydark2 mt-2 italic">
+                          💬 "{demande.commentaire}"
                         </div>
                       )}
                       <div className="text-xs text-bodydark2 mt-2">
                         Créée le {new Date(demande.createdAt || demande.dateCreation || '').toLocaleString('fr-FR')}
                       </div>
                     </div>
-                    <div className="flex gap-2">
+                    <div className="flex flex-col gap-2">
                       <Button
                         variant="success"
-                        onClick={() => setSelectedDemande(demande)}
+                        onClick={() => handleAccepterDemande(demande)}
+                        disabled={!demande.creneauId}
                       >
-                        Accepter
+                        ✓ Accepter
                       </Button>
                       <Button
                         variant="danger"
-                        onClick={() => { setSelectedDemande(demande); setShowRefusModal(true); }}
+                        onClick={() => { setDemandeToRefuse(demande); setShowRefusModal(true); }}
                       >
-                        Refuser
+                        ✗ Refuser
                       </Button>
+                    </div>
+                  </div>
+                </CardBody>
+              </Card>
+            ))
+          )}
+        </div>
+      )}
+
+      {/* Historique Tab */}
+      {activeTab === 'historique' && (
+        <div className="space-y-4">
+          {historique.length === 0 ? (
+            <Card>
+              <CardBody>
+                <div className="bg-bodydark1/20 border border-bodydark1/30 rounded-xl p-6 text-center">
+                  <span className="text-4xl mb-2 block">📭</span>
+                  <p className="text-bodydark2 font-medium">Aucun historique de RDV</p>
+                </div>
+              </CardBody>
+            </Card>
+          ) : (
+            historique.map((demande) => (
+              <Card key={demande.id}>
+                <CardBody>
+                  <div className="flex justify-between items-start">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-3 mb-2">
+                        <span className="font-medium text-black text-lg">
+                          {demande.motif || 'Service SAV'}
+                        </span>
+                        <StatusBadge status={demande.statut} />
+                      </div>
+                      <div className="text-sm text-bodydark2 mt-1">
+                        {demande.reclamationId ? (
+                          <span>🔗 Réclamation #{demande.reclamationId}</span>
+                        ) : (
+                          <span className="text-primary">📅 RDV indépendant</span>
+                        )}
+                        <span className="mx-2">•</span>
+                        Client ID: {demande.clientId}
+                      </div>
+                      <div className="text-sm text-bodydark2 mt-2">
+                        <strong>Date souhaitée:</strong> {new Date(demande.dateSouhaitee || demande.datePreferee || '').toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
+                      </div>
+                      {demande.creneau && (
+                        <div className="text-sm text-success mt-1">
+                          ✅ Créneau: {new Date(demande.creneau.dateDebut).toLocaleString('fr-FR')} avec {demande.creneau.technicienNom}
+                        </div>
+                      )}
+                      {demande.commentaire && (
+                        <div className="text-sm text-bodydark2 mt-1 italic">
+                          💬 "{demande.commentaire}"
+                        </div>
+                      )}
+                    </div>
+                    <div className="text-right text-xs text-bodydark2">
+                      <div>Créée: {new Date(demande.createdAt || '').toLocaleDateString('fr-FR')}</div>
+                      {demande.traiteeAt && (
+                        <div>Traitée: {new Date(demande.traiteeAt).toLocaleDateString('fr-FR')}</div>
+                      )}
                     </div>
                   </div>
                 </CardBody>
@@ -236,7 +370,7 @@ const RdvManagementPage = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {creneaux.slice(0, 50).map((creneau) => (
+                  {creneaux.map((creneau) => (
                     <tr key={creneau.id} className="border-b border-stroke hover:bg-gray-2">
                       <td className="px-6 py-4 text-sm font-medium text-black">
                         {new Date(creneau.dateDebut).toLocaleString('fr-FR')}
@@ -258,9 +392,49 @@ const RdvManagementPage = () => {
                 </tbody>
               </table>
             </div>
-            {creneaux.length > 50 && (
-              <div className="p-4 text-center text-bodydark2 border-t border-stroke">
-                Affichage limité aux 50 premiers créneaux
+            {/* Pagination */}
+            {creneauxStats.totalPages > 1 && (
+              <div className="p-4 border-t border-stroke flex items-center justify-between">
+                <div className="text-sm text-bodydark2">
+                  Page {currentPage} sur {creneauxStats.totalPages} ({creneauxStats.totalCount} créneaux)
+                </div>
+                <div className="flex gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => fetchCreneauxPage(1)}
+                    disabled={currentPage === 1}
+                  >
+                    ⏮ Début
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => fetchCreneauxPage(currentPage - 1)}
+                    disabled={currentPage === 1}
+                  >
+                    ← Précédent
+                  </Button>
+                  <span className="px-4 py-2 text-sm font-medium">
+                    {currentPage} / {creneauxStats.totalPages}
+                  </span>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => fetchCreneauxPage(currentPage + 1)}
+                    disabled={currentPage >= creneauxStats.totalPages}
+                  >
+                    Suivant →
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => fetchCreneauxPage(creneauxStats.totalPages)}
+                    disabled={currentPage >= creneauxStats.totalPages}
+                  >
+                    Fin ⏭
+                  </Button>
+                </div>
               </div>
             )}
           </CardBody>
@@ -354,72 +528,21 @@ const RdvManagementPage = () => {
         </Card>
       )}
 
-      {/* Modal Sélection Créneau */}
-      {selectedDemande && !showRefusModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-          <Card className="w-full max-w-lg mx-4 max-h-[80vh] overflow-auto">
-            <CardHeader>
-              <h2 className="text-xl font-bold text-black">Attribuer un Créneau</h2>
-            </CardHeader>
-            <CardBody>
-              <p className="text-bodydark2 mb-4">
-                Demande #{selectedDemande.id} - Date préférée: {new Date(selectedDemande.dateSouhaitee || selectedDemande.datePreferee || '').toLocaleDateString('fr-FR')}
-              </p>
-              
-              <div className="space-y-2 mb-4">
-                <label className="form-label">Sélectionner un créneau libre</label>
-                {creneauxLibres.length === 0 ? (
-                  <p className="text-meta-1">Aucun créneau libre disponible</p>
-                ) : (
-                  <select
-                    value={selectedCreneau || ''}
-                    onChange={(e) => setSelectedCreneau(parseInt(e.target.value))}
-                    className="form-select"
-                  >
-                    <option value="">-- Choisir un créneau --</option>
-                    {creneauxLibres.map((c) => (
-                      <option key={c.id} value={c.id}>
-                        {new Date(c.dateDebut).toLocaleString('fr-FR')} - {c.technicienNom || `Tech #${c.technicienId}`}
-                      </option>
-                    ))}
-                  </select>
-                )}
-              </div>
-
-              <div className="flex gap-4">
-                <Button
-                  variant="success"
-                  className="flex-1"
-                  onClick={handleAccepterDemande}
-                  disabled={!selectedCreneau}
-                >
-                  Confirmer
-                </Button>
-                <Button
-                  variant="outline"
-                  className="flex-1"
-                  onClick={() => { setSelectedDemande(null); setSelectedCreneau(null); }}
-                >
-                  Annuler
-                </Button>
-              </div>
-            </CardBody>
-          </Card>
-        </div>
-      )}
-
       {/* Modal Refus */}
-      {showRefusModal && selectedDemande && (
+      {showRefusModal && demandeToRefuse && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
           <Card className="w-full max-w-md mx-4">
             <CardHeader>
               <h2 className="text-xl font-bold text-black">Refuser la Demande</h2>
             </CardHeader>
             <CardBody>
-              <p className="text-bodydark2 mb-4">Demande #{selectedDemande.id}</p>
+              <div className="mb-4">
+                <p className="text-bodydark2">Demande #{demandeToRefuse.id}</p>
+                <p className="text-sm text-black font-medium mt-1">{demandeToRefuse.motif}</p>
+              </div>
               
               <div className="mb-4">
-                <label className="form-label">Raison du refus</label>
+                <label className="form-label">Raison du refus *</label>
                 <textarea
                   value={refusRaison}
                   onChange={(e) => setRefusRaison(e.target.value)}
@@ -441,7 +564,7 @@ const RdvManagementPage = () => {
                 <Button
                   variant="outline"
                   className="flex-1"
-                  onClick={() => { setShowRefusModal(false); setSelectedDemande(null); setRefusRaison(''); }}
+                  onClick={() => { setShowRefusModal(false); setDemandeToRefuse(null); setRefusRaison(''); }}
                 >
                   Annuler
                 </Button>

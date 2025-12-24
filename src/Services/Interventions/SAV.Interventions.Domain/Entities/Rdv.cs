@@ -16,10 +16,11 @@ public class CreneauDisponible
 public class DemandeRdv
 {
     public int Id { get; set; }
-    public int ReclamationId { get; set; }
+    public int? ReclamationId { get; set; } // Nullable - RDV peut être indépendant
     public int ClientId { get; set; }
     public int? CreneauId { get; set; }
     public CreneauDisponible? Creneau { get; set; }
+    public string Motif { get; set; } = string.Empty; // Motif de la demande (ex: "Changement pâte thermique")
     public DateTime? DateSouhaitee { get; set; }
     public string? PreferenceMoment { get; set; } // Matin, Après-midi, Soir
     public DemandeRdvStatut Statut { get; set; } = DemandeRdvStatut.EnAttente;

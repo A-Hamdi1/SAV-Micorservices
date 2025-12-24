@@ -59,7 +59,7 @@ const PaymentsManagementPage = () => {
         description: manualPaymentData.description || undefined,
         numeroTransaction: manualPaymentData.numeroTransaction || undefined,
       };
-      return paymentsApi.recordManualPayment(data.interventionId, data);
+      return paymentsApi.recordManualPayment(data);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['payments'] });

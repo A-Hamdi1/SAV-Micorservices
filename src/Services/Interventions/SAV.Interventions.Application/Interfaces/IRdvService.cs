@@ -7,6 +7,7 @@ public interface IRdvService
 {
     // Créneaux
     Task<IEnumerable<CreneauDto>> GetCreneauxDisponiblesAsync(DateTime dateDebut, DateTime dateFin, int? technicienId = null);
+    Task<CreneauxPaginatedResult> GetAllCreneauxAsync(DateTime dateDebut, DateTime dateFin, int? technicienId = null, int page = 1, int pageSize = 20);
     Task<CreneauDto?> CreateCreneauAsync(CreateCreneauDto dto);
     Task<IEnumerable<CreneauDto>> CreateCreneauxRecurrentsAsync(CreateCreneauxRecurrentsDto dto);
     Task<bool> DeleteCreneauAsync(int id);
@@ -76,10 +77,11 @@ public class CreateCreneauxRecurrentsDto
 public class DemandeRdvDto
 {
     public int Id { get; set; }
-    public int ReclamationId { get; set; }
+    public int? ReclamationId { get; set; }
     public int ClientId { get; set; }
     public int? CreneauId { get; set; }
     public CreneauDto? Creneau { get; set; }
+    public string Motif { get; set; } = string.Empty;
     public DateTime? DateSouhaitee { get; set; }
     public string? PreferenceMoment { get; set; }
     public string Statut { get; set; } = string.Empty;
@@ -90,13 +92,17 @@ public class DemandeRdvDto
 
 public class CreateDemandeRdvDto
 {
-    [Required(ErrorMessage = "L'ID de la réclamation est requis")]
+    // ReclamationId est maintenant optionnel - le RDV peut être indépendant
     [Range(1, int.MaxValue, ErrorMessage = "L'ID de la réclamation doit être positif")]
-    public int ReclamationId { get; set; }
+    public int? ReclamationId { get; set; }
     
     [Required(ErrorMessage = "L'ID du client est requis")]
     [Range(1, int.MaxValue, ErrorMessage = "L'ID du client doit être positif")]
     public int ClientId { get; set; }
+    
+    [Required(ErrorMessage = "Le motif est requis")]
+    [MaxLength(200, ErrorMessage = "Le motif ne peut pas dépasser 200 caractères")]
+    public string Motif { get; set; } = string.Empty;
     
     public int? CreneauId { get; set; }
     public DateTime? DateSouhaitee { get; set; }
@@ -117,4 +123,15 @@ public class TraiterDemandeRdvDto
     
     [MaxLength(500, ErrorMessage = "Le commentaire ne peut pas dépasser 500 caractères")]
     public string? Commentaire { get; set; }
+}
+
+public class CreneauxPaginatedResult
+{
+    public IEnumerable<CreneauDto> Creneaux { get; set; } = new List<CreneauDto>();
+    public int TotalCount { get; set; }
+    public int TotalLibres { get; set; }
+    public int TotalReserves { get; set; }
+    public int Page { get; set; }
+    public int PageSize { get; set; }
+    public int TotalPages => (int)Math.Ceiling((double)TotalCount / PageSize);
 }
