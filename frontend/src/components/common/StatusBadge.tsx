@@ -16,11 +16,11 @@ const StatusBadge = ({ status, size = 'md', text, label, type = 'general' }: Sta
   const getStatusColor = (status: string) => {
     const statusLower = status.toLowerCase();
     // Success states
-    if (['success', 'succès', 'reussi', 'terminee', 'resolue', 'paye'].some(s => statusLower.includes(s))) {
+    if (['success', 'succès', 'reussi', 'terminee', 'resolue', 'paye', 'libre', 'confirmee', 'confirme'].some(s => statusLower.includes(s))) {
       return 'bg-green-100 text-green-700 border-green-200';
     }
     // Danger states
-    if (['danger', 'error', 'erreur', 'annulee', 'rejetee', 'echoue', 'rembourse'].some(s => statusLower.includes(s))) {
+    if (['danger', 'error', 'erreur', 'annulee', 'rejetee', 'echoue', 'rembourse', 'refusee', 'refuse'].some(s => statusLower.includes(s))) {
       return 'bg-red-100 text-red-700 border-red-200';
     }
     // Warning states
@@ -28,7 +28,7 @@ const StatusBadge = ({ status, size = 'md', text, label, type = 'general' }: Sta
       return 'bg-amber-100 text-amber-700 border-amber-200';
     }
     // Progress states
-    if (['encours', 'cours'].some(s => statusLower.includes(s))) {
+    if (['encours', 'cours', 'reserve', 'réservé'].some(s => statusLower.includes(s))) {
       return 'bg-blue-100 text-blue-700 border-blue-200';
     }
     // Planned states

@@ -20,7 +20,7 @@ public class RdvController : ControllerBase
     #region Créneaux
 
     /// <summary>
-    /// Obtenir les créneaux disponibles
+    /// Obtenir les créneaux disponibles (non réservés uniquement)
     /// </summary>
     [HttpGet("creneaux")]
     public async Task<IActionResult> GetCreneauxDisponibles(
@@ -33,6 +33,25 @@ public class RdvController : ControllerBase
         {
             Success = true,
             Data = creneaux
+        });
+    }
+
+    /// <summary>
+    /// Obtenir tous les créneaux (disponibles et réservés) avec pagination
+    /// </summary>
+    [HttpGet("creneaux/all")]
+    public async Task<IActionResult> GetAllCreneaux(
+        [FromQuery] DateTime dateDebut,
+        [FromQuery] DateTime dateFin,
+        [FromQuery] int? technicienId = null,
+        [FromQuery] int page = 1,
+        [FromQuery] int pageSize = 20)
+    {
+        var result = await _rdvService.GetAllCreneauxAsync(dateDebut, dateFin, technicienId, page, pageSize);
+        return Ok(new ApiResponse<object>
+        {
+            Success = true,
+            Data = result
         });
     }
 
@@ -235,13 +254,24 @@ public class RdvController : ControllerBase
     [HttpPost("demandes")]
     public async Task<IActionResult> CreateDemandeRdv([FromBody] CreateDemandeRdvDto dto)
     {
-        var demande = await _rdvService.CreateDemandeRdvAsync(dto);
-        return CreatedAtAction(nameof(GetDemandeRdvById), new { id = demande!.Id }, new ApiResponse<object>
+        try
         {
-            Success = true,
-            Data = demande,
-            Message = "Demande de RDV créée avec succès"
-        });
+            var demande = await _rdvService.CreateDemandeRdvAsync(dto);
+            return CreatedAtAction(nameof(GetDemandeRdvById), new { id = demande!.Id }, new ApiResponse<object>
+            {
+                Success = true,
+                Data = demande,
+                Message = "Demande de RDV créée avec succès"
+            });
+        }
+        catch (InvalidOperationException ex)
+        {
+            return BadRequest(new ApiResponse<object>
+            {
+                Success = false,
+                Message = ex.Message
+            });
+        }
     }
 
     /// <summary>

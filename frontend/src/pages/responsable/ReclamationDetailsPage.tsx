@@ -192,15 +192,17 @@ const ReclamationDetailsPage = () => {
             <CardHeader
               title="Interventions"
               action={
-                <Link
-                  to={`/responsable/interventions/new/${rec.id}`}
-                  className="inline-flex items-center gap-2 text-sm font-medium text-primary-600 hover:text-primary-700"
-                >
-                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-                  </svg>
-                  Créer intervention
-                </Link>
+                rec.statut !== 'Resolue' && rec.statut !== 'Rejetee' && (
+                  <Link
+                    to={`/responsable/interventions/new/${rec.id}`}
+                    className="inline-flex items-center gap-2 text-sm font-medium text-primary-600 hover:text-primary-700"
+                  >
+                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                    </svg>
+                    Créer intervention
+                  </Link>
+                )
               }
             />
             <CardBody className="p-0">
@@ -244,12 +246,14 @@ const ReclamationDetailsPage = () => {
                     </svg>
                   </div>
                   <p className="text-bodydark2 text-sm mb-4">Aucune intervention pour cette réclamation</p>
-                  <Link
-                    to={`/responsable/interventions/new/${rec.id}`}
-                    className="text-sm font-medium text-primary-600 hover:text-primary-700"
-                  >
-                    Créer une intervention
-                  </Link>
+                  {rec.statut !== 'Resolue' && rec.statut !== 'Rejetee' && (
+                    <Link
+                      to={`/responsable/interventions/new/${rec.id}`}
+                      className="text-sm font-medium text-primary-600 hover:text-primary-700"
+                    >
+                      Créer une intervention
+                    </Link>
+                  )}
                 </div>
               )}
             </CardBody>
@@ -258,54 +262,83 @@ const ReclamationDetailsPage = () => {
 
         {/* Sidebar */}
         <div className="lg:col-span-1">
-          <Card>
-            <CardHeader title="Mettre à jour le statut" />
-            <CardBody>
-              <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-                <div>
-                  <label htmlFor="statut" className="form-label">
-                    Statut
-                  </label>
-                  <select
-                    {...register('statut', { required: 'Statut requis' })}
-                    className="form-select"
-                  >
-                    <option value="EnAttente">En Attente</option>
-                    <option value="EnCours">En Cours</option>
-                    <option value="Resolue">Résolue</option>
-                    <option value="Rejetee">Rejetée</option>
-                  </select>
-                  {errors.statut && (
-                    <p className="mt-1 text-sm text-danger">{errors.statut.message}</p>
-                  )}
-                </div>
+          {rec.statut !== 'Resolue' && rec.statut !== 'Rejetee' ? (
+            <Card>
+              <CardHeader title="Mettre à jour le statut" />
+              <CardBody>
+                <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+                  <div>
+                    <label htmlFor="statut" className="form-label">
+                      Statut
+                    </label>
+                    <select
+                      {...register('statut', { required: 'Statut requis' })}
+                      className="form-select"
+                    >
+                      <option value="EnAttente">En Attente</option>
+                      <option value="EnCours">En Cours</option>
+                      <option value="Resolue">Résolue</option>
+                      <option value="Rejetee">Rejetée</option>
+                    </select>
+                    {errors.statut && (
+                      <p className="mt-1 text-sm text-danger">{errors.statut.message}</p>
+                    )}
+                  </div>
 
-                <div>
-                  <label
-                    htmlFor="commentaireResponsable"
-                    className="form-label"
-                  >
-                    Commentaire (optionnel)
-                  </label>
-                  <textarea
-                    {...register('commentaireResponsable')}
-                    rows={4}
-                    className="form-input"
-                    placeholder="Ajoutez un commentaire..."
-                  />
-                </div>
+                  <div>
+                    <label
+                      htmlFor="commentaireResponsable"
+                      className="form-label"
+                    >
+                      Commentaire (optionnel)
+                    </label>
+                    <textarea
+                      {...register('commentaireResponsable')}
+                      rows={4}
+                      className="form-input"
+                      placeholder="Ajoutez un commentaire..."
+                    />
+                  </div>
 
-                <Button
-                  type="submit"
-                  variant="primary"
-                  className="w-full"
-                  loading={updateMutation.isPending}
-                >
-                  Mettre à jour
-                </Button>
-              </form>
-            </CardBody>
-          </Card>
+                  <Button
+                    type="submit"
+                    variant="primary"
+                    className="w-full"
+                    loading={updateMutation.isPending}
+                  >
+                    Mettre à jour
+                  </Button>
+                </form>
+              </CardBody>
+            </Card>
+          ) : (
+            <Card>
+              <CardHeader title="Réclamation clôturée" />
+              <CardBody>
+                <div className="text-center py-4">
+                  <div className={`mx-auto w-12 h-12 rounded-full flex items-center justify-center mb-3 ${
+                    rec.statut === 'Resolue' ? 'bg-success/10' : 'bg-danger/10'
+                  }`}>
+                    {rec.statut === 'Resolue' ? (
+                      <svg className="w-6 h-6 text-success" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                    ) : (
+                      <svg className="w-6 h-6 text-danger" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                    )}
+                  </div>
+                  <p className="text-sm text-bodydark2">
+                    Cette réclamation est {rec.statut === 'Resolue' ? 'résolue' : 'rejetée'}.
+                  </p>
+                  <p className="text-xs text-bodydark2 mt-1">
+                    Aucune modification n'est possible.
+                  </p>
+                </div>
+              </CardBody>
+            </Card>
+          )}
         </div>
       </div>
     </div>

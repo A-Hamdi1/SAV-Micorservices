@@ -29,6 +29,36 @@ public class RdvService : IRdvService
         return creneaux.Select(MapToCreneauDto);
     }
 
+    public async Task<CreneauxPaginatedResult> GetAllCreneauxAsync(DateTime dateDebut, DateTime dateFin, int? technicienId = null, int page = 1, int pageSize = 20)
+    {
+        var query = _context.CreneauxDisponibles
+            .Include(c => c.Technicien)
+            .Where(c => c.DateDebut >= dateDebut && c.DateFin <= dateFin);
+
+        if (technicienId.HasValue)
+            query = query.Where(c => c.TechnicienId == technicienId.Value);
+
+        var totalCount = await query.CountAsync();
+        var totalLibres = await query.CountAsync(c => !c.EstReserve);
+        var totalReserves = await query.CountAsync(c => c.EstReserve);
+
+        var creneaux = await query
+            .OrderBy(c => c.DateDebut)
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
+
+        return new CreneauxPaginatedResult
+        {
+            Creneaux = creneaux.Select(MapToCreneauDto),
+            TotalCount = totalCount,
+            TotalLibres = totalLibres,
+            TotalReserves = totalReserves,
+            Page = page,
+            PageSize = pageSize
+        };
+    }
+
     public async Task<CreneauDto?> CreateCreneauAsync(CreateCreneauDto dto)
     {
         var technicien = await _context.Techniciens.FindAsync(dto.TechnicienId);
@@ -199,12 +229,50 @@ public class RdvService : IRdvService
 
     public async Task<DemandeRdvDto?> CreateDemandeRdvAsync(CreateDemandeRdvDto dto)
     {
+        // Vérifier si le client a déjà un RDV actif (EnAttente ou Confirmée avec date future)
+        var rdvActif = await _context.DemandesRdv
+            .Include(d => d.Creneau)
+            .Where(d => d.ClientId == dto.ClientId)
+            .Where(d => d.Statut == DemandeRdvStatut.EnAttente || d.Statut == DemandeRdvStatut.Confirmee)
+            .Where(d => 
+                // Si pas de créneau assigné, considérer comme actif
+                d.CreneauId == null || 
+                // Si créneau assigné, vérifier que la date n'est pas passée
+                (d.Creneau != null && d.Creneau.DateFin > DateTime.UtcNow))
+            .FirstOrDefaultAsync();
+
+        if (rdvActif != null)
+        {
+            var message = rdvActif.Statut == DemandeRdvStatut.EnAttente
+                ? "Vous avez déjà une demande de RDV en attente de traitement."
+                : $"Vous avez déjà un RDV confirmé prévu. Veuillez attendre qu'il soit passé pour en demander un autre.";
+            throw new InvalidOperationException(message);
+        }
+
+        // Le créneau est maintenant obligatoire
+        if (!dto.CreneauId.HasValue)
+        {
+            throw new InvalidOperationException("Vous devez sélectionner un créneau pour votre demande de RDV.");
+        }
+
+        // Vérifier si le créneau sélectionné est disponible
+        var creneauSelectionne = await _context.CreneauxDisponibles
+            .Include(c => c.Technicien)
+            .FirstOrDefaultAsync(c => c.Id == dto.CreneauId.Value);
+        
+        if (creneauSelectionne == null)
+            throw new InvalidOperationException("Le créneau sélectionné n'existe pas.");
+        
+        if (creneauSelectionne.EstReserve)
+            throw new InvalidOperationException("Le créneau sélectionné n'est plus disponible.");
+
         var demande = new DemandeRdv
         {
             ReclamationId = dto.ReclamationId,
             ClientId = dto.ClientId,
+            Motif = dto.Motif,
             CreneauId = dto.CreneauId,
-            DateSouhaitee = dto.DateSouhaitee,
+            DateSouhaitee = dto.DateSouhaitee ?? creneauSelectionne?.DateDebut,
             PreferenceMoment = dto.PreferenceMoment,
             Commentaire = dto.Commentaire
         };
@@ -212,11 +280,9 @@ public class RdvService : IRdvService
         _context.DemandesRdv.Add(demande);
         await _context.SaveChangesAsync();
 
-        if (dto.CreneauId.HasValue)
+        if (creneauSelectionne != null)
         {
-            demande.Creneau = await _context.CreneauxDisponibles
-                .Include(c => c.Technicien)
-                .FirstOrDefaultAsync(c => c.Id == dto.CreneauId.Value);
+            demande.Creneau = creneauSelectionne;
         }
 
         return MapToDemandeRdvDto(demande);
@@ -234,16 +300,22 @@ public class RdvService : IRdvService
 
         if (dto.Accepter)
         {
-            if (dto.CreneauId.HasValue)
+            // Utiliser le créneau fourni par le responsable, sinon celui déjà sélectionné par le client
+            var creneauIdToUse = dto.CreneauId ?? demande.CreneauId;
+            
+            if (creneauIdToUse.HasValue)
             {
                 var creneau = await _context.CreneauxDisponibles
                     .Include(c => c.Technicien)
-                    .FirstOrDefaultAsync(c => c.Id == dto.CreneauId.Value);
+                    .FirstOrDefaultAsync(c => c.Id == creneauIdToUse.Value);
 
                 if (creneau == null || creneau.EstReserve)
                     throw new InvalidOperationException("Créneau non disponible");
 
-                demande.CreneauId = dto.CreneauId;
+                // Marquer le créneau comme réservé
+                creneau.EstReserve = true;
+                
+                demande.CreneauId = creneauIdToUse;
                 demande.Creneau = creneau;
             }
 
@@ -269,6 +341,12 @@ public class RdvService : IRdvService
 
         if (demande == null)
             return null;
+
+        // Libérer le créneau si il était réservé
+        if (demande.Creneau != null && demande.Creneau.EstReserve)
+        {
+            demande.Creneau.EstReserve = false;
+        }
 
         demande.Statut = DemandeRdvStatut.Annulee;
         demande.TraiteeAt = DateTime.UtcNow;
@@ -297,6 +375,7 @@ public class RdvService : IRdvService
         Id = demande.Id,
         ReclamationId = demande.ReclamationId,
         ClientId = demande.ClientId,
+        Motif = demande.Motif,
         CreneauId = demande.CreneauId,
         Creneau = demande.Creneau != null ? MapToCreneauDto(demande.Creneau) : null,
         DateSouhaitee = demande.DateSouhaitee,

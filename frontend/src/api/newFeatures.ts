@@ -68,8 +68,8 @@ export const paymentsApi = {
   getByClientId: (clientId: number) =>
     api.get<{ data: Payment[] }>(`/api/payments/client/${clientId}`),
   
-  recordManualPayment: (interventionId: number, data: CreateManualPaymentRequest) =>
-    api.post<{ data: Payment }>(`/api/payments/manual/${interventionId}`, data),
+  recordManualPayment: (data: CreateManualPaymentRequest) =>
+    api.post<{ data: Payment }>('/api/payments/manual', data),
   
   refund: (paymentId: number) =>
     api.post<{ data: Payment }>(`/api/payments/${paymentId}/refund`),
@@ -166,12 +166,23 @@ export interface CreneauDisponible {
   interventionId?: number;
 }
 
+export interface CreneauxPaginatedResult {
+  creneaux: CreneauDisponible[];
+  totalCount: number;
+  totalLibres: number;
+  totalReserves: number;
+  page: number;
+  pageSize: number;
+  totalPages: number;
+}
+
 export interface DemandeRdv {
   id: number;
-  reclamationId: number;
+  reclamationId?: number; // Nullable - RDV peut être indépendant
   clientId: number;
   creneauId?: number;
   creneau?: CreneauDisponible;
+  motif: string; // Motif de la demande
   dateSouhaitee?: string;
   preferenceMoment?: string;
   statut: string;
@@ -202,9 +213,10 @@ export interface CreateCreneauxRecurrentsRequest {
 }
 
 export interface CreateDemandeRdvRequest {
-  reclamationId: number;
+  reclamationId?: number; // Optionnel - RDV peut être indépendant
   clientId: number;
-  creneauId?: number;
+  motif: string; // Motif obligatoire
+  creneauId?: number; // Créneau sélectionné par le client
   dateSouhaitee?: string;
   preferenceMoment?: string;
   commentaire?: string;
@@ -223,6 +235,11 @@ export const rdvApi = {
   getCreneauxDisponibles: (dateDebut: string, dateFin: string, technicienId?: number) =>
     api.get<{ data: CreneauDisponible[] }>('/api/rdv/creneaux', {
       params: { dateDebut, dateFin, technicienId }
+    }),
+  
+  getAllCreneaux: (dateDebut: string, dateFin: string, page: number = 1, pageSize: number = 20, technicienId?: number) =>
+    api.get<{ data: CreneauxPaginatedResult }>('/api/rdv/creneaux/all', {
+      params: { dateDebut, dateFin, page, pageSize, technicienId }
     }),
   
   createCreneau: (data: CreateCreneauRequest) =>
@@ -259,6 +276,7 @@ export const rdvApi = {
     const backendData = {
       reclamationId: data.reclamationId,
       clientId: data.clientId,
+      motif: data.motif,
       creneauId: data.creneauId,
       dateSouhaitee: data.dateSouhaitee || data.datePreferee,
       preferenceMoment: data.preferenceMoment || data.creneauPreference,
@@ -276,7 +294,6 @@ export const rdvApi = {
   annulerDemande: (id: number) =>
     api.post<{ data: DemandeRdv }>(`/api/rdv/demandes/${id}/annuler`),
   
-  // Méthodes d'aide pour la gestion
   getDemandesEnAttente: () =>
     api.get<{ data: DemandeRdv[] }>('/api/rdv/demandes', {
       params: { statut: 'EnAttente' }

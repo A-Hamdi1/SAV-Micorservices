@@ -151,19 +151,13 @@ public class PaymentsController : ControllerBase
     /// <summary>
     /// Enregistrer un paiement manuel (espèces, chèque, virement)
     /// </summary>
-    [HttpPost("manual/{interventionId}")]
+    [HttpPost("manual")]
     [Authorize(Roles = "ResponsableSAV")]
-    public async Task<ActionResult<ApiResponse<PaymentDto>>> CreateManualPayment(int interventionId)
+    public async Task<ActionResult<ApiResponse<PaymentDto>>> CreateManualPayment([FromBody] CreateManualPaymentDto dto)
     {
         try
         {
-            var payment = await _paymentService.CreateManualPaymentAsync(new CreateManualPaymentDto
-            {
-                InterventionId = interventionId,
-                ClientId = 0, // À déterminer depuis l'intervention
-                Montant = 0,
-                Methode = PaymentMethode.Especes
-            });
+            var payment = await _paymentService.CreateManualPaymentAsync(dto);
             return Ok(new ApiResponse<PaymentDto>
             {
                 Success = true,

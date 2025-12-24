@@ -47,6 +47,7 @@ import AnalyticsDashboardPage from './pages/responsable/AnalyticsDashboardPage';
 import StockManagementPage from './pages/responsable/StockManagementPage';
 import RdvManagementPage from './pages/responsable/RdvManagementPage';
 import PaymentsManagementPage from './pages/responsable/PaymentsManagementPage';
+import EvaluationsListPage from './pages/responsable/EvaluationsListPage';
 
 // Composant pour la redirection par défaut
 const DefaultRedirect = () => {
@@ -85,7 +86,7 @@ function App() {
                   <Route path="reclamations" element={<MyReclamationsPage />} />
                   <Route path="reclamations/:id" element={<ReclamationDetailsPage />} />
                   <Route path="evaluation/:interventionId" element={<EvaluationPage />} />
-                  <Route path="rdv/:reclamationId" element={<DemandeRdvPage />} />
+                  <Route path="rdv" element={<DemandeRdvPage />} />
                   <Route path="payment/:interventionId" element={<PaymentPage />} />
                   <Route path="payment/:interventionId/success" element={<PaymentSuccessPage />} />
                   <Route path="payment/:interventionId/cancel" element={<PaymentCancelPage />} />
@@ -131,6 +132,7 @@ function App() {
                 <Route path="stock" element={<StockManagementPage />} />
                 <Route path="rdv" element={<RdvManagementPage />} />
                 <Route path="payments" element={<PaymentsManagementPage />} />
+                <Route path="evaluations" element={<EvaluationsListPage />} />
                 <Route path="*" element={<Navigate to="/responsable/dashboard" replace />} />
               </Routes>
             </Layout>
