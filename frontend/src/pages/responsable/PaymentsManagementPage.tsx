@@ -202,7 +202,7 @@ const PaymentsManagementPage = () => {
                 </select>
               </div>
               <div>
-                <label className="form-label">NÂ° Transaction</label>
+                <label className="form-label">N° Transaction</label>
                 <input
                   type="text"
                   value={manualPaymentData.numeroTransaction}

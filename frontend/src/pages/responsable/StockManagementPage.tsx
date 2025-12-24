@@ -132,13 +132,13 @@ const StockManagementPage = () => {
           onClick={() => setActiveTab('alerts')}
           className={`px-6 py-3 font-medium transition-colors ${activeTab === 'alerts' ? 'border-b-2 border-primary text-primary' : 'text-bodydark2 hover:text-black'}`}
         >
-          âš ï¸ Alertes Stock ({lowStockPieces.length})
+          ⚠️ Alertes Stock ({lowStockPieces.length})
         </button>
         <button
           onClick={() => setActiveTab('stats')}
           className={`px-6 py-3 font-medium transition-colors ${activeTab === 'stats' ? 'border-b-2 border-primary text-primary' : 'text-bodydark2 hover:text-black'}`}
         >
-          ðŸ“Š Statistiques
+          📊 Statistiques
         </button>
       </div>
 
@@ -365,7 +365,7 @@ const StockManagementPage = () => {
                   onClick={() => { setSelectedPiece(null); setMouvements([]); }}
                   className="text-bodydark2 hover:text-black"
                 >
-                  âœ•
+                  ❌
                 </button>
               </div>
             </CardHeader>

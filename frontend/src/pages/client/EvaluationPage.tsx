@@ -112,7 +112,7 @@ const EvaluationPage = () => {
                 <div className="mb-4">
                   <div className="text-sm text-bodydark2 mb-1">Votre note</div>
                   <div className="text-3xl text-warning">
-                    {'â˜…'.repeat(existingEvaluation.note)}{'â˜†'.repeat(5 - existingEvaluation.note)}
+                    {'★'.repeat(existingEvaluation.note)}{'☆'.repeat(5 - existingEvaluation.note)}
                   </div>
                 </div>
                 
@@ -126,7 +126,7 @@ const EvaluationPage = () => {
                 <div>
                   <div className="text-sm text-bodydark2 mb-1">Recommandation</div>
                   <p className={existingEvaluation.recommandeTechnicien ? 'text-success' : 'text-danger'}>
-                    {existingEvaluation.recommandeTechnicien ? 'ðŸ‘ Recommande le technicien' : 'ðŸ‘Ž Ne recommande pas'}
+                    {existingEvaluation.recommandeTechnicien ? '👍 Recommande le technicien' : '👎 Ne recommande pas'}
                   </p>
                 </div>
               </div>
@@ -206,9 +206,9 @@ const EvaluationPage = () => {
                       className="text-5xl focus:outline-none transition-transform hover:scale-110"
                     >
                       {star <= (hoveredStar || note) ? (
-                        <span className="text-warning">â˜…</span>
+                        <span className="text-warning">★</span>
                       ) : (
-                        <span className="text-bodydark2/30">â˜†</span>
+                        <span className="text-bodydark2/30">☆</span>
                       )}
                     </button>
                   ))}
@@ -255,7 +255,7 @@ const EvaluationPage = () => {
                         : 'border-stroke hover:border-success/50'
                     }`}
                   >
-                    <span className="text-2xl block mb-1">ðŸ‘</span>
+                    <span className="text-2xl block mb-1">👍</span>
                     Oui, je recommande
                   </button>
                   <button
@@ -267,7 +267,7 @@ const EvaluationPage = () => {
                         : 'border-stroke hover:border-danger/50'
                     }`}
                   >
-                    <span className="text-2xl block mb-1">ðŸ‘Ž</span>
+                    <span className="text-2xl block mb-1">👎</span>
                     Non
                   </button>
                 </div>

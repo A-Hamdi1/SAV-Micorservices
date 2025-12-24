@@ -193,7 +193,7 @@ const AnalyticsDashboardPage = () => {
       {/* Performance Techniciens */}
       <Card className="mb-6">
         <CardHeader>
-          <h2 className="text-lg font-semibold text-black">ðŸ”§ Performance des Techniciens</h2>
+          <h2 className="text-lg font-semibold text-black">🔧 Performance des Techniciens</h2>
         </CardHeader>
         <CardBody className="p-0">
           <div className="overflow-x-auto">
@@ -225,7 +225,7 @@ const AnalyticsDashboardPage = () => {
                     </td>
                     <td className="text-center px-6 py-4 text-bodydark2">{(tech.dureeMoyenne || 0).toFixed(0)} min</td>
                     <td className="text-center px-6 py-4">
-                      <span className="text-warning">â˜…</span> {(tech.noteMoyenne || 0).toFixed(1)}
+                      <span className="text-warning">★</span> {(tech.noteMoyenne || 0).toFixed(1)}
                     </td>
                   </tr>
                 ))}
@@ -272,7 +272,7 @@ const AnalyticsDashboardPage = () => {
               onClick={() => handleExport('interventions')}
               disabled={exporting}
             >
-              <span className="mr-2">ðŸ“‹</span> Interventions (Excel)
+              <span className="mr-2">📋</span> Interventions (Excel)
             </Button>
             <Button
               variant="success"
@@ -286,14 +286,14 @@ const AnalyticsDashboardPage = () => {
               onClick={() => handleExport('factures')}
               disabled={exporting}
             >
-              <span className="mr-2">ðŸ’°</span> Factures (Excel)
+              <span className="mr-2">💰</span> Factures (Excel)
             </Button>
             <Button
               variant="secondary"
               onClick={() => handleExport('rapport')}
               disabled={exporting}
             >
-              <span className="mr-2">ðŸ“Š</span> Rapport Mensuel (Excel)
+              <span className="mr-2">📊</span> Rapport Mensuel (Excel)
             </Button>
           </div>
           {exporting && <p className="text-sm text-bodydark2 mt-2">Export en cours...</p>}

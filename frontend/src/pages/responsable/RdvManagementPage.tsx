@@ -141,7 +141,7 @@ const RdvManagementPage = () => {
           onClick={() => setActiveTab('demandes')}
           className={`px-6 py-3 font-medium transition-colors ${activeTab === 'demandes' ? 'border-b-2 border-primary text-primary' : 'text-bodydark2 hover:text-black'}`}
         >
-          ðŸ“¨ Demandes ({demandes.length})
+          📨 Demandes ({demandes.length})
         </button>
         <button
           onClick={() => setActiveTab('creneaux')}
@@ -164,7 +164,7 @@ const RdvManagementPage = () => {
             <Card>
               <CardBody>
                 <div className="bg-meta-3/10 border border-meta-3/20 rounded-xl p-6 text-center">
-                  <span className="text-4xl mb-2 block">âœ…</span>
+                  <span className="text-4xl mb-2 block">✅</span>
                   <p className="text-meta-3 font-medium">Aucune demande en attente</p>
                 </div>
               </CardBody>

@@ -236,7 +236,7 @@ const ClientDashboard = () => {
                             : 'bg-red-100 text-red-700'
                         }`}
                       >
-                        {article.sousGarantie ? 'âœ“ Garantie' : 'âœ— Hors garantie'}
+                        {article.sousGarantie ? '✔ Garantie' : '✗ Hors garantie'}
                       </span>
                     </div>
                   </div>
