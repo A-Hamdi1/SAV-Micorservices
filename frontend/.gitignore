@@ -7,19 +7,44 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-node_modules
-dist
-dist-ssr
+# Dependencies
+node_modules/
+package-lock.json
+
+# Production
+dist/
+dist-ssr/
+
+# Vite / build caches
+.vite/
+.cache/
+.cache/vite/
+.parcel-cache/
+
+# Local env files
+.env
+.env.local
+.env.*.local
 *.local
 
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
-.idea
+.idea/
 .DS_Store
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
+
+# OS files
+Thumbs.db
+
+# Test coverage
+coverage/
+.nyc_output/
+
+# Misc
+.sass-cache/
+.pnp.cjs
+.pnp.js
+.eslintcache
+*.tgz
+
 
