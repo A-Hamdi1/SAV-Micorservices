@@ -8,6 +8,19 @@ import StatusBadge from '../../components/common/StatusBadge';
 import StatCard from '../../components/common/StatCard';
 import { Card, CardHeader, CardBody } from '../../components/common/Card';
 import { formatDate } from '../../utils/formatters';
+import {
+  PieChart,
+  Pie,
+  Cell,
+  ResponsiveContainer,
+  AreaChart,
+  Area,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+} from 'recharts';
 
 const ClientDashboard = () => {
   const { data: profile, isLoading: profileLoading } = useQuery({
@@ -33,6 +46,40 @@ const ClientDashboard = () => {
   const recentArticles = articles?.data?.slice(0, 5) || [];
   const articlesEnGarantie = articles?.data?.filter((a) => a.sousGarantie).length || 0;
   const reclamationsEnCours = reclamations?.data?.filter((r) => r.statut === 'EnCours' || r.statut === 'EnAttente').length || 0;
+
+  // Données pour le PieChart - Répartition des réclamations par statut
+  const reclamationsByStatus = [
+    { name: 'En attente', value: reclamations?.data?.filter((r) => r.statut === 'EnAttente').length || 0, color: '#F59E0B' },
+    { name: 'En cours', value: reclamations?.data?.filter((r) => r.statut === 'EnCours').length || 0, color: '#3B82F6' },
+    { name: 'Résolues', value: reclamations?.data?.filter((r) => r.statut === 'Resolue').length || 0, color: '#10B981' },
+    { name: 'Rejetées', value: reclamations?.data?.filter((r) => r.statut === 'Rejetee').length || 0, color: '#EF4444' },
+  ].filter(item => item.value > 0);
+
+  // Données pour l'AreaChart - Historique des réclamations par mois (6 derniers mois)
+  const getMonthlyReclamations = () => {
+    const months = [];
+    const now = new Date();
+    for (let i = 5; i >= 0; i--) {
+      const date = new Date(now.getFullYear(), now.getMonth() - i, 1);
+      const monthName = date.toLocaleDateString('fr-FR', { month: 'short' });
+      const year = date.getFullYear();
+      const monthStart = new Date(date.getFullYear(), date.getMonth(), 1);
+      const monthEnd = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+      
+      const count = reclamations?.data?.filter((r) => {
+        const recDate = new Date(r.dateCreation);
+        return recDate >= monthStart && recDate <= monthEnd;
+      }).length || 0;
+
+      months.push({
+        name: `${monthName} ${year}`,
+        reclamations: count,
+      });
+    }
+    return months;
+  };
+
+  const monthlyData = getMonthlyReclamations();
 
   return (
     <div className="space-y-6">
@@ -103,6 +150,113 @@ const ClientDashboard = () => {
             </svg>
           }
         />
+      </div>
+
+      {/* Charts Section */}
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+        {/* Pie Chart - Répartition des réclamations */}
+        <Card>
+          <CardHeader title="Répartition de vos réclamations" />
+          <CardBody>
+            {reclamationsByStatus.length === 0 ? (
+              <div className="flex flex-col items-center justify-center py-12">
+                <div className="w-16 h-16 rounded-full bg-gray-2 flex items-center justify-center mb-4">
+                  <svg className="w-8 h-8 text-bodydark2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z" />
+                  </svg>
+                </div>
+                <p className="text-bodydark2 text-sm">Aucune donnée disponible</p>
+              </div>
+            ) : (
+              <div className="h-72">
+                <ResponsiveContainer width="100%" height="100%">
+                  <PieChart>
+                    <Pie
+                      data={reclamationsByStatus}
+                      cx="50%"
+                      cy="50%"
+                      innerRadius={60}
+                      outerRadius={90}
+                      paddingAngle={5}
+                      dataKey="value"
+                      label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                      labelLine={false}
+                    >
+                      {reclamationsByStatus.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={entry.color} />
+                      ))}
+                    </Pie>
+                    <Tooltip
+                      contentStyle={{
+                        backgroundColor: '#fff',
+                        border: '1px solid #e5e7eb',
+                        borderRadius: '8px',
+                        boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
+                      }}
+                      formatter={(value: number, name: string) => [`${value} réclamation(s)`, name]}
+                    />
+                    <Legend
+                      verticalAlign="bottom"
+                      height={36}
+                      formatter={(value: string) => <span className="text-sm text-black">{value}</span>}
+                    />
+                  </PieChart>
+                </ResponsiveContainer>
+              </div>
+            )}
+          </CardBody>
+        </Card>
+
+        {/* Area Chart - Évolution des réclamations */}
+        <Card>
+          <CardHeader title="Évolution de vos réclamations" />
+          <CardBody>
+            <div className="h-72">
+              <ResponsiveContainer width="100%" height="100%">
+                <AreaChart data={monthlyData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
+                  <defs>
+                    <linearGradient id="colorReclamations" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#6366F1" stopOpacity={0.8} />
+                      <stop offset="95%" stopColor="#6366F1" stopOpacity={0} />
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+                  <XAxis
+                    dataKey="name"
+                    tick={{ fontSize: 12, fill: '#64748b' }}
+                    axisLine={{ stroke: '#e5e7eb' }}
+                    tickLine={false}
+                  />
+                  <YAxis
+                    tick={{ fontSize: 12, fill: '#64748b' }}
+                    axisLine={{ stroke: '#e5e7eb' }}
+                    tickLine={false}
+                    allowDecimals={false}
+                  />
+                  <Tooltip
+                    contentStyle={{
+                      backgroundColor: '#fff',
+                      border: '1px solid #e5e7eb',
+                      borderRadius: '8px',
+                      boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
+                    }}
+                    formatter={(value: number) => [`${value} réclamation(s)`, 'Total']}
+                  />
+                  <Area
+                    type="monotone"
+                    dataKey="reclamations"
+                    stroke="#6366F1"
+                    strokeWidth={2}
+                    fillOpacity={1}
+                    fill="url(#colorReclamations)"
+                    name="Réclamations"
+                  />
+                </AreaChart>
+              </ResponsiveContainer>
+            </div>
+          </CardBody>
+        </Card>
       </div>
 
       {/* Content Grid */}

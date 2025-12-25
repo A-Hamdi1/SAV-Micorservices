@@ -74,16 +74,30 @@ axiosInstance.interceptors.response.use(
     if (error.response) {
       const message = (error.response.data as { message?: string })?.message || 'Une erreur s\'est produite';
       const errors = (error.response.data as { errors?: string[] })?.errors || [];
+      const isGetRequest = originalRequest?.method?.toUpperCase() === 'GET';
 
       if (error.response.status >= 500) {
         toast.error('Erreur serveur. Veuillez réessayer plus tard.');
       } else if (error.response.status === 403) {
         toast.error('Accès refusé. Vous n\'avez pas les permissions nécessaires.');
       } else if (error.response.status === 404) {
-        toast.error('Ressource non trouvée.');
+        // Ne pas afficher de toast pour les requêtes GET 404 (état vide normal: profil, évaluations, etc.)
+        if (!isGetRequest) {
+          toast.error('Ressource non trouvée.');
+        }
+      } else if (error.response.status === 400) {
+        // Afficher les erreurs de validation seulement pour les actions (POST, PUT, DELETE)
+        if (!isGetRequest) {
+          if (errors.length > 0) {
+            toast.error(errors.join(', '));
+          } else {
+            toast.error(message);
+          }
+        }
       } else if (errors.length > 0) {
         toast.error(errors.join(', '));
-      } else {
+      } else if (!isGetRequest) {
+        // Pour les autres erreurs, afficher seulement si ce n'est pas une requête GET
         toast.error(message);
       }
     } else if (error.request) {

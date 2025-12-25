@@ -8,6 +8,19 @@ import StatusBadge from '../../components/common/StatusBadge';
 import StatCard from '../../components/common/StatCard';
 import { Card, CardHeader, CardBody } from '../../components/common/Card';
 import { formatDate } from '../../utils/formatters';
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+  LineChart,
+  Line,
+  Cell,
+} from 'recharts';
 
 const ResponsableDashboard = () => {
   const { data: reclamations, isLoading: reclamationsLoading } = useQuery({
@@ -20,18 +33,78 @@ const ResponsableDashboard = () => {
     queryFn: () => interventionsApi.getInterventionsPlanifiees(),
   });
 
+  const { data: allInterventions, isLoading: allInterventionsLoading } = useQuery({
+    queryKey: ['interventions', 'all'],
+    queryFn: () => interventionsApi.getAllInterventions(1, 100),
+  });
+
   const { data: techniciens, isLoading: techniciensLoading } = useQuery({
     queryKey: ['techniciens', 'disponibles'],
     queryFn: () => techniciensApi.getTechniciensDisponibles(),
   });
 
-  if (reclamationsLoading || interventionsLoading || techniciensLoading) {
+  if (reclamationsLoading || interventionsLoading || techniciensLoading || allInterventionsLoading) {
     return <LoadingSpinner fullScreen />;
   }
 
   const recentReclamations = reclamations?.data?.items?.slice(0, 5) || [];
   const recentInterventions = interventions?.data?.slice(0, 5) || [];
   const enAttenteCount = reclamations?.data?.items?.filter((r) => r.statut === 'EnAttente').length || 0;
+
+  // Données pour le BarChart - Interventions par statut
+  const interventionsByStatus = [
+    { 
+      name: 'Planifiées', 
+      count: allInterventions?.data?.items?.filter((i) => i.statut === 'Planifiee').length || 0,
+      fill: '#3B82F6'
+    },
+    { 
+      name: 'En cours', 
+      count: allInterventions?.data?.items?.filter((i) => i.statut === 'EnCours').length || 0,
+      fill: '#F59E0B'
+    },
+    { 
+      name: 'Terminées', 
+      count: allInterventions?.data?.items?.filter((i) => i.statut === 'Terminee').length || 0,
+      fill: '#10B981'
+    },
+    { 
+      name: 'Annulées', 
+      count: allInterventions?.data?.items?.filter((i) => i.statut === 'Annulee').length || 0,
+      fill: '#EF4444'
+    },
+  ];
+
+  // Données pour le LineChart - Évolution mensuelle des réclamations
+  const getMonthlyStats = () => {
+    const months = [];
+    const now = new Date();
+    for (let i = 5; i >= 0; i--) {
+      const date = new Date(now.getFullYear(), now.getMonth() - i, 1);
+      const monthName = date.toLocaleDateString('fr-FR', { month: 'short' });
+      const monthStart = new Date(date.getFullYear(), date.getMonth(), 1);
+      const monthEnd = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+      
+      const reclamationsCount = reclamations?.data?.items?.filter((r) => {
+        const recDate = new Date(r.dateCreation);
+        return recDate >= monthStart && recDate <= monthEnd;
+      }).length || 0;
+
+      const interventionsCount = allInterventions?.data?.items?.filter((i) => {
+        const intDate = new Date(i.dateIntervention);
+        return intDate >= monthStart && intDate <= monthEnd;
+      }).length || 0;
+
+      months.push({
+        name: monthName,
+        reclamations: reclamationsCount,
+        interventions: interventionsCount,
+      });
+    }
+    return months;
+  };
+
+  const monthlyStats = getMonthlyStats();
 
   return (
     <div className="space-y-6">
@@ -108,6 +181,106 @@ const ResponsableDashboard = () => {
             </svg>
           }
         />
+      </div>
+
+      {/* Charts Section */}
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+        {/* Bar Chart - Interventions par statut */}
+        <Card>
+          <CardHeader title="Interventions par statut" />
+          <CardBody>
+            <div className="h-72">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={interventionsByStatus} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+                  <XAxis
+                    dataKey="name"
+                    tick={{ fontSize: 12, fill: '#64748b' }}
+                    axisLine={{ stroke: '#e5e7eb' }}
+                    tickLine={false}
+                  />
+                  <YAxis
+                    tick={{ fontSize: 12, fill: '#64748b' }}
+                    axisLine={{ stroke: '#e5e7eb' }}
+                    tickLine={false}
+                    allowDecimals={false}
+                  />
+                  <Tooltip
+                    contentStyle={{
+                      backgroundColor: '#fff',
+                      border: '1px solid #e5e7eb',
+                      borderRadius: '8px',
+                      boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
+                    }}
+                    formatter={(value: number) => [`${value} intervention(s)`, 'Total']}
+                  />
+                  <Bar dataKey="count" radius={[4, 4, 0, 0]}>
+                    {interventionsByStatus.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={entry.fill} />
+                    ))}
+                  </Bar>
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          </CardBody>
+        </Card>
+
+        {/* Line Chart - Évolution mensuelle */}
+        <Card>
+          <CardHeader title="Évolution mensuelle" />
+          <CardBody>
+            <div className="h-72">
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart data={monthlyStats} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+                  <XAxis
+                    dataKey="name"
+                    tick={{ fontSize: 12, fill: '#64748b' }}
+                    axisLine={{ stroke: '#e5e7eb' }}
+                    tickLine={false}
+                  />
+                  <YAxis
+                    tick={{ fontSize: 12, fill: '#64748b' }}
+                    axisLine={{ stroke: '#e5e7eb' }}
+                    tickLine={false}
+                    allowDecimals={false}
+                  />
+                  <Tooltip
+                    contentStyle={{
+                      backgroundColor: '#fff',
+                      border: '1px solid #e5e7eb',
+                      borderRadius: '8px',
+                      boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
+                    }}
+                  />
+                  <Legend
+                    verticalAlign="top"
+                    height={36}
+                    formatter={(value: string) => <span className="text-sm text-black">{value}</span>}
+                  />
+                  <Line
+                    type="monotone"
+                    dataKey="reclamations"
+                    stroke="#6366F1"
+                    strokeWidth={2}
+                    dot={{ fill: '#6366F1', strokeWidth: 2, r: 4 }}
+                    activeDot={{ r: 6 }}
+                    name="Réclamations"
+                  />
+                  <Line
+                    type="monotone"
+                    dataKey="interventions"
+                    stroke="#10B981"
+                    strokeWidth={2}
+                    dot={{ fill: '#10B981', strokeWidth: 2, r: 4 }}
+                    activeDot={{ r: 6 }}
+                    name="Interventions"
+                  />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
+          </CardBody>
+        </Card>
       </div>
 
       {/* Content Grid */}
