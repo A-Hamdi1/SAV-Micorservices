@@ -1,15 +1,52 @@
-﻿import { useEffect } from 'react';
+﻿import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { Card, CardBody } from '../../components/common/Card';
 import Button from '../../components/common/Button';
+import LoadingSpinner from '../../components/common/LoadingSpinner';
+import { paymentsApi } from '../../api/newFeatures';
 
 const PaymentSuccessPage = () => {
   const { interventionId } = useParams<{ interventionId: string }>();
+  const [isConfirming, setIsConfirming] = useState(true);
+  const [confirmed, setConfirmed] = useState(false);
 
   useEffect(() => {
-    toast.success('Paiement effectué avec succès !');
-  }, []);
+    const confirmPayment = async () => {
+      if (!interventionId) {
+        setIsConfirming(false);
+        return;
+      }
+
+      try {
+        await paymentsApi.confirmPayment(parseInt(interventionId));
+        setConfirmed(true);
+        toast.success('Paiement effectué avec succès !');
+      } catch (error) {
+        console.error('Erreur lors de la confirmation:', error);
+        // Même en cas d'erreur, on affiche la page de succès
+        // car Stripe a confirmé le paiement côté client
+        toast.success('Paiement effectué avec succès !');
+      } finally {
+        setIsConfirming(false);
+      }
+    };
+
+    confirmPayment();
+  }, [interventionId]);
+
+  if (isConfirming) {
+    return (
+      <div className="max-w-2xl mx-auto">
+        <Card>
+          <CardBody className="py-12 text-center">
+            <LoadingSpinner />
+            <p className="mt-4 text-bodydark2">Confirmation du paiement en cours...</p>
+          </CardBody>
+        </Card>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-2xl mx-auto">
@@ -28,7 +65,9 @@ const PaymentSuccessPage = () => {
 
           <div className="bg-success/10 border border-success/20 rounded-xl p-4 mb-8">
             <p className="text-success">
-              Vous recevrez un email de confirmation avec votre facture.
+              {confirmed 
+                ? 'Votre paiement a été confirmé. Vous recevrez un email de confirmation avec votre facture.'
+                : 'Vous recevrez un email de confirmation avec votre facture.'}
             </p>
           </div>
 

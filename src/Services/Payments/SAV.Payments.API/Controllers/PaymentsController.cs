@@ -149,6 +149,42 @@ public class PaymentsController : ControllerBase
     }
 
     /// <summary>
+    /// Confirmer un paiement depuis Stripe (fallback si webhook ne fonctionne pas)
+    /// </summary>
+    [HttpPost("confirm/{interventionId}")]
+    [Authorize]
+    public async Task<ActionResult<ApiResponse<PaymentDto>>> ConfirmPayment(int interventionId)
+    {
+        try
+        {
+            var payment = await _paymentService.ConfirmPaymentFromStripeAsync(interventionId);
+            if (payment == null)
+            {
+                return NotFound(new ApiResponse<PaymentDto>
+                {
+                    Success = false,
+                    Message = "Paiement non trouvé"
+                });
+            }
+            return Ok(new ApiResponse<PaymentDto>
+            {
+                Success = true,
+                Data = payment,
+                Message = "Paiement confirmé"
+            });
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new ApiResponse<PaymentDto>
+            {
+                Success = false,
+                Message = "Erreur lors de la confirmation du paiement",
+                Errors = new List<string> { ex.Message }
+            });
+        }
+    }
+
+    /// <summary>
     /// Enregistrer un paiement manuel (espèces, chèque, virement)
     /// </summary>
     [HttpPost("manual")]

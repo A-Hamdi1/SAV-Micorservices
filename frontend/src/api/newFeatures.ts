@@ -59,6 +59,9 @@ export const paymentsApi = {
   createCheckoutSession: (data: CreateCheckoutRequest) =>
     api.post<{ data: { sessionUrl: string } }>('/api/payments/checkout', data),
   
+  confirmPayment: (interventionId: number) =>
+    api.post<{ data: Payment }>(`/api/payments/confirm/${interventionId}`),
+  
   getByInterventionId: (interventionId: number) =>
     api.get<{ data: Payment }>(`/api/payments/intervention/${interventionId}`),
   

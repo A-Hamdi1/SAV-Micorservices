@@ -34,10 +34,12 @@ const PaymentPage = () => {
         const response = await paymentsApi.getByInterventionId(parseInt(interventionId || '0'));
         return response.data;
       } catch {
-        return null;
+        // 404 = pas de paiement existant, c'est normal
+        return { data: null };
       }
     },
     enabled: !!interventionId,
+    retry: false, // Ne pas réessayer si 404
   });
 
   const checkoutMutation = useMutation({
@@ -71,7 +73,12 @@ const PaymentPage = () => {
 
   const handlePayment = async () => {
     setIsProcessing(true);
-    await checkoutMutation.mutateAsync();
+    try {
+      await checkoutMutation.mutateAsync();
+    } catch {
+      // L'erreur est déjà gérée dans onError
+      setIsProcessing(false);
+    }
   };
 
   if (interventionLoading || paymentLoading) {
@@ -96,11 +103,15 @@ const PaymentPage = () => {
   }
 
   const interv = intervention.data;
-  const payment = existingPayment?.data as Payment | undefined;
+  const payment = existingPayment?.data as Payment | null | undefined;
 
   // Vérifier si l'intervention est payable
   const isPayable = interv.statut === 'Terminee' && !interv.estGratuite && interv.montantTotal > 0;
   const isPaid = payment?.statut === 'Reussi';
+  const isPaymentPending = payment?.statut === 'EnCours' || payment?.statut === 'EnAttente';
+
+  // Cacher le bouton si déjà payé OU si un paiement est en cours
+  const canPay = isPayable && !isPaid && !isPaymentPending;
 
   return (
     <div>
@@ -186,6 +197,17 @@ const PaymentPage = () => {
               </div>
             )}
 
+            {payment && payment.statut === 'EnCours' && (
+              <div className="bg-primary/10 border border-primary/20 rounded-xl p-4 mt-6">
+                <div className="flex items-center">
+                  <svg className="w-5 h-5 text-primary mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  <p className="text-primary font-medium">Paiement en cours de traitement</p>
+                </div>
+              </div>
+            )}
+
             {payment && payment.statut === 'EnAttente' && (
               <div className="bg-warning/10 border border-warning/20 rounded-xl p-4 mt-6">
                 <div className="flex items-center">
@@ -209,7 +231,7 @@ const PaymentPage = () => {
             )}
 
             {/* Bouton de paiement */}
-            {isPayable && !isPaid && (
+            {canPay && (
               <div className="mt-8">
                 <Button
                   onClick={handlePayment}
