@@ -97,7 +97,7 @@ public class PaymentService : IPaymentService
         return new StripeCheckoutSessionDto
         {
             SessionId = session.Id,
-            Url = session.Url
+            SessionUrl = session.Url
         };
     }
 
@@ -212,6 +212,49 @@ public class PaymentService : IPaymentService
             SuccessfulPayments = await _paymentRepository.GetPaymentCountByStatutAsync(PaymentStatut.Reussi),
             FailedPayments = await _paymentRepository.GetPaymentCountByStatutAsync(PaymentStatut.Echoue)
         };
+    }
+
+    public async Task<PaymentDto?> ConfirmPaymentFromStripeAsync(int interventionId)
+    {
+        var payment = await _paymentRepository.GetByInterventionIdAsync(interventionId);
+        if (payment == null)
+            return null;
+
+        // Si déjà réussi, retourner le paiement
+        if (payment.Statut == PaymentStatut.Reussi)
+            return MapToDto(payment);
+
+        // Vérifier le statut sur Stripe
+        if (!string.IsNullOrEmpty(payment.StripeSessionId))
+        {
+            var sessionService = new SessionService();
+            var session = await sessionService.GetAsync(payment.StripeSessionId);
+
+            if (session.PaymentStatus == "paid")
+            {
+                payment.Statut = PaymentStatut.Reussi;
+                payment.PaidAt = DateTime.UtcNow;
+                payment.StripePaymentIntentId = session.PaymentIntentId;
+                payment.NumeroTransaction = session.PaymentIntentId;
+
+                // Récupérer le receipt URL
+                if (!string.IsNullOrEmpty(session.PaymentIntentId))
+                {
+                    var paymentIntentService = new PaymentIntentService();
+                    var paymentIntent = await paymentIntentService.GetAsync(session.PaymentIntentId);
+                    if (!string.IsNullOrEmpty(paymentIntent.LatestChargeId))
+                    {
+                        var chargeService = new ChargeService();
+                        var charge = await chargeService.GetAsync(paymentIntent.LatestChargeId);
+                        payment.ReceiptUrl = charge.ReceiptUrl;
+                    }
+                }
+
+                await _paymentRepository.UpdateAsync(payment);
+            }
+        }
+
+        return MapToDto(payment);
     }
 
     private static PaymentDto MapToDto(Payment payment) => new()

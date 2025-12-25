@@ -14,6 +14,7 @@ public interface IPaymentService
     Task<PaymentDto> CreateManualPaymentAsync(CreateManualPaymentDto dto);
     Task<PaymentDto> RefundPaymentAsync(int paymentId);
     Task<PaymentStatsDto> GetPaymentStatsAsync();
+    Task<PaymentDto?> ConfirmPaymentFromStripeAsync(int interventionId);
 }
 
 public class PaymentDto
@@ -84,7 +85,7 @@ public class CreateManualPaymentDto
 public class StripeCheckoutSessionDto
 {
     public string SessionId { get; set; } = string.Empty;
-    public string Url { get; set; } = string.Empty;
+    public string SessionUrl { get; set; } = string.Empty;
 }
 
 public class PaymentStatsDto
