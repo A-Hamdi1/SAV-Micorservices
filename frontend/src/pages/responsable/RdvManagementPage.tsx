@@ -97,6 +97,7 @@ const RdvManagementPage = () => {
 
   useEffect(() => {
     fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleAccepterDemande = async (demande: DemandeRdv) => {

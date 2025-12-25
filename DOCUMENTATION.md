@@ -17,7 +17,6 @@
 | **Interventions** | 5003 | Interventions, techniciens, RDV, évaluations |
 | **Articles** | 5004 | Catalogue produits, pièces détachées |
 | **Payments** | 5005 | Paiements (intégration Stripe) |
-| **Notifications** | 5006 | Envoi d'emails (SMTP) |
 
 ### Frontend (React 18)
 - **Framework**: React + TypeScript + Vite
