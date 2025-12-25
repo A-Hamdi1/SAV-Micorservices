@@ -3,5 +3,42 @@
 SAV_Microservices.postman_collection.json
 .vs/
 *.log
+logs
 bin/
 obj/
+
+# Build outputs
+artifacts/
+packages/
+*.nupkg
+*.snupkg
+
+# User-specific files
+*.user
+*.userosscache
+*.suo
+*.pidb
+*.svclog
+*.pdb
+
+# Rider
+.idea/
+
+# Test results
+TestResults/
+coverage/
+
+# Visual Studio Code workspace file
+*.code-workspace
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Secret / env
+.env
+.env.*.local
+
+# Lockfiles
+package-lock.json
+
