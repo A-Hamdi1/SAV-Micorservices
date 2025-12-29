@@ -14,4 +14,7 @@ public interface IAuthService
     Task<bool> SendPasswordResetOtpAsync(string email);
     Task<bool> VerifyOtpAsync(string email, string otp);
     Task<(bool Success, List<string> Errors)> ResetPasswordAsync(string email, string otp, string newPassword);
+    
+    // Change Password
+    Task<(bool Success, List<string> Errors)> ChangePasswordAsync(string userId, string currentPassword, string newPassword);
 }

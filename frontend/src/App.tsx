@@ -11,6 +11,7 @@ import ForgotPasswordPage from './pages/auth/ForgotPasswordPage';
 // Client Pages
 import ClientDashboard from './pages/client/ClientDashboard';
 import ClientProfilePage from './pages/client/ClientProfilePage';
+import ChangePasswordPage from './pages/client/ChangePasswordPage';
 import MyArticlesPage from './pages/client/MyArticlesPage';
 import MyReclamationsPage from './pages/client/MyReclamationsPage';
 import ReclamationDetailsPage from './pages/client/ReclamationDetailsPage';
@@ -82,6 +83,7 @@ function App() {
                 <Routes>
                   <Route path="dashboard" element={<ClientDashboard />} />
                   <Route path="profile" element={<ClientProfilePage />} />
+                  <Route path="change-password" element={<ChangePasswordPage />} />
                   <Route path="articles" element={<MyArticlesPage />} />
                   <Route path="reclamations" element={<MyReclamationsPage />} />
                   <Route path="reclamations/:id" element={<ReclamationDetailsPage />} />

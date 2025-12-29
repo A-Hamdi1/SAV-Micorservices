@@ -12,12 +12,13 @@ import EmptyState from '../../components/common/EmptyState';
 
 // Liste des motifs prédéfinis
 const MOTIFS_PREDEFINIS = [
-  { value: 'pate_thermique', label: 'Changement de pâte thermique', icon: '🔧' },
-  { value: 'nettoyage', label: 'Nettoyage préventif', icon: '🧹' },
-  { value: 'upgrade_ram', label: 'Upgrade RAM', icon: '💾' },
-  { value: 'upgrade_ssd', label: 'Upgrade SSD/Stockage', icon: '💿' },
+  { value: 'installation_radiateur', label: 'Installation radiateur', icon: '🌡️' },
+  { value: 'reparation_chaudiere', label: 'Réparation chaudière', icon: '🔥' },
+  { value: 'entretien_chauffage', label: 'Entretien chauffage central', icon: '🔧' },
+  { value: 'fuite_tuyauterie', label: 'Fuite tuyauterie', icon: '💧' },
+  { value: 'sanitaires_eau', label: 'Problèmes sanitaires/eau', icon: '🚿' },
+  { value: 'reparation_robinetterie', label: 'Réparation robinetterie', icon: '🚰' },
   { value: 'diagnostic', label: 'Diagnostic général', icon: '🔍' },
-  { value: 'installation_os', label: 'Installation système', icon: '💻' },
   { value: 'autre', label: 'Autre (préciser)', icon: '📝' },
 ];
 
