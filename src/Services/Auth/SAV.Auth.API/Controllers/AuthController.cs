@@ -359,4 +359,60 @@ public class AuthController : ControllerBase
             });
         }
     }
+
+    [HttpPost("change-password")]
+    [Authorize]
+    public async Task<ActionResult<ApiResponse>> ChangePassword([FromBody] ChangePasswordDto changePasswordDto)
+    {
+        try
+        {
+            if (changePasswordDto.NewPassword != changePasswordDto.ConfirmPassword)
+            {
+                return BadRequest(new ApiResponse
+                {
+                    Success = false,
+                    Message = "Les mots de passe ne correspondent pas",
+                    Errors = new List<string> { "NewPassword and ConfirmPassword must match" }
+                });
+            }
+
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (string.IsNullOrEmpty(userId))
+            {
+                return Unauthorized(new ApiResponse
+                {
+                    Success = false,
+                    Message = "Utilisateur non authentifié"
+                });
+            }
+
+            var (success, errors) = await _authService.ChangePasswordAsync(userId, changePasswordDto.CurrentPassword, changePasswordDto.NewPassword);
+
+            if (!success)
+            {
+                return BadRequest(new ApiResponse
+                {
+                    Success = false,
+                    Message = errors.FirstOrDefault() ?? "Erreur lors du changement du mot de passe",
+                    Errors = errors
+                });
+            }
+
+            return Ok(new ApiResponse
+            {
+                Success = true,
+                Message = "Mot de passe changé avec succès"
+            });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error changing password");
+            return StatusCode(500, new ApiResponse
+            {
+                Success = false,
+                Message = "Une erreur s'est produite",
+                Errors = new List<string> { ex.Message }
+            });
+        }
+    }
 }

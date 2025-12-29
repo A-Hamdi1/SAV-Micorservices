@@ -17,6 +17,12 @@ export interface ResetPasswordDto {
   confirmPassword: string;
 }
 
+export interface ChangePasswordDto {
+  currentPassword: string;
+  newPassword: string;
+  confirmPassword: string;
+}
+
 export const authApi = {
   register: async (data: RegisterDto): Promise<ApiResponse<AuthResponse>> => {
     const response = await axiosInstance.post<ApiResponse<AuthResponse>>('/api/auth/register', data);
@@ -60,6 +66,11 @@ export const authApi = {
 
   resetPassword: async (data: ResetPasswordDto): Promise<ApiResponse<void>> => {
     const response = await axiosInstance.post<ApiResponse<void>>('/api/auth/reset-password', data);
+    return response.data;
+  },
+
+  changePassword: async (data: ChangePasswordDto): Promise<ApiResponse<void>> => {
+    const response = await axiosInstance.post<ApiResponse<void>>('/api/auth/change-password', data);
     return response.data;
   },
 };

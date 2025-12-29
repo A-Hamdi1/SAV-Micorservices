@@ -307,6 +307,50 @@ public class AuthService : IAuthService
         return (false, errors);
     }
 
+    public async Task<(bool Success, List<string> Errors)> ChangePasswordAsync(string userId, string currentPassword, string newPassword)
+    {
+        var errors = new List<string>();
+
+        // Trouver l'utilisateur
+        var user = await _userManager.FindByIdAsync(userId);
+        if (user == null)
+        {
+            errors.Add("Utilisateur non trouvé");
+            return (false, errors);
+        }
+
+        // Vérifier le mot de passe actuel
+        var isPasswordValid = await _userManager.CheckPasswordAsync(user, currentPassword);
+        if (!isPasswordValid)
+        {
+            errors.Add("Le mot de passe actuel est incorrect");
+            return (false, errors);
+        }
+
+        // Changer le mot de passe
+        var result = await _userManager.ChangePasswordAsync(user, currentPassword, newPassword);
+
+        if (!result.Succeeded)
+        {
+            foreach (var error in result.Errors)
+            {
+                var errorMessage = error.Code switch
+                {
+                    "PasswordTooShort" => "Le mot de passe doit contenir au moins 8 caractères",
+                    "PasswordRequiresUniqueChars" => "Le mot de passe doit contenir au moins 3 caractères uniques",
+                    "PasswordRequiresLower" => "Le mot de passe doit contenir au moins une minuscule",
+                    "PasswordRequiresUpper" => "Le mot de passe doit contenir au moins une majuscule",
+                    "PasswordRequiresNonAlphanumeric" => "Le mot de passe doit contenir au moins un chiffre",
+                    _ => error.Description
+                };
+                errors.Add(errorMessage);
+            }
+            return (false, errors);
+        }
+
+        return (true, errors);
+    }
+
     private static string GenerateOtp()
     {
         var random = new Random();
