@@ -23,4 +23,5 @@ public interface IAuthService
     
     // Internal - Get users by role
     Task<List<string>> GetUserIdsByRoleAsync(string role);
+    Task<List<UserDto>> GetUsersByRoleAsync(string role);
 }

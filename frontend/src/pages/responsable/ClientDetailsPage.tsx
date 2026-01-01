@@ -80,22 +80,14 @@ const ClientDetailsPage = () => {
           { label: `${clientData.prenom} ${clientData.nom}` },
         ]}
         actions={
-          <div className="flex gap-3">
-            <Button
-              variant="primary"
-              onClick={() => navigate(`/responsable/clients/${clientId}/edit`)}
-            >
-              Modifier
-            </Button>
-            <Button
-              variant="danger"
-              onClick={handleDelete}
-              disabled={deleteMutation.isPending}
-              loading={deleteMutation.isPending}
-            >
-              Supprimer
-            </Button>
-          </div>
+          <Button
+            variant="danger"
+            onClick={handleDelete}
+            disabled={deleteMutation.isPending}
+            loading={deleteMutation.isPending}
+          >
+            Supprimer
+          </Button>
         }
       />
 

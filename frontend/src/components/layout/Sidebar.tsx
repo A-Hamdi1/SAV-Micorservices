@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useAuthStore } from "../../store/authStore";
-
+// import logo from "../../assets/images/logo.png";
 // Icons as SVG components
 const DashboardIcon = () => (
   <svg
@@ -121,6 +121,7 @@ const ProfileIcon = () => (
   </svg>
 );
 
+
 const CalendarIcon = () => (
   <svg
     className="w-5 h-5"
@@ -185,6 +186,38 @@ const EvaluationIcon = () => (
   </svg>
 );
 
+const CategoryIcon = () => (
+  <svg
+    className="w-5 h-5"
+    fill="none"
+    viewBox="0 0 24 24"
+    stroke="currentColor"
+  >
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth={2}
+      d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"
+    />
+  </svg>
+);
+
+const AppointmentIcon = () => (
+  <svg
+    className="w-5 h-5"
+    fill="none"
+    viewBox="0 0 24 24"
+    stroke="currentColor"
+  >
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth={2}
+      d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+    />
+  </svg>
+);
+
 const ChevronDownIcon = () => (
   <svg
     className="w-4 h-4"
@@ -215,7 +248,7 @@ interface MenuItem {
 
 const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
   const location = useLocation();
-  const { role } = useAuthStore();
+  const { role, user } = useAuthStore();
   const [openSubMenu, setOpenSubMenu] = useState<string | null>(null);
 
   const clientMenuItems: MenuItem[] = [
@@ -231,7 +264,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
       icon: <ReclamationIcon />,
     },
     { label: "Calendrier", path: "/client/calendrier", icon: <CalendarIcon /> },
-    { label: "Mes rendez-vous", path: "/client/rdv", icon: <CalendarIcon /> },
+    { label: "Mes rendez-vous", path: "/client/rdv", icon: <AppointmentIcon /> },
     { label: "Mon profil", path: "/client/profile", icon: <ProfileIcon /> },
   ];
 
@@ -269,7 +302,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
     {
       label: "Catégories",
       path: "/responsable/categories",
-      icon: <ArticleIcon />,
+      icon: <CategoryIcon />,
     },
     {
       label: "Techniciens",
@@ -284,7 +317,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
     {
       label: "Rendez-vous",
       path: "/responsable/rdv",
-      icon: <CalendarIcon />,
+      icon: <AppointmentIcon />,
     },
     {
       label: "Évaluations",
@@ -371,6 +404,13 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
               </svg>
             </div>
             <span className="text-2xl font-bold text-white">SAV Pro</span>
+            {/* <Link to="/" className="flex items-center gap-2">
+              <img
+                src={logo}
+                alt="SmartSAV"
+                className="h-10 w-10 object-contain"
+              />
+            </Link> */}
           </Link>
 
           <button
@@ -479,22 +519,20 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
           <div className="flex items-center gap-3">
             <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary-600">
               <span className="text-sm font-medium text-white">
-                {role === "Client"
-                  ? "CL"
-                  : role === "Technicien"
-                  ? "TC"
-                  : "RS"}
+                {user?.prenom && user?.nom ? `${user.prenom.charAt(0)}${user.nom.charAt(0)}`.toUpperCase() : (role === "Client" ? "CL" : role === "Technicien" ? "TC" : "RS")}
               </span>
             </div>
             <div>
               <p className="text-sm font-medium text-white">
-                {role === "Client"
+                {user?.prenom && user?.nom ? `${user.prenom} ${user.nom}` : (role === "Client"
                   ? "Client"
                   : role === "Technicien"
                   ? "Technicien"
-                  : "Responsable SAV"}
+                  : "Responsable SAV")}
               </p>
-              <p className="text-xs text-bodydark2">Connecté</p>
+              <p className="text-xs text-bodydark2">
+                {role === "Client" ? "Client" : role === "Technicien" ? "Technicien" : "Responsable"} • Connecté
+              </p>
             </div>
           </div>
         </div>

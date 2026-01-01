@@ -95,7 +95,9 @@ export const useAuthStore = create<AuthState>()(
                 if (clientResponse.success && clientResponse.data) {
                   user = {
                     ...user,
-                    clientId: clientResponse.data.id
+                    clientId: clientResponse.data.id,
+                    nom: clientResponse.data.nom,
+                    prenom: clientResponse.data.prenom
                   };
                 }
               } catch (err) {
@@ -110,7 +112,9 @@ export const useAuthStore = create<AuthState>()(
                 if (technicienResponse.success && technicienResponse.data) {
                   user = {
                     ...user,
-                    technicienId: technicienResponse.data.id
+                    technicienId: technicienResponse.data.id,
+                    nom: technicienResponse.data.nom,
+                    prenom: technicienResponse.data.prenom
                   };
                 }
               } catch (err) {
@@ -171,7 +175,9 @@ export const useAuthStore = create<AuthState>()(
                 if (clientResponse.success && clientResponse.data) {
                   user = {
                     ...user,
-                    clientId: clientResponse.data.id
+                    clientId: clientResponse.data.id,
+                    nom: clientResponse.data.nom,
+                    prenom: clientResponse.data.prenom
                   };
                 }
               } catch (err) {
@@ -186,7 +192,9 @@ export const useAuthStore = create<AuthState>()(
                 if (technicienResponse.success && technicienResponse.data) {
                   user = {
                     ...user,
-                    technicienId: technicienResponse.data.id
+                    technicienId: technicienResponse.data.id,
+                    nom: technicienResponse.data.nom,
+                    prenom: technicienResponse.data.prenom
                   };
                 }
               } catch (err) {

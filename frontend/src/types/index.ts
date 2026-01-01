@@ -6,6 +6,8 @@ export interface User {
   id: string;
   email: string;
   role: UserRole;
+  nom?: string;
+  prenom?: string;
   clientId?: number; // ID du client si l'utilisateur est un client
   technicienId?: number; // ID du technicien si l'utilisateur est un technicien
 }
