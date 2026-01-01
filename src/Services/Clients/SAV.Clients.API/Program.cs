@@ -70,6 +70,7 @@ builder.Services.AddAuthentication(options =>
 });
 
 builder.Services.AddHttpClient<IArticlesApiClient, ArticlesApiClient>();
+builder.Services.AddHttpClient<IAuthApiClient, AuthApiClient>();
 builder.Services.AddScoped<IClientService, ClientService>();
 builder.Services.AddScoped<IArticleAchatService, ArticleAchatService>();
 builder.Services.AddScoped<IReclamationService, ReclamationService>();

@@ -461,6 +461,22 @@ public class AuthService : IAuthService
         }
     }
 
+    public async Task<List<string>> GetUserIdsByRoleAsync(string role)
+    {
+        var validRoles = new[] { "Client", "Technicien", "ResponsableSAV" };
+        if (!validRoles.Contains(role))
+        {
+            return new List<string>();
+        }
+
+        var userIds = await _context.Users
+            .Where(u => u.Role == role)
+            .Select(u => u.Id)
+            .ToListAsync();
+
+        return userIds;
+    }
+
     private static string GenerateOtp()
     {
         var random = new Random();

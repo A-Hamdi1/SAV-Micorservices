@@ -13,11 +13,13 @@ public class AuthController : ControllerBase
 {
     private readonly IAuthService _authService;
     private readonly ILogger<AuthController> _logger;
+    private readonly IConfiguration _configuration;
 
-    public AuthController(IAuthService authService, ILogger<AuthController> logger)
+    public AuthController(IAuthService authService, ILogger<AuthController> logger, IConfiguration configuration)
     {
         _authService = authService;
         _logger = logger;
+        _configuration = configuration;
     }
 
     [HttpPost("register")]
@@ -444,6 +446,56 @@ public class AuthController : ControllerBase
         {
             _logger.LogError(ex, "Error changing password");
             return StatusCode(500, new ApiResponse
+            {
+                Success = false,
+                Message = "Une erreur s'est produite",
+                Errors = new List<string> { ex.Message }
+            });
+        }
+    }
+
+    /// <summary>
+    /// Internal endpoint pour récupérer les user IDs par rôle (communication inter-services)
+    /// </summary>
+    [HttpGet("internal/users-by-role/{role}")]
+    [ApiExplorerSettings(IgnoreApi = true)]
+    public async Task<ActionResult<ApiResponse<List<string>>>> GetUserIdsByRole(string role)
+    {
+        try
+        {
+            // Vérifier l'API Key pour la communication inter-services
+            if (!Request.Headers.TryGetValue("X-API-Key", out var apiKey))
+            {
+                return Unauthorized(new ApiResponse<List<string>>
+                {
+                    Success = false,
+                    Message = "API Key requise pour les endpoints internes"
+                });
+            }
+
+            var configuredApiKey = _configuration["InterServiceApiKey"];
+            if (string.IsNullOrEmpty(configuredApiKey) || apiKey != configuredApiKey)
+            {
+                return Unauthorized(new ApiResponse<List<string>>
+                {
+                    Success = false,
+                    Message = "API Key invalide"
+                });
+            }
+
+            var userIds = await _authService.GetUserIdsByRoleAsync(role);
+
+            return Ok(new ApiResponse<List<string>>
+            {
+                Success = true,
+                Data = userIds,
+                Message = $"Récupération des utilisateurs avec le rôle {role}"
+            });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error getting users by role");
+            return StatusCode(500, new ApiResponse<List<string>>
             {
                 Success = false,
                 Message = "Une erreur s'est produite",

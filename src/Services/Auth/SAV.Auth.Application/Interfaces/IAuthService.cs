@@ -20,4 +20,7 @@ public interface IAuthService
     
     // Google Authentication
     Task<AuthResponseDto?> GoogleLoginAsync(GoogleAuthDto googleAuthDto);
+    
+    // Internal - Get users by role
+    Task<List<string>> GetUserIdsByRoleAsync(string role);
 }
