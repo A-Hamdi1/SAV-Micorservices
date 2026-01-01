@@ -11,6 +11,7 @@ import {
   Notification,
 } from '../../api/notifications';
 import { useAuthStore } from '../../store/authStore';
+import { useNotificationHub } from '../../hooks/useNotificationHub';
 
 const NotificationDropdown = () => {
   const navigate = useNavigate();
@@ -18,12 +19,18 @@ const NotificationDropdown = () => {
   const { role } = useAuthStore();
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  
+  // Initialize SignalR connection for real-time updates
+  const { isConnected } = useNotificationHub();
 
   // Récupérer le compteur de notifications
+  // With SignalR, we don't need frequent polling - just initial fetch and real-time updates
   const { data: countData } = useQuery({
     queryKey: ['notificationCount'],
     queryFn: getNotificationCount,
-    refetchInterval: 30000, // Rafraîchir toutes les 30 secondes
+    // Only poll as fallback if SignalR is not connected
+    refetchInterval: isConnected ? false : 30000,
+    staleTime: isConnected ? Infinity : 10000,
   });
 
   // Récupérer les notifications non lues

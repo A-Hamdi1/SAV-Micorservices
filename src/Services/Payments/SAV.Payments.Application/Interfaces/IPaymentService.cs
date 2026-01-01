@@ -42,6 +42,11 @@ public class CreatePaymentDto
     [Range(1, int.MaxValue, ErrorMessage = "L'ID du client doit être positif")]
     public int ClientId { get; set; }
     
+    /// <summary>
+    /// UserId du client (pour les notifications)
+    /// </summary>
+    public string? ClientUserId { get; set; }
+    
     [Required(ErrorMessage = "Le montant est requis")]
     [Range(0.01, double.MaxValue, ErrorMessage = "Le montant doit être positif")]
     public decimal Montant { get; set; }
@@ -67,6 +72,11 @@ public class CreateManualPaymentDto
     [Required(ErrorMessage = "L'ID du client est requis")]
     [Range(1, int.MaxValue, ErrorMessage = "L'ID du client doit être positif")]
     public int ClientId { get; set; }
+    
+    /// <summary>
+    /// UserId du client (pour les notifications)
+    /// </summary>
+    public string? ClientUserId { get; set; }
     
     [Required(ErrorMessage = "Le montant est requis")]
     [Range(0.01, double.MaxValue, ErrorMessage = "Le montant doit être positif")]

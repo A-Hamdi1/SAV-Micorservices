@@ -8,10 +8,12 @@ namespace SAV.Interventions.Infrastructure.Services;
 public class EvaluationService : IEvaluationService
 {
     private readonly InterventionsDbContext _context;
+    private readonly INotificationsApiClient _notificationsApiClient;
 
-    public EvaluationService(InterventionsDbContext context)
+    public EvaluationService(InterventionsDbContext context, INotificationsApiClient notificationsApiClient)
     {
         _context = context;
+        _notificationsApiClient = notificationsApiClient;
     }
 
     public async Task<EvaluationDto?> GetByIdAsync(int id)
@@ -104,6 +106,15 @@ public class EvaluationService : IEvaluationService
         
         _context.Evaluations.Add(evaluation);
         await _context.SaveChangesAsync();
+        
+        // Envoyer notification au technicien
+        if (intervention.Technicien != null)
+        {
+            await _notificationsApiClient.NotifyEvaluationReceivedAsync(
+                evaluation.Id, 
+                intervention.Id, 
+                intervention.Technicien.UserId);
+        }
         
         evaluation.Intervention = intervention;
         return MapToDto(evaluation);

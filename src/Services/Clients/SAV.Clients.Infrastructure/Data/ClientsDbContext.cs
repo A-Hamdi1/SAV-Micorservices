@@ -12,7 +12,6 @@ public class ClientsDbContext : DbContext
     public DbSet<Client> Clients => Set<Client>();
     public DbSet<ArticleAchat> ArticlesAchetes => Set<ArticleAchat>();
     public DbSet<Reclamation> Reclamations => Set<Reclamation>();
-    public DbSet<Notification> Notifications => Set<Notification>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -59,20 +58,6 @@ public class ClientsDbContext : DbContext
                 .HasForeignKey(e => e.ArticleAchatId)
                 .OnDelete(DeleteBehavior.Restrict)
                 .IsRequired();
-        });
-
-        modelBuilder.Entity<Notification>(entity =>
-        {
-            entity.HasKey(e => e.Id);
-            entity.Property(e => e.UserId).IsRequired().HasMaxLength(450);
-            entity.Property(e => e.Titre).IsRequired().HasMaxLength(200);
-            entity.Property(e => e.Message).IsRequired().HasMaxLength(1000);
-            entity.Property(e => e.Type).HasConversion<string>();
-            entity.Property(e => e.LienAction).HasMaxLength(500);
-            
-            entity.HasIndex(e => e.UserId);
-            entity.HasIndex(e => new { e.UserId, e.EstLue });
-            entity.HasIndex(e => e.DateCreation);
         });
     }
 }

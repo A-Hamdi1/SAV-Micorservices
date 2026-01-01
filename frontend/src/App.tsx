@@ -4,6 +4,7 @@ import Layout from './components/layout/Layout';
 import ProtectedRoute from './components/common/ProtectedRoute';
 import AuthInitializer from './components/common/AuthInitializer';
 import ClientProfileCheck from './components/common/ClientProfileCheck';
+import NotificationProvider from './components/common/NotificationProvider';
 import LoginPage from './pages/auth/LoginPage';
 import RegisterPage from './pages/auth/RegisterPage';
 import ForgotPasswordPage from './pages/auth/ForgotPasswordPage';
@@ -87,11 +88,12 @@ const DefaultRedirect = () => {
 function App() {
   return (
     <AuthInitializer>
-      <Routes>
-      {/* Public Routes */}
-      <Route path="/login" element={<LoginPage />} />
-      <Route path="/register" element={<RegisterPage />} />
-      <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+      <NotificationProvider>
+        <Routes>
+        {/* Public Routes */}
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegisterPage />} />
+        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
 
       {/* Client Routes */}
       <Route
@@ -190,7 +192,8 @@ function App() {
 
       {/* Default Route */}
       <Route path="/" element={<DefaultRedirect />} />
-      </Routes>
+        </Routes>
+      </NotificationProvider>
     </AuthInitializer>
   );
 }

@@ -1,20 +1,29 @@
 using Microsoft.EntityFrameworkCore;
-using SAV.Clients.Application.Interfaces;
-using SAV.Clients.Domain.Entities;
-using SAV.Clients.Infrastructure.Data;
+using Microsoft.Extensions.Logging;
+using SAV.Notifications.Application.Interfaces;
+using SAV.Notifications.Domain.Entities;
+using SAV.Notifications.Infrastructure.Data;
 using SAV.Shared.DTOs.Notifications;
 
-namespace SAV.Clients.Infrastructure.Services;
+namespace SAV.Notifications.Infrastructure.Services;
 
 public class NotificationService : INotificationService
 {
-    private readonly ClientsDbContext _context;
+    private readonly NotificationsDbContext _context;
     private readonly IAuthApiClient _authApiClient;
+    private readonly INotificationHubService _hubService;
+    private readonly ILogger<NotificationService> _logger;
 
-    public NotificationService(ClientsDbContext context, IAuthApiClient authApiClient)
+    public NotificationService(
+        NotificationsDbContext context, 
+        IAuthApiClient authApiClient,
+        INotificationHubService hubService,
+        ILogger<NotificationService> logger)
     {
         _context = context;
         _authApiClient = authApiClient;
+        _hubService = hubService;
+        _logger = logger;
     }
 
     public async Task<List<NotificationDto>> GetUserNotificationsAsync(string userId, int page = 1, int pageSize = 20)
@@ -77,7 +86,16 @@ public class NotificationService : INotificationService
         _context.Notifications.Add(notification);
         await _context.SaveChangesAsync();
 
-        return MapToDto(notification);
+        var notificationDto = MapToDto(notification);
+
+        // Send real-time notification via SignalR
+        await _hubService.SendNotificationToUserAsync(dto.UserId, notificationDto);
+        
+        // Also send updated count
+        var count = await GetNotificationCountAsync(dto.UserId);
+        await _hubService.SendNotificationCountAsync(dto.UserId, count);
+
+        return notificationDto;
     }
 
     public async Task<bool> MarkAsReadAsync(int id, string userId)
@@ -90,6 +108,10 @@ public class NotificationService : INotificationService
         notification.EstLue = true;
         notification.DateLecture = DateTime.UtcNow;
         await _context.SaveChangesAsync();
+
+        // Send updated count via SignalR
+        var count = await GetNotificationCountAsync(userId);
+        await _hubService.SendNotificationCountAsync(userId, count);
 
         return true;
     }
@@ -107,6 +129,11 @@ public class NotificationService : INotificationService
         }
 
         await _context.SaveChangesAsync();
+
+        // Send updated count via SignalR
+        var count = await GetNotificationCountAsync(userId);
+        await _hubService.SendNotificationCountAsync(userId, count);
+
         return true;
     }
 
@@ -120,6 +147,10 @@ public class NotificationService : INotificationService
         _context.Notifications.Remove(notification);
         await _context.SaveChangesAsync();
 
+        // Send updated count via SignalR
+        var count = await GetNotificationCountAsync(userId);
+        await _hubService.SendNotificationCountAsync(userId, count);
+
         return true;
     }
 
@@ -132,6 +163,10 @@ public class NotificationService : INotificationService
         _context.Notifications.RemoveRange(notifications);
         await _context.SaveChangesAsync();
 
+        // Send updated count via SignalR
+        var count = await GetNotificationCountAsync(userId);
+        await _hubService.SendNotificationCountAsync(userId, count);
+
         return true;
     }
 
@@ -141,9 +176,20 @@ public class NotificationService : INotificationService
     {
         try
         {
+            _logger.LogInformation("Fetching ResponsableSAV users to send notification: {Titre}", titre);
             var responsableIds = await _authApiClient.GetUserIdsByRoleAsync("ResponsableSAV");
+            
+            _logger.LogInformation("Found {Count} ResponsableSAV users", responsableIds?.Count() ?? 0);
+            
+            if (responsableIds == null || !responsableIds.Any())
+            {
+                _logger.LogWarning("No ResponsableSAV users found, no notifications will be sent");
+                return;
+            }
+            
             foreach (var responsableId in responsableIds)
             {
+                _logger.LogInformation("Creating notification for ResponsableSAV user: {UserId}", responsableId);
                 await CreateNotificationAsync(new CreateNotificationDto
                 {
                     UserId = responsableId,
@@ -154,22 +200,19 @@ public class NotificationService : INotificationService
                     ReferenceId = referenceId
                 });
             }
+            
+            _logger.LogInformation("Successfully sent notifications to all ResponsableSAV users");
         }
-        catch
+        catch (Exception ex)
         {
-            // Ne pas bloquer si la notification des responsables échoue
+            _logger.LogError(ex, "Failed to notify ResponsableSAV users for: {Titre}", titre);
         }
     }
 
     // ==================== Méthodes de notification automatique ====================
 
-    /// <summary>
-    /// Quand un CLIENT crée une réclamation : notifier les RESPONSABLES SAV uniquement
-    /// (Le client ne doit pas être notifié de sa propre action)
-    /// </summary>
     public async Task NotifyReclamationCreatedAsync(int reclamationId, int clientId, string clientUserId)
     {
-        // Notifier tous les responsables SAV qu'une nouvelle réclamation a été créée
         await NotifyAllResponsablesSAVAsync(
             "Nouvelle réclamation",
             $"Une nouvelle réclamation #{reclamationId} a été soumise et nécessite votre attention.",
@@ -179,9 +222,6 @@ public class NotificationService : INotificationService
         );
     }
 
-    /// <summary>
-    /// Quand le statut d'une réclamation change : notifier le CLIENT
-    /// </summary>
     public async Task NotifyReclamationStatusChangedAsync(int reclamationId, string newStatus, string clientUserId)
     {
         var (titre, message, type) = newStatus switch
@@ -203,13 +243,9 @@ public class NotificationService : INotificationService
         });
     }
 
-    /// <summary>
-    /// Quand une intervention est CRÉÉE/ASSIGNÉE par le responsable : 
-    /// notifier le TECHNICIEN (nouvelle tâche) et le CLIENT (intervention planifiée)
-    /// </summary>
     public async Task NotifyInterventionCreatedAsync(int interventionId, int reclamationId, string technicienUserId, string? clientUserId)
     {
-        // Notifier le technicien qu'il a une nouvelle intervention assignée
+        // Notifier le technicien
         await CreateNotificationAsync(new CreateNotificationDto
         {
             UserId = technicienUserId,
@@ -220,14 +256,14 @@ public class NotificationService : INotificationService
             ReferenceId = interventionId
         });
 
-        // Notifier le client qu'une intervention a été planifiée pour sa réclamation
+        // Notifier le client si disponible
         if (!string.IsNullOrEmpty(clientUserId))
         {
             await CreateNotificationAsync(new CreateNotificationDto
             {
                 UserId = clientUserId,
                 Titre = "Intervention planifiée",
-                Message = $"Une intervention #{interventionId} a été planifiée pour votre réclamation #{reclamationId}.",
+                Message = $"Une intervention a été planifiée pour votre réclamation #{reclamationId}.",
                 Type = NotificationType.InterventionPlanifiee.ToString(),
                 LienAction = $"/client/reclamations/{reclamationId}",
                 ReferenceId = interventionId
@@ -235,22 +271,17 @@ public class NotificationService : INotificationService
         }
     }
 
-    /// <summary>
-    /// Quand le statut d'une intervention change (EnCours, Terminée, etc.) :
-    /// - Si le TECHNICIEN démarre/termine : notifier le CLIENT et les RESPONSABLES SAV
-    /// - Le technicien ne doit PAS être notifié de ses propres actions
-    /// </summary>
     public async Task NotifyInterventionStatusChangedAsync(int interventionId, string newStatus, string technicienUserId, string? clientUserId)
     {
         var (titre, message, type) = newStatus switch
         {
-            "EnCours" => ("Intervention en cours", $"L'intervention #{interventionId} a été démarrée.", NotificationType.InterventionEnCours),
-            "Terminee" => ("Intervention terminée", $"L'intervention #{interventionId} a été terminée.", NotificationType.InterventionTerminee),
+            "EnCours" => ("Intervention en cours", $"L'intervention #{interventionId} est maintenant en cours.", NotificationType.InterventionEnCours),
+            "Terminee" => ("Intervention terminée", $"L'intervention #{interventionId} a été terminée avec succès.", NotificationType.InterventionTerminee),
             "Annulee" => ("Intervention annulée", $"L'intervention #{interventionId} a été annulée.", NotificationType.InterventionAnnulee),
             _ => ("Intervention mise à jour", $"Le statut de l'intervention #{interventionId} a été mis à jour.", NotificationType.InterventionEnCours)
         };
 
-        // Notifier le client (si disponible)
+        // Notifier le client
         if (!string.IsNullOrEmpty(clientUserId))
         {
             await CreateNotificationAsync(new CreateNotificationDto
@@ -259,123 +290,160 @@ public class NotificationService : INotificationService
                 Titre = titre,
                 Message = message,
                 Type = type.ToString(),
-                LienAction = $"/client/reclamations",
+                LienAction = $"/client/interventions/{interventionId}",
                 ReferenceId = interventionId
             });
         }
 
-        // Notifier tous les responsables SAV
+        // Notifier le responsable SAV
         await NotifyAllResponsablesSAVAsync(
             titre,
-            message,
+            $"L'intervention #{interventionId} - {message}",
             type,
             $"/responsable/interventions/{interventionId}",
             interventionId
         );
     }
 
-    /// <summary>
-    /// Quand un CLIENT envoie une évaluation : notifier le TECHNICIEN et les RESPONSABLES SAV
-    /// </summary>
     public async Task NotifyEvaluationReceivedAsync(int evaluationId, int interventionId, string technicienUserId)
     {
-        // Notifier le technicien
         await CreateNotificationAsync(new CreateNotificationDto
         {
             UserId = technicienUserId,
-            Titre = "Nouvelle évaluation reçue",
+            Titre = "Nouvelle évaluation",
             Message = $"Vous avez reçu une nouvelle évaluation pour l'intervention #{interventionId}.",
             Type = NotificationType.NouvelleEvaluation.ToString(),
-            LienAction = $"/technicien/interventions/{interventionId}",
+            LienAction = $"/technicien/evaluations",
             ReferenceId = evaluationId
         });
+    }
 
-        // Notifier les responsables SAV
+    // ==================== RDV Notifications ====================
+
+    public async Task NotifyRdvRequestedAsync(int rdvId, string clientUserId, DateTime dateProposee)
+    {
+        // Notifier tous les responsables SAV
         await NotifyAllResponsablesSAVAsync(
-            "Nouvelle évaluation client",
-            $"Le client a soumis une évaluation pour l'intervention #{interventionId}.",
-            NotificationType.NouvelleEvaluation,
-            $"/responsable/evaluations",
-            evaluationId
+            "Nouvelle demande de RDV",
+            $"Un client a demandé un rendez-vous pour le {dateProposee:dd/MM/yyyy à HH:mm}.",
+            NotificationType.RdvPlanifie,
+            $"/responsable/rdv/{rdvId}",
+            rdvId
         );
     }
 
-    public async Task NotifyRdvStatusChangedAsync(int rdvId, string status, string clientUserId)
+    public async Task NotifyRdvConfirmedAsync(int rdvId, string clientUserId, DateTime dateConfirmee)
     {
-        var (titre, message, type) = status switch
-        {
-            "Confirme" => ("RDV confirmé", $"Votre rendez-vous #{rdvId} a été confirmé.", NotificationType.RdvConfirme),
-            "Annule" => ("RDV annulé", $"Votre rendez-vous #{rdvId} a été annulé.", NotificationType.RdvAnnule),
-            _ => ("RDV planifié", $"Votre rendez-vous #{rdvId} a été planifié.", NotificationType.RdvPlanifie)
-        };
-
         await CreateNotificationAsync(new CreateNotificationDto
         {
             UserId = clientUserId,
-            Titre = titre,
-            Message = message,
-            Type = type.ToString(),
+            Titre = "RDV confirmé",
+            Message = $"Votre demande de rendez-vous a été acceptée pour le {dateConfirmee:dd/MM/yyyy à HH:mm}.",
+            Type = NotificationType.RdvConfirme.ToString(),
             LienAction = $"/client/rdv",
             ReferenceId = rdvId
         });
     }
 
-    /// <summary>
-    /// Quand un CLIENT effectue un paiement : notifier les RESPONSABLES SAV
-    /// </summary>
-    public async Task NotifyPaymentStatusAsync(int interventionId, bool success, string clientUserId)
+    public async Task NotifyRdvRejectedAsync(int rdvId, string clientUserId, string? motif)
     {
-        if (success)
-        {
-            // Notifier le client du succès
-            await CreateNotificationAsync(new CreateNotificationDto
-            {
-                UserId = clientUserId,
-                Titre = "Paiement réussi",
-                Message = $"Votre paiement pour l'intervention #{interventionId} a été effectué avec succès.",
-                Type = NotificationType.PaiementRecu.ToString(),
-                LienAction = $"/client/reclamations",
-                ReferenceId = interventionId
-            });
+        var message = string.IsNullOrEmpty(motif)
+            ? "Votre demande de rendez-vous a été refusée."
+            : $"Votre demande de rendez-vous a été refusée. Motif: {motif}";
 
-            // Notifier les responsables SAV du paiement reçu
+        await CreateNotificationAsync(new CreateNotificationDto
+        {
+            UserId = clientUserId,
+            Titre = "RDV refusé",
+            Message = message,
+            Type = NotificationType.RdvAnnule.ToString(),
+            LienAction = $"/client/rdv",
+            ReferenceId = rdvId
+        });
+    }
+
+    public async Task NotifyRdvCancelledAsync(int rdvId, string clientUserId, bool cancelledByClient)
+    {
+        if (cancelledByClient)
+        {
+            // Le client annule → notifier les responsables
             await NotifyAllResponsablesSAVAsync(
-                "Paiement reçu",
-                $"Le client a effectué le paiement pour l'intervention #{interventionId}.",
-                NotificationType.PaiementRecu,
-                $"/responsable/payments",
-                interventionId
+                "RDV annulé par le client",
+                $"Le client a annulé sa demande de rendez-vous #{rdvId}.",
+                NotificationType.RdvAnnule,
+                $"/responsable/rdv",
+                rdvId
             );
         }
         else
         {
-            // Notifier le client de l'échec
+            // Le responsable annule → notifier le client
             await CreateNotificationAsync(new CreateNotificationDto
             {
                 UserId = clientUserId,
-                Titre = "Échec du paiement",
-                Message = $"Le paiement pour l'intervention #{interventionId} a échoué. Veuillez réessayer.",
-                Type = NotificationType.PaiementEchoue.ToString(),
-                LienAction = $"/client/reclamations",
-                ReferenceId = interventionId
+                Titre = "RDV annulé",
+                Message = "Votre rendez-vous a été annulé par le service.",
+                Type = NotificationType.RdvAnnule.ToString(),
+                LienAction = $"/client/rdv",
+                ReferenceId = rdvId
             });
         }
     }
 
-    private static NotificationDto MapToDto(Notification n)
+    // ==================== Payment Notifications ====================
+
+    public async Task NotifyPaymentSuccessAsync(int interventionId, string clientUserId, decimal montant)
+    {
+        // Notifier le client
+        await CreateNotificationAsync(new CreateNotificationDto
+        {
+            UserId = clientUserId,
+            Titre = "Paiement reçu",
+            Message = $"Votre paiement de {montant:C} pour l'intervention #{interventionId} a été reçu avec succès.",
+            Type = NotificationType.PaiementRecu.ToString(),
+            LienAction = $"/client/factures",
+            ReferenceId = interventionId
+        });
+
+        // Notifier les responsables SAV
+        await NotifyAllResponsablesSAVAsync(
+            "Paiement reçu",
+            $"Le client a payé {montant:C} pour l'intervention #{interventionId}.",
+            NotificationType.PaiementRecu,
+            $"/responsable/paiements",
+            interventionId
+        );
+    }
+
+    public async Task NotifyPaymentFailedAsync(int interventionId, string clientUserId)
+    {
+        await CreateNotificationAsync(new CreateNotificationDto
+        {
+            UserId = clientUserId,
+            Titre = "Paiement échoué",
+            Message = $"Le paiement pour l'intervention #{interventionId} a échoué. Veuillez réessayer.",
+            Type = NotificationType.PaiementEchoue.ToString(),
+            LienAction = $"/client/factures",
+            ReferenceId = interventionId
+        });
+    }
+
+    // ==================== Mapping ====================
+
+    private static NotificationDto MapToDto(Notification notification)
     {
         return new NotificationDto
         {
-            Id = n.Id,
-            UserId = n.UserId,
-            Titre = n.Titre,
-            Message = n.Message,
-            Type = n.Type.ToString(),
-            EstLue = n.EstLue,
-            LienAction = n.LienAction,
-            ReferenceId = n.ReferenceId,
-            DateCreation = n.DateCreation,
-            DateLecture = n.DateLecture
+            Id = notification.Id,
+            UserId = notification.UserId,
+            Titre = notification.Titre,
+            Message = notification.Message,
+            Type = notification.Type.ToString(),
+            EstLue = notification.EstLue,
+            LienAction = notification.LienAction,
+            ReferenceId = notification.ReferenceId,
+            DateCreation = notification.DateCreation,
+            DateLecture = notification.DateLecture
         };
     }
 }
