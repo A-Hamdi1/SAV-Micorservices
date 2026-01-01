@@ -274,6 +274,10 @@ public class MessagingService : IMessagingService
         // Notifier l'expéditeur
         await _hubService.NotifyMessageReadAsync(message.ExpediteurUserId, messageId, message.ConversationId);
 
+        // Envoyer le nouveau compteur de messages non lus au lecteur
+        var unreadCount = await GetUnreadMessageCountAsync(userId);
+        await _hubService.SendUnreadCountAsync(userId, unreadCount);
+
         return true;
     }
 
@@ -310,6 +314,10 @@ public class MessagingService : IMessagingService
                 await _hubService.NotifyMessageReadAsync(senderId, msgId, conversationId);
             }
         }
+
+        // Envoyer le nouveau compteur de messages non lus au lecteur
+        var unreadCount = await GetUnreadMessageCountAsync(userId);
+        await _hubService.SendUnreadCountAsync(userId, unreadCount);
 
         return true;
     }

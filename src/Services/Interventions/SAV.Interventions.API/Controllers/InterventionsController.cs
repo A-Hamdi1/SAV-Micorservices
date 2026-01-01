@@ -180,7 +180,7 @@ public class InterventionsController : ControllerBase
     }
 
     [HttpGet("{id}/facture")]
-    [Authorize(Roles = "ResponsableSAV")]
+    [Authorize(Roles = "ResponsableSAV,Technicien")]
     public async Task<ActionResult<ApiResponse<string>>> GenererFacture(int id)
     {
         try
