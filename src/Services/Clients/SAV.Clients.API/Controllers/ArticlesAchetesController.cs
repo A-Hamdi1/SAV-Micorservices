@@ -137,7 +137,7 @@ public class ArticlesAchetesController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    [Authorize(Roles = "ResponsableSAV")]
+    [Authorize(Roles = "ResponsableSAV,Technicien")]
     public async Task<ActionResult<ApiResponse<ArticleAchatDto>>> GetArticleAchatById(int id)
     {
         var article = await _articleAchatService.GetArticleAchatByIdAsync(id);
