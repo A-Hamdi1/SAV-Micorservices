@@ -4,6 +4,7 @@ import { ChatBubbleLeftRightIcon } from '@heroicons/react/24/outline';
 import { getUnreadCount } from '../../api/messaging';
 import { useAuthStore } from '../../store/authStore';
 import { Link } from 'react-router-dom';
+import { useMessagingHub } from '../../hooks/useMessagingHub';
 
 interface MessagingBadgeProps {
   className?: string;
@@ -12,11 +13,15 @@ interface MessagingBadgeProps {
 const MessagingBadge: React.FC<MessagingBadgeProps> = ({ className = '' }) => {
   const { isAuthenticated, role } = useAuthStore();
 
+  // Connect to messaging hub for real-time updates
+  useMessagingHub();
+
   const { data: unreadCount = 0 } = useQuery({
     queryKey: ['unreadMessagesCount'],
     queryFn: getUnreadCount,
     enabled: isAuthenticated,
-    refetchInterval: 30000,
+    staleTime: 30000, // Consider data stale after 30 seconds
+    refetchOnWindowFocus: false, // Don't refetch on window focus, rely on SignalR + invalidation
   });
 
   // Déterminer le chemin selon le rôle

@@ -108,6 +108,7 @@ const MessagingPage: React.FC = () => {
     mutationFn: markConversationAsRead,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['conversations'] });
+      queryClient.invalidateQueries({ queryKey: ['unreadMessagesCount'] });
     },
   });
 

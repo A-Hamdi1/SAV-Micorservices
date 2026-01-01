@@ -130,7 +130,7 @@ export const useAuthStore = create<AuthState>()(
               role: authData.role,
             });
 
-            toast.success('Connexion réussie');
+            // toast.success('Connexion réussie');
           } else {
             throw new Error(response.message || 'Échec de la connexion');
           }
@@ -210,7 +210,7 @@ export const useAuthStore = create<AuthState>()(
               role: authData.role,
             });
 
-            toast.success('Connexion avec Google réussie');
+            // toast.success('Connexion avec Google réussie');
           } else {
             throw new Error(response.message || 'Échec de la connexion avec Google');
           }
@@ -288,7 +288,7 @@ export const useAuthStore = create<AuthState>()(
           role: null,
         });
 
-        toast.info('Déconnexion réussie');
+        // toast.info('Déconnexion réussie');
       },
 
       refreshAccessToken: async () => {

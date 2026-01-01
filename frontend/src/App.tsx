@@ -58,6 +58,7 @@ import ClientCalendarPage from './pages/client/ClientCalendarPage';
 // Technicien Pages
 import TechnicienDashboard from './pages/technicien/TechnicienDashboard';
 import TechnicienInterventionsPage from './pages/technicien/TechnicienInterventionsPage';
+import TechnicienInterventionDetailsPage from './pages/technicien/TechnicienInterventionDetailsPage';
 import TechnicienCalendarPage from './pages/technicien/TechnicienCalendarPage';
 import TechnicienProfilePage from './pages/technicien/TechnicienProfilePage';
 
@@ -179,6 +180,7 @@ function App() {
               <Routes>
                 <Route path="dashboard" element={<TechnicienDashboard />} />
                 <Route path="interventions" element={<TechnicienInterventionsPage />} />
+                <Route path="interventions/:id" element={<TechnicienInterventionDetailsPage />} />
                 <Route path="calendrier" element={<TechnicienCalendarPage />} />
                 <Route path="profile" element={<TechnicienProfilePage />} />
                 <Route path="notifications" element={<NotificationsPage />} />
