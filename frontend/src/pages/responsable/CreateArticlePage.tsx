@@ -1,16 +1,23 @@
 ﻿import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { articlesApi } from '../../api/articles';
+import { categoriesApi } from '../../api/categories';
 import { CreateArticleDto } from '../../types';
 import { toast } from 'react-toastify';
 import PageHeader from '../../components/common/PageHeader';
 import { Card, CardBody } from '../../components/common/Card';
 import Button from '../../components/common/Button';
+import LoadingSpinner from '../../components/common/LoadingSpinner';
 
 const CreateArticlePage = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+
+  const { data: categories = [], isLoading: categoriesLoading } = useQuery({
+    queryKey: ['categories'],
+    queryFn: () => categoriesApi.getAll(),
+  });
 
   const createMutation = useMutation({
     mutationFn: (data: CreateArticleDto) => articlesApi.createArticle(data),
@@ -29,11 +36,22 @@ const CreateArticlePage = () => {
 
   const onSubmit = async (data: CreateArticleDto) => {
     try {
-      await createMutation.mutateAsync(data);
+      // Find the category name for backward compatibility
+      const selectedCategory = categories.find(c => c.id === Number(data.categorieId));
+      const submitData = {
+        ...data,
+        categorie: selectedCategory?.nom || '',
+        categorieId: data.categorieId ? Number(data.categorieId) : undefined,
+      };
+      await createMutation.mutateAsync(submitData);
     } catch (error) {
       console.error('Error creating article:', error);
     }
   };
+
+  if (categoriesLoading) {
+    return <LoadingSpinner fullScreen />;
+  }
 
   return (
     <>
@@ -80,16 +98,27 @@ const CreateArticlePage = () => {
               </div>
 
               <div>
-                <label htmlFor="categorie" className="form-label">
+                <label htmlFor="categorieId" className="form-label">
                   Catégorie *
                 </label>
-                <input
-                  {...register('categorie', { required: 'Catégorie requise' })}
-                  type="text"
-                  className="form-input"
-                />
-                {errors.categorie && (
-                  <p className="mt-1 text-sm text-danger">{errors.categorie.message}</p>
+                <select
+                  {...register('categorieId', { required: 'Catégorie requise' })}
+                  className="form-select"
+                >
+                  <option value="">Sélectionner une catégorie</option>
+                  {categories.map((category) => (
+                    <option key={category.id} value={category.id}>
+                      {category.nom}
+                    </option>
+                  ))}
+                </select>
+                {errors.categorieId && (
+                  <p className="mt-1 text-sm text-danger">{errors.categorieId.message}</p>
+                )}
+                {categories.length === 0 && (
+                  <p className="mt-1 text-sm text-warning">
+                    Aucune catégorie disponible. <a href="/responsable/categories/new" className="text-primary hover:underline">Créer une catégorie</a>
+                  </p>
                 )}
               </div>
 

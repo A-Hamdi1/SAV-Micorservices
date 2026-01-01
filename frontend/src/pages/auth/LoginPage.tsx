@@ -19,6 +19,8 @@ const LoginPage = () => {
     if (isAuthenticated) {
       if (role === 'Client') {
         navigate('/client/dashboard', { replace: true });
+      } else if (role === 'Technicien') {
+        navigate('/technicien/dashboard', { replace: true });
       } else if (role === 'ResponsableSAV' || role === 'Admin') {
         navigate('/responsable/dashboard', { replace: true });
       }

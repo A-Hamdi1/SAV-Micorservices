@@ -1,0 +1,219 @@
+import { useState, useMemo } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { useNavigate } from 'react-router-dom';
+import { parseISO, format, isSameDay } from 'date-fns';
+import { fr } from 'date-fns/locale';
+import { interventionsApi } from '../../api/interventions';
+import LoadingSpinner from '../../components/common/LoadingSpinner';
+import PageHeader from '../../components/common/PageHeader';
+import Calendar, { CalendarEvent } from '../../components/common/Calendar';
+import { Card, CardBody } from '../../components/common/Card';
+import Modal from '../../components/common/Modal';
+import StatusBadge from '../../components/common/StatusBadge';
+
+const ResponsableCalendarPage = () => {
+  const navigate = useNavigate();
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const { data: interventionsData, isLoading: interventionsLoading } = useQuery({
+    queryKey: ['all-interventions-calendar'],
+    queryFn: () => interventionsApi.getAllInterventions(1, 1000), // Get all interventions
+  });
+
+  const interventions = useMemo(() => interventionsData?.data?.items || [], [interventionsData?.data?.items]);
+
+  // Convert interventions to calendar events
+  const events: CalendarEvent[] = useMemo(() => interventions.map((intervention) => ({
+    id: intervention.id,
+    title: `Intervention #${intervention.id} - ${intervention.technicienNom}`,
+    date: parseISO(intervention.dateIntervention),
+    type: 'intervention' as const,
+    status: intervention.statut,
+    description: intervention.commentaire || `Réclamation #${intervention.reclamationId}`,
+  })), [interventions]);
+
+  // Get events for selected date
+  const selectedDateEvents = useMemo(() => {
+    if (!selectedDate) return [];
+    return events.filter(event => isSameDay(event.date, selectedDate));
+  }, [events, selectedDate]);
+
+  const handleDateClick = (date: Date) => {
+    setSelectedDate(date);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setSelectedDate(null);
+  };
+
+  const handleViewDetails = (event: CalendarEvent) => {
+    navigate(`/responsable/interventions/${event.id}`);
+  };
+
+  if (interventionsLoading) {
+    return <LoadingSpinner />;
+  }
+
+  return (
+    <div className="space-y-6">
+      <PageHeader
+        title="Calendrier des interventions"
+        breadcrumb={[
+          { label: 'Tableau de bord', path: '/responsable/dashboard' },
+          { label: 'Calendrier' },
+        ]}
+      />
+
+      {/* Stats summary */}
+      <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+        <Card>
+          <CardBody>
+            <div className="text-center">
+              <p className="text-3xl font-bold text-primary-600">{interventions.length}</p>
+              <p className="text-sm text-gray-500">Total interventions</p>
+            </div>
+          </CardBody>
+        </Card>
+        <Card>
+          <CardBody>
+            <div className="text-center">
+              <p className="text-3xl font-bold text-blue-600">
+                {interventions.filter(i => i.statut === 'Planifiee').length}
+              </p>
+              <p className="text-sm text-gray-500">Planifiées</p>
+            </div>
+          </CardBody>
+        </Card>
+        <Card>
+          <CardBody>
+            <div className="text-center">
+              <p className="text-3xl font-bold text-amber-600">
+                {interventions.filter(i => i.statut === 'EnCours').length}
+              </p>
+              <p className="text-sm text-gray-500">En cours</p>
+            </div>
+          </CardBody>
+        </Card>
+        <Card>
+          <CardBody>
+            <div className="text-center">
+              <p className="text-3xl font-bold text-green-600">
+                {interventions.filter(i => i.statut === 'Terminee').length}
+              </p>
+              <p className="text-sm text-gray-500">Terminées</p>
+            </div>
+          </CardBody>
+        </Card>
+        <Card>
+          <CardBody>
+            <div className="text-center">
+              <p className="text-3xl font-bold text-red-600">
+                {interventions.filter(i => i.statut === 'Annulee').length}
+              </p>
+              <p className="text-sm text-gray-500">Annulées</p>
+            </div>
+          </CardBody>
+        </Card>
+      </div>
+
+      {/* Calendar */}
+      <Card>
+        <CardBody>
+          <Calendar events={events} onDateClick={handleDateClick} />
+        </CardBody>
+      </Card>
+
+      {/* Legend */}
+      <Card>
+        <CardBody>
+          <h4 className="font-semibold text-black mb-4">Légende des statuts</h4>
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div className="flex items-center gap-2">
+              <div className="w-4 h-4 rounded bg-blue-100"></div>
+              <span className="text-sm text-bodydark2">Planifiée</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="w-4 h-4 rounded bg-yellow-100"></div>
+              <span className="text-sm text-bodydark2">En cours</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="w-4 h-4 rounded bg-green-100"></div>
+              <span className="text-sm text-bodydark2">Terminée</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="w-4 h-4 rounded bg-red-100"></div>
+              <span className="text-sm text-bodydark2">Annulée</span>
+            </div>
+          </div>
+        </CardBody>
+      </Card>
+
+      {/* Date Events Modal */}
+      <Modal 
+        isOpen={isModalOpen} 
+        onClose={handleCloseModal} 
+        title={selectedDate ? format(selectedDate, 'EEEE d MMMM yyyy', { locale: fr }) : ''} 
+        size="lg"
+      >
+        <div className="space-y-4">
+          {selectedDateEvents.length > 0 ? (
+            <>
+              <p className="text-sm text-gray-500">
+                {selectedDateEvents.length} intervention{selectedDateEvents.length > 1 ? 's' : ''} pour cette date
+              </p>
+              <div className="space-y-3 max-h-96 overflow-y-auto">
+                {selectedDateEvents.map((event) => (
+                  <div
+                    key={event.id}
+                    className="p-4 border border-blue-200 bg-blue-50 rounded-lg hover:shadow-md transition-shadow cursor-pointer"
+                    onClick={() => handleViewDetails(event)}
+                  >
+                    <div className="flex items-center justify-between mb-2">
+                      <h4 className="font-semibold text-blue-800">{event.title}</h4>
+                      <StatusBadge status={event.status || ''} type="intervention" />
+                    </div>
+                    {event.description && (
+                      <p className="text-sm text-blue-700">{event.description}</p>
+                    )}
+                    <div className="mt-2 flex justify-end">
+                      <button
+                        className="text-sm text-primary-600 hover:text-primary-700 font-medium"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleViewDetails(event);
+                        }}
+                      >
+                        Voir les détails →
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </>
+          ) : (
+            <div className="text-center py-8">
+              <svg className="w-16 h-16 mx-auto text-gray-300 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+              <p className="text-gray-500">Aucune intervention pour cette date</p>
+            </div>
+          )}
+
+          <div className="flex justify-end pt-4 border-t border-stroke">
+            <button
+              onClick={handleCloseModal}
+              className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+            >
+              Fermer
+            </button>
+          </div>
+        </div>
+      </Modal>
+    </div>
+  );
+};
+
+export default ResponsableCalendarPage;

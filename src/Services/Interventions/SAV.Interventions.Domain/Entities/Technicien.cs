@@ -3,6 +3,7 @@ namespace SAV.Interventions.Domain.Entities;
 public class Technicien
 {
     public int Id { get; set; }
+    public string? UserId { get; set; } // Link to Auth User
     public string Nom { get; set; } = string.Empty;
     public string Prenom { get; set; } = string.Empty;
     public string Email { get; set; } = string.Empty;

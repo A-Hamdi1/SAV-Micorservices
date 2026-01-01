@@ -17,7 +17,7 @@ public class ArticleService : IArticleService
 
     public async Task<ArticleListDto> GetAllArticlesAsync(int page, int pageSize, string? search, string? categorie)
     {
-        var query = _context.Articles.AsQueryable();
+        var query = _context.Articles.Include(a => a.Categorie).AsQueryable();
 
         if (!string.IsNullOrWhiteSpace(search))
         {
@@ -26,7 +26,7 @@ public class ArticleService : IArticleService
 
         if (!string.IsNullOrWhiteSpace(categorie))
         {
-            query = query.Where(a => a.Categorie == categorie);
+            query = query.Where(a => a.CategorieNom == categorie || (a.Categorie != null && a.Categorie.Nom == categorie));
         }
 
         var totalCount = await query.CountAsync();
@@ -39,7 +39,8 @@ public class ArticleService : IArticleService
                 Id = a.Id,
                 Reference = a.Reference,
                 Nom = a.Nom,
-                Categorie = a.Categorie,
+                CategorieId = a.CategorieId,
+                Categorie = a.Categorie != null ? a.Categorie.Nom : a.CategorieNom,
                 PrixVente = a.PrixVente,
                 DureeGarantie = a.DureeGarantie,
                 CreatedAt = a.CreatedAt
@@ -57,7 +58,9 @@ public class ArticleService : IArticleService
 
     public async Task<ArticleDto?> GetArticleByIdAsync(int id)
     {
-        var article = await _context.Articles.FindAsync(id);
+        var article = await _context.Articles
+            .Include(a => a.Categorie)
+            .FirstOrDefaultAsync(a => a.Id == id);
         
         if (article == null)
         {
@@ -69,7 +72,8 @@ public class ArticleService : IArticleService
             Id = article.Id,
             Reference = article.Reference,
             Nom = article.Nom,
-            Categorie = article.Categorie,
+            CategorieId = article.CategorieId,
+            Categorie = article.Categorie != null ? article.Categorie.Nom : article.CategorieNom,
             PrixVente = article.PrixVente,
             DureeGarantie = article.DureeGarantie,
             CreatedAt = article.CreatedAt
@@ -78,11 +82,23 @@ public class ArticleService : IArticleService
 
     public async Task<ArticleDto> CreateArticleAsync(CreateArticleDto dto)
     {
+        // If CategorieId is provided, get the category name
+        string categorieNom = dto.Categorie;
+        if (dto.CategorieId.HasValue)
+        {
+            var categorie = await _context.Categories.FindAsync(dto.CategorieId.Value);
+            if (categorie != null)
+            {
+                categorieNom = categorie.Nom;
+            }
+        }
+
         var article = new Article
         {
             Reference = dto.Reference,
             Nom = dto.Nom,
-            Categorie = dto.Categorie,
+            CategorieId = dto.CategorieId,
+            CategorieNom = categorieNom,
             PrixVente = dto.PrixVente,
             DureeGarantie = dto.DureeGarantie
         };
@@ -95,7 +111,8 @@ public class ArticleService : IArticleService
             Id = article.Id,
             Reference = article.Reference,
             Nom = article.Nom,
-            Categorie = article.Categorie,
+            CategorieId = article.CategorieId,
+            Categorie = categorieNom,
             PrixVente = article.PrixVente,
             DureeGarantie = article.DureeGarantie,
             CreatedAt = article.CreatedAt
@@ -104,15 +121,29 @@ public class ArticleService : IArticleService
 
     public async Task<ArticleDto?> UpdateArticleAsync(int id, UpdateArticleDto dto)
     {
-        var article = await _context.Articles.FindAsync(id);
+        var article = await _context.Articles
+            .Include(a => a.Categorie)
+            .FirstOrDefaultAsync(a => a.Id == id);
         
         if (article == null)
         {
             return null;
         }
 
+        // If CategorieId is provided, get the category name
+        string categorieNom = dto.Categorie;
+        if (dto.CategorieId.HasValue)
+        {
+            var categorie = await _context.Categories.FindAsync(dto.CategorieId.Value);
+            if (categorie != null)
+            {
+                categorieNom = categorie.Nom;
+            }
+        }
+
         article.Nom = dto.Nom;
-        article.Categorie = dto.Categorie;
+        article.CategorieId = dto.CategorieId;
+        article.CategorieNom = categorieNom;
         article.PrixVente = dto.PrixVente;
         article.DureeGarantie = dto.DureeGarantie;
 
@@ -123,7 +154,8 @@ public class ArticleService : IArticleService
             Id = article.Id,
             Reference = article.Reference,
             Nom = article.Nom,
-            Categorie = article.Categorie,
+            CategorieId = article.CategorieId,
+            Categorie = categorieNom,
             PrixVente = article.PrixVente,
             DureeGarantie = article.DureeGarantie,
             CreatedAt = article.CreatedAt
@@ -163,7 +195,7 @@ public class ArticleService : IArticleService
 
     public async Task<ArticleStatsDto> GetArticlesStatsAsync()
     {
-        var articles = await _context.Articles.ToListAsync();
+        var articles = await _context.Articles.Include(a => a.Categorie).ToListAsync();
         var piecesDetachees = await _context.PiecesDetachees.ToListAsync();
 
         var nombreTotalArticles = articles.Count;
@@ -173,7 +205,7 @@ public class ArticleService : IArticleService
 
         // Stats par catégorie
         var parCategorie = articles
-            .GroupBy(a => a.Categorie)
+            .GroupBy(a => a.Categorie != null ? a.Categorie.Nom : a.CategorieNom)
             .Select(g => new ArticleCategoryStatsDto
             {
                 Categorie = g.Key,
@@ -193,7 +225,7 @@ public class ArticleService : IArticleService
                 Id = a.Id,
                 Nom = a.Nom,
                 Reference = a.Reference,
-                Categorie = a.Categorie,
+                Categorie = a.Categorie != null ? a.Categorie.Nom : a.CategorieNom,
                 NombreVentes = 0 // TODO: À implémenter avec les vraies données de ventes
             })
             .ToList();

@@ -10,6 +10,7 @@ public class ArticlesDbContext : DbContext
     }
 
     public DbSet<Article> Articles { get; set; }
+    public DbSet<Categorie> Categories { get; set; }
     public DbSet<PieceDetachee> PiecesDetachees { get; set; }
     public DbSet<MouvementStock> MouvementsStock { get; set; }
 
@@ -17,12 +18,25 @@ public class ArticlesDbContext : DbContext
     {
         base.OnModelCreating(builder);
 
+        builder.Entity<Categorie>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Nom).IsRequired().HasMaxLength(100);
+            entity.Property(e => e.Description).HasMaxLength(500);
+            entity.HasIndex(e => e.Nom).IsUnique();
+            
+            entity.HasMany(e => e.Articles)
+                  .WithOne(a => a.Categorie)
+                  .HasForeignKey(a => a.CategorieId)
+                  .OnDelete(DeleteBehavior.SetNull);
+        });
+
         builder.Entity<Article>(entity =>
         {
             entity.HasKey(e => e.Id);
             entity.Property(e => e.Reference).IsRequired().HasMaxLength(50);
             entity.Property(e => e.Nom).IsRequired().HasMaxLength(200);
-            entity.Property(e => e.Categorie).IsRequired().HasMaxLength(100);
+            entity.Property(e => e.CategorieNom).HasMaxLength(100);
             entity.Property(e => e.PrixVente).HasColumnType("decimal(18,2)");
             entity.HasIndex(e => e.Reference).IsUnique();
             

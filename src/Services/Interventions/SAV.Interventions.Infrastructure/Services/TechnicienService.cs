@@ -11,11 +11,16 @@ namespace SAV.Interventions.Infrastructure.Services;
 public class TechnicienService : ITechnicienService
 {
     private readonly InterventionsDbContext _context;
+    private readonly IClientsApiClient _clientsApiClient;
     private readonly ILogger<TechnicienService> _logger;
 
-    public TechnicienService(InterventionsDbContext context, ILogger<TechnicienService> logger)
+    public TechnicienService(
+        InterventionsDbContext context, 
+        IClientsApiClient clientsApiClient,
+        ILogger<TechnicienService> logger)
     {
         _context = context;
+        _clientsApiClient = clientsApiClient;
         _logger = logger;
     }
 
@@ -96,7 +101,42 @@ public class TechnicienService : ITechnicienService
         return techniciens.Select(t => MapToDto(t)).ToList();
     }
 
-    public async Task<TechnicienDto?> CreateTechnicienAsync(CreateTechnicienDto dto)
+    public async Task<TechnicienDetailsDto?> GetTechnicienByUserIdAsync(string userId)
+    {
+        var technicien = await _context.Techniciens
+            .Include(t => t.Interventions)
+                .ThenInclude(i => i.PiecesUtilisees)
+            .FirstOrDefaultAsync(t => t.UserId == userId);
+
+        if (technicien == null)
+            return null;
+
+        var interventions = technicien.Interventions
+            .Select(i => MapInterventionToDto(i))
+            .OrderByDescending(i => i.DateIntervention)
+            .ToList();
+
+        var stats = await CalculerStatsAsync(technicien);
+
+        return new TechnicienDetailsDto
+        {
+            Id = technicien.Id,
+            UserId = technicien.UserId,
+            Nom = technicien.Nom,
+            Prenom = technicien.Prenom,
+            NomComplet = technicien.NomComplet,
+            Email = technicien.Email,
+            Telephone = technicien.Telephone,
+            Specialite = technicien.Specialite,
+            EstDisponible = technicien.EstDisponible,
+            DateEmbauche = technicien.DateEmbauche,
+            CreatedAt = technicien.CreatedAt,
+            Interventions = interventions,
+            Stats = stats
+        };
+    }
+
+    public async Task<TechnicienDto?> CreateTechnicienAsync(CreateTechnicienDto dto, string? userId = null)
     {
         // Vérifier si l'email existe déjà
         var emailExists = await _context.Techniciens
@@ -110,6 +150,7 @@ public class TechnicienService : ITechnicienService
 
         var technicien = new Technicien
         {
+            UserId = userId,
             Nom = dto.Nom,
             Prenom = dto.Prenom,
             Email = dto.Email,
@@ -220,9 +261,9 @@ public class TechnicienService : ITechnicienService
             .Where(i => i.TechnicienId == technicienId)
             .AsQueryable();
 
-        if (!string.IsNullOrEmpty(statut))
+        if (!string.IsNullOrEmpty(statut) && Enum.TryParse<InterventionStatut>(statut, out var statutEnum))
         {
-            query = query.Where(i => i.Statut.ToString() == statut);
+            query = query.Where(i => i.Statut == statutEnum);
         }
 
         if (dateDebut.HasValue)
@@ -316,6 +357,7 @@ public class TechnicienService : ITechnicienService
         return new TechnicienDto
         {
             Id = technicien.Id,
+            UserId = technicien.UserId,
             Nom = technicien.Nom,
             Prenom = technicien.Prenom,
             NomComplet = technicien.NomComplet,
@@ -385,5 +427,92 @@ public class TechnicienService : ITechnicienService
             ChiffreAffaireTotal = chiffreAffaireTotal,
             ChiffreAffaireMoyen = chiffreAffaireMoyen
         };
+    }
+
+    public async Task<InterventionDto?> UpdateInterventionStatutByTechnicienAsync(
+        int interventionId, 
+        int technicienId, 
+        string statut, 
+        string? commentaire = null)
+    {
+        var intervention = await _context.Interventions
+            .Include(i => i.PiecesUtilisees)
+            .Include(i => i.Technicien)
+            .FirstOrDefaultAsync(i => i.Id == interventionId && i.TechnicienId == technicienId);
+
+        if (intervention == null)
+        {
+            _logger.LogWarning("Intervention {InterventionId} non trouvée ou n'appartient pas au technicien {TechnicienId}", 
+                interventionId, technicienId);
+            return null;
+        }
+
+        // Technicien ne peut que passer de Planifiee -> EnCours -> Terminee
+        if (Enum.TryParse<InterventionStatut>(statut, out var newStatut))
+        {
+            // Vérifier la logique de transition
+            var currentStatut = intervention.Statut;
+            
+            // Transitions valides pour technicien
+            bool isValidTransition = 
+                (currentStatut == InterventionStatut.Planifiee && newStatut == InterventionStatut.EnCours) ||
+                (currentStatut == InterventionStatut.EnCours && newStatut == InterventionStatut.Terminee);
+
+            if (!isValidTransition)
+            {
+                _logger.LogWarning("Transition invalide de {CurrentStatut} vers {NewStatut} pour technicien", 
+                    currentStatut, newStatut);
+                return null;
+            }
+
+            intervention.Statut = newStatut;
+            
+            if (!string.IsNullOrEmpty(commentaire))
+            {
+                intervention.Commentaire = commentaire;
+            }
+
+            // Si l'intervention est terminée, libérer le technicien et mettre à jour la réclamation
+            if (newStatut == InterventionStatut.Terminee)
+            {
+                var technicien = await _context.Techniciens.FindAsync(technicienId);
+                if (technicien != null)
+                {
+                    technicien.EstDisponible = true;
+                    _logger.LogInformation("Technicien {TechnicienId} libéré après intervention terminée", technicienId);
+                }
+            }
+
+            await _context.SaveChangesAsync();
+
+            // Synchroniser automatiquement le statut de la réclamation
+            if (newStatut == InterventionStatut.Terminee)
+            {
+                try
+                {
+                    var updated = await _clientsApiClient.UpdateReclamationStatutAsync(intervention.ReclamationId, "Resolue");
+                    if (updated)
+                    {
+                        _logger.LogInformation("Réclamation {ReclamationId} statut mis à jour automatiquement vers Resolue par technicien", 
+                            intervention.ReclamationId);
+                    }
+                    else
+                    {
+                        _logger.LogWarning("Échec de la mise à jour automatique du statut de la réclamation {ReclamationId}", 
+                            intervention.ReclamationId);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Erreur lors de la mise à jour du statut de la réclamation {ReclamationId}", 
+                        intervention.ReclamationId);
+                }
+            }
+
+            _logger.LogInformation("Statut de l'intervention {InterventionId} mis à jour par technicien {TechnicienId}: {Statut}", 
+                interventionId, technicienId, statut);
+        }
+
+        return MapInterventionToDto(intervention);
     }
 }

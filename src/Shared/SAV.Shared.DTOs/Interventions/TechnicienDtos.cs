@@ -3,6 +3,7 @@ namespace SAV.Shared.DTOs.Interventions;
 public class TechnicienDto
 {
     public int Id { get; set; }
+    public string? UserId { get; set; }
     public string Nom { get; set; } = string.Empty;
     public string Prenom { get; set; } = string.Empty;
     public string NomComplet { get; set; } = string.Empty;
@@ -18,6 +19,7 @@ public class TechnicienDto
 public class TechnicienDetailsDto
 {
     public int Id { get; set; }
+    public string? UserId { get; set; }
     public string Nom { get; set; } = string.Empty;
     public string Prenom { get; set; } = string.Empty;
     public string NomComplet { get; set; } = string.Empty;
@@ -36,6 +38,7 @@ public class CreateTechnicienDto
     public string Nom { get; set; } = string.Empty;
     public string Prenom { get; set; } = string.Empty;
     public string Email { get; set; } = string.Empty;
+    public string Password { get; set; } = string.Empty; // Password for user account
     public string Telephone { get; set; } = string.Empty;
     public string Specialite { get; set; } = string.Empty;
     public DateTime? DateEmbauche { get; set; }

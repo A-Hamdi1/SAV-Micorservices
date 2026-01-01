@@ -2,6 +2,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Link, useNavigate } from 'react-router-dom';
 import { articlesApi } from '../../api/articles';
+import { categoriesApi } from '../../api/categories';
 import LoadingSpinner from '../../components/common/LoadingSpinner';
 import PageHeader from '../../components/common/PageHeader';
 import { Card, CardBody } from '../../components/common/Card';
@@ -22,6 +23,11 @@ const ArticlesListPage = () => {
   const { data, isLoading } = useQuery({
     queryKey: ['articles', page, search, categorie],
     queryFn: () => articlesApi.getArticles(page, pageSize, search || undefined, categorie || undefined),
+  });
+
+  const { data: categories = [] } = useQuery({
+    queryKey: ['categories'],
+    queryFn: () => categoriesApi.getAll(),
   });
 
   const deleteMutation = useMutation({
@@ -108,9 +114,9 @@ const ArticlesListPage = () => {
                 className="form-select min-w-[180px]"
               >
                 <option value="">Toutes les catégories</option>
-                <option value="électronique">électronique</option>
-                <option value="électroménager">électroménager</option>
-                <option value="Informatique">Informatique</option>
+                {categories.map((cat) => (
+                  <option key={cat.id} value={cat.nom}>{cat.nom}</option>
+                ))}
               </select>
             </div>
             <div className="flex items-center gap-2 text-sm text-bodydark2">

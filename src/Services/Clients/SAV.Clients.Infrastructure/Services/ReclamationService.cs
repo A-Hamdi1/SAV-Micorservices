@@ -75,7 +75,7 @@ public class ReclamationService : IReclamationService
     public async Task<List<ReclamationDto>> GetClientReclamationsAsync(string userId)
     {
         var client = await _context.Clients
-            .Include(c => c.Reclamations)
+            .Include(c => c.Reclamations.OrderByDescending(r => r.DateCreation))
                 .ThenInclude(r => r.ArticleAchat)
             .FirstOrDefaultAsync(c => c.UserId == userId);
 

@@ -5,6 +5,7 @@ public class ArticleDto
     public int Id { get; set; }
     public string Reference { get; set; } = string.Empty;
     public string Nom { get; set; } = string.Empty;
+    public int? CategorieId { get; set; }
     public string Categorie { get; set; } = string.Empty;
     public decimal PrixVente { get; set; }
     public int DureeGarantie { get; set; } // En mois
@@ -15,6 +16,7 @@ public class CreateArticleDto
 {
     public string Reference { get; set; } = string.Empty;
     public string Nom { get; set; } = string.Empty;
+    public int? CategorieId { get; set; }
     public string Categorie { get; set; } = string.Empty;
     public decimal PrixVente { get; set; }
     public int DureeGarantie { get; set; }
@@ -23,6 +25,7 @@ public class CreateArticleDto
 public class UpdateArticleDto
 {
     public string Nom { get; set; } = string.Empty;
+    public int? CategorieId { get; set; }
     public string Categorie { get; set; } = string.Empty;
     public decimal PrixVente { get; set; }
     public int DureeGarantie { get; set; }
