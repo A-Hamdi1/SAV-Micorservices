@@ -1,4 +1,4 @@
-namespace SAV.Clients.Domain.Entities;
+namespace SAV.Notifications.Domain.Entities;
 
 public class Notification
 {

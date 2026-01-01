@@ -21,7 +21,7 @@ public interface IRdvService
     Task<IEnumerable<DemandeRdvDto>> GetDemandesRdvByClientAsync(int clientId);
     Task<DemandeRdvDto?> CreateDemandeRdvAsync(CreateDemandeRdvDto dto);
     Task<DemandeRdvDto?> TraiterDemandeRdvAsync(int id, TraiterDemandeRdvDto dto);
-    Task<DemandeRdvDto?> AnnulerDemandeRdvAsync(int id);
+    Task<DemandeRdvDto?> AnnulerDemandeRdvAsync(int id, string? clientUserId = null, bool cancelledByClient = true);
 }
 
 public class CreneauDto
@@ -100,6 +100,11 @@ public class CreateDemandeRdvDto
     [Range(1, int.MaxValue, ErrorMessage = "L'ID du client doit être positif")]
     public int ClientId { get; set; }
     
+    /// <summary>
+    /// UserId du client (pour les notifications)
+    /// </summary>
+    public string? ClientUserId { get; set; }
+    
     [Required(ErrorMessage = "Le motif est requis")]
     [MaxLength(200, ErrorMessage = "Le motif ne peut pas dépasser 200 caractères")]
     public string Motif { get; set; } = string.Empty;
@@ -120,6 +125,11 @@ public class TraiterDemandeRdvDto
     
     [Required(ErrorMessage = "Le choix d'acceptation est requis")]
     public bool Accepter { get; set; }
+    
+    /// <summary>
+    /// UserId du client (pour les notifications)
+    /// </summary>
+    public string? ClientUserId { get; set; }
     
     [MaxLength(500, ErrorMessage = "Le commentaire ne peut pas dépasser 500 caractères")]
     public string? Commentaire { get; set; }

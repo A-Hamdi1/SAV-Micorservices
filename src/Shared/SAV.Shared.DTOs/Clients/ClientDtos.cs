@@ -86,6 +86,7 @@ public class ReclamationDto
 {
     public int Id { get; set; }
     public int ClientId { get; set; }
+    public string? ClientUserId { get; set; }
     public string ClientNom { get; set; } = string.Empty;
     public string ClientPrenom { get; set; } = string.Empty;
     public int ArticleAchatId { get; set; }

@@ -12,17 +12,20 @@ public class InterventionService : IInterventionService
     private readonly InterventionsDbContext _context;
     private readonly IClientsApiClient _clientsApiClient;
     private readonly IArticlesApiClient _articlesApiClient;
+    private readonly INotificationsApiClient _notificationsApiClient;
     private readonly ILogger<InterventionService> _logger;
 
     public InterventionService(
         InterventionsDbContext context,
         IClientsApiClient clientsApiClient,
         IArticlesApiClient articlesApiClient,
+        INotificationsApiClient notificationsApiClient,
         ILogger<InterventionService> logger)
     {
         _context = context;
         _clientsApiClient = clientsApiClient;
         _articlesApiClient = articlesApiClient;
+        _notificationsApiClient = notificationsApiClient;
         _logger = logger;
     }
 
@@ -81,6 +84,17 @@ public class InterventionService : IInterventionService
             if (updated)
             {
                 _logger.LogInformation("Réclamation {ReclamationId} passée en statut EnCours", dto.ReclamationId);
+            }
+
+            // Envoyer notifications au technicien et au client
+            if (technicien != null)
+            {
+                await _notificationsApiClient.NotifyInterventionCreatedAsync(
+                    intervention.Id, 
+                    dto.ReclamationId, 
+                    technicien.UserId, 
+                    reclamation.ClientUserId);
+                _logger.LogInformation("Notifications sent for intervention {InterventionId}", intervention.Id);
             }
 
             return await MapToDto(intervention);
@@ -217,6 +231,19 @@ public class InterventionService : IInterventionService
                     _logger.LogWarning("Échec de la mise à jour automatique du statut de la réclamation {ReclamationId}", 
                         intervention.ReclamationId);
                 }
+            }
+
+            // Envoyer notification de changement de statut
+            if (intervention.Technicien != null)
+            {
+                var reclamation = await _clientsApiClient.GetReclamationByIdAsync(intervention.ReclamationId);
+                await _notificationsApiClient.NotifyInterventionStatusChangedAsync(
+                    intervention.Id,
+                    dto.Statut,
+                    intervention.Technicien.UserId,
+                    reclamation?.ClientUserId);
+                _logger.LogInformation("Notification sent for intervention {InterventionId} status change to {Statut}", 
+                    intervention.Id, dto.Statut);
             }
         }
 

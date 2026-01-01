@@ -21,19 +21,21 @@ builder.Services.AddScoped<IPaymentRepository, PaymentRepository>();
 // Services
 builder.Services.AddScoped<IPaymentService, PaymentService>();
 
+// HTTP Clients for inter-service communication
+builder.Services.AddHttpClient<INotificationsApiClient, NotificationsApiClient>();
+
 // JWT Authentication
-var jwtKey = builder.Configuration["Jwt:Key"] ?? "VotreCleSecreteTresLongueEtSecurisee123!";
+var jwtKey = builder.Configuration["Jwt:Key"] ?? throw new InvalidOperationException("JWT Key not configured");
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
         options.TokenValidationParameters = new TokenValidationParameters
         {
             ValidateIssuer = true,
-            ValidateAudience = true,
+            ValidateAudience = false, // Disable audience validation to match other services
             ValidateLifetime = true,
             ValidateIssuerSigningKey = true,
-            ValidIssuer = builder.Configuration["Jwt:Issuer"] ?? "SAV.Auth",
-            ValidAudience = builder.Configuration["Jwt:Audience"] ?? "SAV.Clients",
+            ValidIssuer = builder.Configuration["Jwt:Issuer"] ?? "SAV.Auth.API",
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey))
         };
     });

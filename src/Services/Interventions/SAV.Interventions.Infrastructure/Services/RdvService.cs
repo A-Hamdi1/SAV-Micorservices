@@ -8,10 +8,12 @@ namespace SAV.Interventions.Infrastructure.Services;
 public class RdvService : IRdvService
 {
     private readonly InterventionsDbContext _context;
+    private readonly INotificationsApiClient _notificationsApiClient;
 
-    public RdvService(InterventionsDbContext context)
+    public RdvService(InterventionsDbContext context, INotificationsApiClient notificationsApiClient)
     {
         _context = context;
+        _notificationsApiClient = notificationsApiClient;
     }
 
     #region Créneaux
@@ -285,6 +287,15 @@ public class RdvService : IRdvService
             demande.Creneau = creneauSelectionne;
         }
 
+        // Notifier les ResponsableSAV qu'une nouvelle demande de RDV a été créée
+        if (!string.IsNullOrEmpty(dto.ClientUserId))
+        {
+            await _notificationsApiClient.NotifyRdvRequestedAsync(
+                demande.Id,
+                dto.ClientUserId,
+                dto.DateSouhaitee ?? creneauSelectionne?.DateDebut ?? DateTime.UtcNow);
+        }
+
         return MapToDemandeRdvDto(demande);
     }
 
@@ -330,10 +341,25 @@ public class RdvService : IRdvService
         demande.TraiteeAt = DateTime.UtcNow;
 
         await _context.SaveChangesAsync();
+
+        // Envoyer notification au client
+        if (!string.IsNullOrEmpty(dto.ClientUserId))
+        {
+            if (dto.Accepter)
+            {
+                var dateConfirmee = demande.Creneau?.DateDebut ?? DateTime.UtcNow;
+                await _notificationsApiClient.NotifyRdvConfirmedAsync(demande.Id, dto.ClientUserId, dateConfirmee);
+            }
+            else
+            {
+                await _notificationsApiClient.NotifyRdvRejectedAsync(demande.Id, dto.ClientUserId, dto.Commentaire);
+            }
+        }
+
         return MapToDemandeRdvDto(demande);
     }
 
-    public async Task<DemandeRdvDto?> AnnulerDemandeRdvAsync(int id)
+    public async Task<DemandeRdvDto?> AnnulerDemandeRdvAsync(int id, string? clientUserId = null, bool cancelledByClient = true)
     {
         var demande = await _context.DemandesRdv
             .Include(d => d.Creneau)
@@ -352,6 +378,13 @@ public class RdvService : IRdvService
         demande.TraiteeAt = DateTime.UtcNow;
 
         await _context.SaveChangesAsync();
+
+        // Envoyer notification
+        if (!string.IsNullOrEmpty(clientUserId))
+        {
+            await _notificationsApiClient.NotifyRdvCancelledAsync(demande.Id, clientUserId, cancelledByClient);
+        }
+
         return MapToDemandeRdvDto(demande);
     }
 

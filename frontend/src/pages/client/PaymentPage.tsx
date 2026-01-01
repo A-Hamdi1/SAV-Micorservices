@@ -33,8 +33,13 @@ const PaymentPage = () => {
       try {
         const response = await paymentsApi.getByInterventionId(parseInt(interventionId || '0'));
         return response.data;
-      } catch {
+      } catch (error: unknown) {
         // 404 = pas de paiement existant, c'est normal
+        // Pour les autres erreurs, on log mais on ne bloque pas
+        const axiosError = error as { response?: { status?: number } };
+        if (axiosError.response?.status !== 404) {
+          console.warn('Error fetching existing payment:', error);
+        }
         return { data: null };
       }
     },
@@ -48,10 +53,16 @@ const PaymentPage = () => {
         throw new Error('Données manquantes');
       }
       
+      const montant = intervention.data.montantTotal;
+      if (!montant || montant <= 0) {
+        throw new Error('Montant invalide. Le montant doit être supérieur à 0.');
+      }
+      
       const response = await paymentsApi.createCheckoutSession({
         interventionId: intervention.data.id,
         clientId: profile.data.id,
-        montant: intervention.data.montantTotal,
+        clientUserId: profile.data.userId,
+        montant: montant,
         description: `Paiement intervention #${intervention.data.id}`,
         successUrl: `${window.location.origin}/client/payment/${interventionId}/success`,
         cancelUrl: `${window.location.origin}/client/payment/${interventionId}/cancel`,
@@ -64,9 +75,13 @@ const PaymentPage = () => {
         window.location.href = data.data.sessionUrl;
       }
     },
-    onError: (error) => {
+    onError: (error: Error & { response?: { data?: { message?: string; errors?: string[] } } }) => {
       console.error('Error creating checkout session:', error);
-      toast.error('Erreur lors de la création de la session de paiement');
+      const errorMessage = error.response?.data?.message 
+        || error.response?.data?.errors?.[0] 
+        || error.message 
+        || 'Erreur lors de la création de la session de paiement';
+      toast.error(errorMessage);
       setIsProcessing(false);
     },
   });

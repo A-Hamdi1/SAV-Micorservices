@@ -98,60 +98,6 @@ namespace SAV.Clients.Infrastructure.Migrations
                     b.ToTable("Clients");
                 });
 
-            modelBuilder.Entity("SAV.Clients.Domain.Entities.Notification", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("DateCreation")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("DateLecture")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("EstLue")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("LienAction")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<string>("Message")
-                        .IsRequired()
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
-
-                    b.Property<int?>("ReferenceId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Titre")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<string>("Type")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasMaxLength(450)
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("DateCreation");
-
-                    b.HasIndex("UserId");
-
-                    b.HasIndex("UserId", "EstLue");
-
-                    b.ToTable("Notifications");
-                });
-
             modelBuilder.Entity("SAV.Clients.Domain.Entities.Reclamation", b =>
                 {
                     b.Property<int>("Id")

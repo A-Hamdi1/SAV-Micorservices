@@ -23,13 +23,29 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidIssuer = builder.Configuration["Jwt:Issuer"],
             IssuerSigningKey = new SymmetricSecurityKey(key)
         };
+
+        // Support SignalR token from query string
+        options.Events = new JwtBearerEvents
+        {
+            OnMessageReceived = context =>
+            {
+                var accessToken = context.Request.Query["access_token"];
+                var path = context.HttpContext.Request.Path;
+                
+                if (!string.IsNullOrEmpty(accessToken) && path.StartsWithSegments("/hubs"))
+                {
+                    context.Token = accessToken;
+                }
+                return Task.CompletedTask;
+            }
+        };
     });
 
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowBlazor", policy =>
     {
-        policy.WithOrigins("https://localhost:5005", "http://localhost:5015", "http://localhost:3000")
+        policy.WithOrigins("https://localhost:5005", "http://localhost:5015", "http://localhost:3000", "http://localhost:5173")
               .AllowAnyMethod()
               .AllowAnyHeader()
               .AllowCredentials();
@@ -41,6 +57,9 @@ builder.Services.AddOcelot();
 var app = builder.Build();
 
 app.UseCors("AllowBlazor");
+
+// Enable WebSocket support for SignalR
+app.UseWebSockets();
 
 await app.UseOcelot();
 

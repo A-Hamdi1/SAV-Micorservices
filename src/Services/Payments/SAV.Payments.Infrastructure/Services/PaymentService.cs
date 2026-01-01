@@ -4,21 +4,40 @@ using SAV.Payments.Domain.Interfaces;
 using Stripe;
 using Stripe.Checkout;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 
 namespace SAV.Payments.Infrastructure.Services;
 
 public class PaymentService : IPaymentService
 {
     private readonly IPaymentRepository _paymentRepository;
+    private readonly INotificationsApiClient _notificationsApiClient;
     private readonly IConfiguration _configuration;
+    private readonly ILogger<PaymentService> _logger;
     private readonly string _webhookSecret;
 
-    public PaymentService(IPaymentRepository paymentRepository, IConfiguration configuration)
+    public PaymentService(
+        IPaymentRepository paymentRepository, 
+        INotificationsApiClient notificationsApiClient,
+        IConfiguration configuration,
+        ILogger<PaymentService> logger)
     {
         _paymentRepository = paymentRepository;
+        _notificationsApiClient = notificationsApiClient;
         _configuration = configuration;
+        _logger = logger;
         _webhookSecret = configuration["Stripe:WebhookSecret"] ?? "";
-        StripeConfiguration.ApiKey = configuration["Stripe:SecretKey"];
+        
+        var stripeKey = configuration["Stripe:SecretKey"];
+        if (string.IsNullOrEmpty(stripeKey))
+        {
+            _logger.LogError("Stripe SecretKey is not configured!");
+        }
+        else
+        {
+            StripeConfiguration.ApiKey = stripeKey;
+            _logger.LogInformation("Stripe API configured successfully");
+        }
     }
 
     public async Task<PaymentDto?> GetByIdAsync(int id)
@@ -47,17 +66,29 @@ public class PaymentService : IPaymentService
 
     public async Task<StripeCheckoutSessionDto> CreateCheckoutSessionAsync(CreatePaymentDto dto)
     {
-        var options = new SessionCreateOptions
+        _logger.LogInformation("Creating checkout session for intervention {InterventionId}, amount {Montant}", 
+            dto.InterventionId, dto.Montant);
+        
+        // Validation du montant
+        if (dto.Montant <= 0)
         {
-            PaymentMethodTypes = new List<string> { "card" },
-            LineItems = new List<SessionLineItemOptions>
+            _logger.LogWarning("Invalid amount: {Montant}", dto.Montant);
+            throw new ArgumentException("Le montant doit être supérieur à 0");
+        }
+
+        try
+        {
+            var options = new SessionCreateOptions
             {
-                new SessionLineItemOptions
+                PaymentMethodTypes = new List<string> { "card" },
+                LineItems = new List<SessionLineItemOptions>
                 {
-                    PriceData = new SessionLineItemPriceDataOptions
+                    new SessionLineItemOptions
                     {
-                        UnitAmount = (long)(dto.Montant * 100), // Stripe utilise les centimes
-                        Currency = "eur",
+                        PriceData = new SessionLineItemPriceDataOptions
+                        {
+                            UnitAmount = (long)(dto.Montant * 100), // Stripe utilise les centimes
+                            Currency = "eur",
                         ProductData = new SessionLineItemPriceDataProductDataOptions
                         {
                             Name = $"Intervention #{dto.InterventionId}",
@@ -78,27 +109,43 @@ public class PaymentService : IPaymentService
         };
 
         var service = new SessionService();
-        var session = await service.CreateAsync(options);
+            var session = await service.CreateAsync(options);
 
-        // Créer l'enregistrement du paiement
-        var payment = new Payment
+            _logger.LogInformation("Stripe session created: {SessionId}", session.Id);
+
+            // Créer l'enregistrement du paiement
+            var payment = new Payment
+            {
+                InterventionId = dto.InterventionId,
+                ClientId = dto.ClientId,
+                ClientUserId = dto.ClientUserId,
+                Montant = dto.Montant,
+                StripeSessionId = session.Id,
+                Statut = PaymentStatut.EnCours,
+                Methode = PaymentMethode.Carte,
+                Description = dto.Description
+            };
+
+            await _paymentRepository.CreateAsync(payment);
+
+            _logger.LogInformation("Payment record created for intervention {InterventionId}", dto.InterventionId);
+
+            return new StripeCheckoutSessionDto
+            {
+                SessionId = session.Id,
+                SessionUrl = session.Url
+            };
+        }
+        catch (StripeException ex)
         {
-            InterventionId = dto.InterventionId,
-            ClientId = dto.ClientId,
-            Montant = dto.Montant,
-            StripeSessionId = session.Id,
-            Statut = PaymentStatut.EnCours,
-            Methode = PaymentMethode.Carte,
-            Description = dto.Description
-        };
-
-        await _paymentRepository.CreateAsync(payment);
-
-        return new StripeCheckoutSessionDto
+            _logger.LogError(ex, "Stripe error creating checkout session: {Message}", ex.Message);
+            throw new InvalidOperationException($"Erreur Stripe: {ex.Message}", ex);
+        }
+        catch (Exception ex)
         {
-            SessionId = session.Id,
-            SessionUrl = session.Url
-        };
+            _logger.LogError(ex, "Error creating checkout session");
+            throw;
+        }
     }
 
     public async Task<PaymentDto> HandleStripeWebhookAsync(string json, string signature)
@@ -132,6 +179,16 @@ public class PaymentService : IPaymentService
                     }
 
                     await _paymentRepository.UpdateAsync(payment);
+                    
+                    // Envoyer notification de succès
+                    if (!string.IsNullOrEmpty(payment.ClientUserId))
+                    {
+                        await _notificationsApiClient.NotifyPaymentSuccessAsync(
+                            payment.InterventionId, 
+                            payment.ClientUserId, 
+                            payment.Montant);
+                    }
+                    
                     return MapToDto(payment);
                 }
             }
@@ -146,6 +203,15 @@ public class PaymentService : IPaymentService
                 {
                     payment.Statut = PaymentStatut.Echoue;
                     await _paymentRepository.UpdateAsync(payment);
+                    
+                    // Envoyer notification d'échec
+                    if (!string.IsNullOrEmpty(payment.ClientUserId))
+                    {
+                        await _notificationsApiClient.NotifyPaymentFailedAsync(
+                            payment.InterventionId, 
+                            payment.ClientUserId);
+                    }
+                    
                     return MapToDto(payment);
                 }
             }
@@ -160,6 +226,7 @@ public class PaymentService : IPaymentService
         {
             InterventionId = dto.InterventionId,
             ClientId = dto.ClientId,
+            ClientUserId = dto.ClientUserId,
             Montant = dto.Montant,
             Methode = dto.Methode,
             Statut = PaymentStatut.Reussi,
@@ -169,6 +236,16 @@ public class PaymentService : IPaymentService
         };
 
         await _paymentRepository.CreateAsync(payment);
+        
+        // Envoyer notification de succès
+        if (!string.IsNullOrEmpty(dto.ClientUserId))
+        {
+            await _notificationsApiClient.NotifyPaymentSuccessAsync(
+                dto.InterventionId, 
+                dto.ClientUserId, 
+                dto.Montant);
+        }
+        
         return MapToDto(payment);
     }
 

@@ -10,13 +10,13 @@ public class ReclamationService : IReclamationService
 {
     private readonly ClientsDbContext _context;
     private readonly IArticlesApiClient _articlesApiClient;
-    private readonly INotificationService _notificationService;
+    private readonly INotificationsApiClient _notificationsApiClient;
 
-    public ReclamationService(ClientsDbContext context, IArticlesApiClient articlesApiClient, INotificationService notificationService)
+    public ReclamationService(ClientsDbContext context, IArticlesApiClient articlesApiClient, INotificationsApiClient notificationsApiClient)
     {
         _context = context;
         _articlesApiClient = articlesApiClient;
-        _notificationService = notificationService;
+        _notificationsApiClient = notificationsApiClient;
     }
 
     public async Task<ReclamationDto?> CreateReclamationAsync(string userId, CreateReclamationDto dto)
@@ -56,10 +56,10 @@ public class ReclamationService : IReclamationService
         _context.Reclamations.Add(reclamation);
         await _context.SaveChangesAsync();
 
-        // Envoyer une notification au client
+        // Envoyer une notification via le microservice Notifications
         try
         {
-            await _notificationService.NotifyReclamationCreatedAsync(reclamation.Id, client.Id, userId);
+            await _notificationsApiClient.NotifyReclamationCreatedAsync(reclamation.Id, client.Id, userId);
         }
         catch
         {
@@ -72,6 +72,7 @@ public class ReclamationService : IReclamationService
         {
             Id = reclamation.Id,
             ClientId = reclamation.ClientId,
+            ClientUserId = client.UserId,
             ClientNom = client.Nom,
             ClientPrenom = client.Prenom,
             ArticleAchatId = reclamation.ArticleAchatId,
@@ -104,6 +105,7 @@ public class ReclamationService : IReclamationService
             {
                 Id = reclamation.Id,
                 ClientId = reclamation.ClientId,
+                ClientUserId = client.UserId,
                 ClientNom = client.Nom,
                 ClientPrenom = client.Prenom,
                 ArticleAchatId = reclamation.ArticleAchatId,
@@ -148,7 +150,8 @@ public class ReclamationService : IReclamationService
             {
                 Id = reclamation.Id,
                 ClientId = reclamation.ClientId,
-                ClientNom = reclamation.Client!.Nom,
+                ClientUserId = reclamation.Client!.UserId,
+                ClientNom = reclamation.Client.Nom,
                 ClientPrenom = reclamation.Client.Prenom,
                 ArticleAchatId = reclamation.ArticleAchatId,
                 ArticleNom = articleInfo?.Nom ?? "Article introuvable",
@@ -185,7 +188,8 @@ public class ReclamationService : IReclamationService
         {
             Id = reclamation.Id,
             ClientId = reclamation.ClientId,
-            ClientNom = reclamation.Client!.Nom,
+            ClientUserId = reclamation.Client!.UserId,
+            ClientNom = reclamation.Client.Nom,
             ClientPrenom = reclamation.Client.Prenom,
             ArticleAchatId = reclamation.ArticleAchatId,
             ArticleNom = articleInfo?.Nom ?? "Article introuvable",
@@ -219,12 +223,12 @@ public class ReclamationService : IReclamationService
 
             await _context.SaveChangesAsync();
 
-            // Envoyer une notification au client
+            // Envoyer une notification au client via le microservice Notifications
             if (reclamation.Client != null && !string.IsNullOrEmpty(reclamation.Client.UserId))
             {
                 try
                 {
-                    await _notificationService.NotifyReclamationStatusChangedAsync(
+                    await _notificationsApiClient.NotifyReclamationStatusChangedAsync(
                         reclamation.Id,
                         dto.Statut,
                         reclamation.Client.UserId
@@ -243,7 +247,8 @@ public class ReclamationService : IReclamationService
         {
             Id = reclamation.Id,
             ClientId = reclamation.ClientId,
-            ClientNom = reclamation.Client!.Nom,
+            ClientUserId = reclamation.Client!.UserId,
+            ClientNom = reclamation.Client.Nom,
             ClientPrenom = reclamation.Client.Prenom,
             ArticleAchatId = reclamation.ArticleAchatId,
             ArticleNom = articleInfo?.Nom ?? "Article introuvable",
@@ -274,7 +279,8 @@ public class ReclamationService : IReclamationService
             {
                 Id = reclamation.Id,
                 ClientId = reclamation.ClientId,
-                ClientNom = reclamation.Client!.Nom,
+                ClientUserId = reclamation.Client!.UserId,
+                ClientNom = reclamation.Client.Nom,
                 ClientPrenom = reclamation.Client.Prenom,
                 ArticleAchatId = reclamation.ArticleAchatId,
                 ArticleNom = articleInfo?.Nom ?? "Article introuvable",

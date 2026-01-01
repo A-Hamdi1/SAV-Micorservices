@@ -11,10 +11,22 @@ namespace SAV.Payments.API.Controllers;
 public class PaymentsController : ControllerBase
 {
     private readonly IPaymentService _paymentService;
+    private readonly ILogger<PaymentsController> _logger;
 
-    public PaymentsController(IPaymentService paymentService)
+    public PaymentsController(IPaymentService paymentService, ILogger<PaymentsController> logger)
     {
         _paymentService = paymentService;
+        _logger = logger;
+    }
+
+    /// <summary>
+    /// Health check endpoint
+    /// </summary>
+    [HttpGet("health")]
+    [AllowAnonymous]
+    public ActionResult Health()
+    {
+        return Ok(new { status = "healthy", service = "Payments API", timestamp = DateTime.UtcNow });
     }
 
     /// <summary>
@@ -56,14 +68,31 @@ public class PaymentsController : ControllerBase
     [Authorize]
     public async Task<ActionResult<ApiResponse<PaymentDto>>> GetByInterventionId(int interventionId)
     {
-        var payment = await _paymentService.GetByInterventionIdAsync(interventionId);
-        if (payment == null)
-            return NotFound(new ApiResponse<PaymentDto> { Success = false, Message = "Paiement non trouvé" });
-        return Ok(new ApiResponse<PaymentDto>
+        try
         {
-            Success = true,
-            Data = payment
-        });
+            _logger.LogInformation("Getting payment for intervention {InterventionId}", interventionId);
+            var payment = await _paymentService.GetByInterventionIdAsync(interventionId);
+            if (payment == null)
+            {
+                _logger.LogInformation("No payment found for intervention {InterventionId}", interventionId);
+                return NotFound(new ApiResponse<PaymentDto> { Success = false, Message = "Paiement non trouvé" });
+            }
+            return Ok(new ApiResponse<PaymentDto>
+            {
+                Success = true,
+                Data = payment
+            });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error getting payment for intervention {InterventionId}", interventionId);
+            return StatusCode(500, new ApiResponse<PaymentDto>
+            {
+                Success = false,
+                Message = "Erreur interne du serveur",
+                Errors = new List<string> { ex.Message }
+            });
+        }
     }
 
     /// <summary>
@@ -106,9 +135,29 @@ public class PaymentsController : ControllerBase
     [Authorize]
     public async Task<ActionResult<ApiResponse<StripeCheckoutSessionDto>>> CreateCheckoutSession([FromBody] CreatePaymentDto dto)
     {
+        if (!ModelState.IsValid)
+        {
+            var errors = ModelState.Values
+                .SelectMany(v => v.Errors)
+                .Select(e => e.ErrorMessage)
+                .ToList();
+            return BadRequest(new ApiResponse<StripeCheckoutSessionDto>
+            {
+                Success = false,
+                Message = "Données de paiement invalides",
+                Errors = errors
+            });
+        }
+
         try
         {
+            _logger.LogInformation("Creating checkout session for intervention {InterventionId}, clientId {ClientId}, montant {Montant}", 
+                dto.InterventionId, dto.ClientId, dto.Montant);
+            
             var session = await _paymentService.CreateCheckoutSessionAsync(dto);
+            
+            _logger.LogInformation("Checkout session created successfully: {SessionUrl}", session.SessionUrl);
+            
             return Ok(new ApiResponse<StripeCheckoutSessionDto>
             {
                 Success = true,
@@ -118,10 +167,11 @@ public class PaymentsController : ControllerBase
         }
         catch (Exception ex)
         {
+            _logger.LogError(ex, "Error creating checkout session for intervention {InterventionId}", dto.InterventionId);
             return BadRequest(new ApiResponse<StripeCheckoutSessionDto>
             {
                 Success = false,
-                Message = "Erreur lors de la création de la session",
+                Message = "Erreur lors de la création de la session: " + ex.Message,
                 Errors = new List<string> { ex.Message }
             });
         }

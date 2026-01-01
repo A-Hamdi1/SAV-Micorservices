@@ -18,6 +18,7 @@ export interface Payment {
 export interface CreateCheckoutRequest {
   interventionId: number;
   clientId: number;
+  clientUserId?: string;
   montant: number;
   description?: string;
   successUrl: string;

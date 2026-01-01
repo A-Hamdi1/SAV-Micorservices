@@ -1,6 +1,6 @@
 using SAV.Shared.DTOs.Notifications;
 
-namespace SAV.Clients.Application.Interfaces;
+namespace SAV.Notifications.Application.Interfaces;
 
 public interface INotificationService
 {
@@ -20,6 +20,14 @@ public interface INotificationService
     Task NotifyInterventionCreatedAsync(int interventionId, int reclamationId, string technicienUserId, string? clientUserId);
     Task NotifyInterventionStatusChangedAsync(int interventionId, string newStatus, string technicienUserId, string? clientUserId);
     Task NotifyEvaluationReceivedAsync(int evaluationId, int interventionId, string technicienUserId);
-    Task NotifyRdvStatusChangedAsync(int rdvId, string status, string clientUserId);
-    Task NotifyPaymentStatusAsync(int interventionId, bool success, string clientUserId);
+    
+    // RDV notifications
+    Task NotifyRdvRequestedAsync(int rdvId, string clientUserId, DateTime dateProposee);
+    Task NotifyRdvConfirmedAsync(int rdvId, string clientUserId, DateTime dateConfirmee);
+    Task NotifyRdvRejectedAsync(int rdvId, string clientUserId, string? motif);
+    Task NotifyRdvCancelledAsync(int rdvId, string clientUserId, bool cancelledByClient);
+    
+    // Payment notifications
+    Task NotifyPaymentSuccessAsync(int interventionId, string clientUserId, decimal montant);
+    Task NotifyPaymentFailedAsync(int interventionId, string clientUserId);
 }

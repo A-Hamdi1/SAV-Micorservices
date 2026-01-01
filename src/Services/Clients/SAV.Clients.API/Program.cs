@@ -71,10 +71,10 @@ builder.Services.AddAuthentication(options =>
 
 builder.Services.AddHttpClient<IArticlesApiClient, ArticlesApiClient>();
 builder.Services.AddHttpClient<IAuthApiClient, AuthApiClient>();
+builder.Services.AddHttpClient<INotificationsApiClient, NotificationsApiClient>();
 builder.Services.AddScoped<IClientService, ClientService>();
 builder.Services.AddScoped<IArticleAchatService, ArticleAchatService>();
 builder.Services.AddScoped<IReclamationService, ReclamationService>();
-builder.Services.AddScoped<INotificationService, NotificationService>();
 
 builder.Services.AddCors(options =>
 {
