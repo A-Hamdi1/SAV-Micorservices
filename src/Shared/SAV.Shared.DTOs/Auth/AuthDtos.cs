@@ -63,3 +63,18 @@ public class ChangePasswordDto
     public string NewPassword { get; set; } = string.Empty;
     public string ConfirmPassword { get; set; } = string.Empty;
 }
+
+// DTO pour l'authentification Google
+public class GoogleAuthDto
+{
+    public string IdToken { get; set; } = string.Empty;
+}
+
+public class GoogleUserInfo
+{
+    public string Email { get; set; } = string.Empty;
+    public string Name { get; set; } = string.Empty;
+    public string? Picture { get; set; }
+    public bool EmailVerified { get; set; }
+    public string GoogleId { get; set; } = string.Empty;
+}

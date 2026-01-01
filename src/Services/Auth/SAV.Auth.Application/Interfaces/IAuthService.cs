@@ -17,4 +17,7 @@ public interface IAuthService
     
     // Change Password
     Task<(bool Success, List<string> Errors)> ChangePasswordAsync(string userId, string currentPassword, string newPassword);
+    
+    // Google Authentication
+    Task<AuthResponseDto?> GoogleLoginAsync(GoogleAuthDto googleAuthDto);
 }

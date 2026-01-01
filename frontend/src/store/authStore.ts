@@ -13,6 +13,7 @@ interface AuthState {
   isAuthenticated: boolean;
   role: UserRole | null;
   login: (email: string, password: string) => Promise<void>;
+  googleLogin: (idToken: string) => Promise<void>;
   register: (email: string, password: string, confirmPassword: string, role: string) => Promise<void>;
   logout: () => void;
   refreshAccessToken: () => Promise<void>;
@@ -131,6 +132,82 @@ export const useAuthStore = create<AuthState>()(
           }
         } catch (error) {
           const errMsg = error instanceof Error ? error.message : 'Erreur lors de la connexion';
+          toast.error(errMsg);
+          throw error;
+        }
+      },
+
+      googleLogin: async (idToken: string) => {
+        try {
+          const response = await authApi.googleLogin({ idToken });
+          if (response.success && response.data) {
+            const authData = response.data;
+            
+            // Set token in localStorage FIRST so subsequent API calls can use it
+            localStorage.setItem('token', authData.token);
+            localStorage.setItem('refreshToken', authData.refreshToken);
+            
+            // Récupérer les infos utilisateur complètes
+            let userInfo: User | null = null;
+            try {
+              const userResponse = await authApi.getCurrentUser();
+              if (userResponse.success && userResponse.data) {
+                userInfo = userResponse.data;
+              }
+            } catch (err) {
+              console.warn('Could not fetch user info:', err);
+            }
+
+            let user: User = userInfo || {
+              id: '',
+              email: authData.email,
+              role: authData.role,
+            };
+
+            // Si l'utilisateur est un client, récupérer son clientId
+            if (authData.role === 'Client') {
+              try {
+                const clientResponse = await clientsApi.getMyProfile();
+                if (clientResponse.success && clientResponse.data) {
+                  user = {
+                    ...user,
+                    clientId: clientResponse.data.id
+                  };
+                }
+              } catch (err) {
+                console.warn('Could not fetch client profile:', err);
+              }
+            }
+
+            // Si l'utilisateur est un technicien, récupérer son technicienId
+            if (authData.role === 'Technicien') {
+              try {
+                const technicienResponse = await techniciensApi.getMyProfile();
+                if (technicienResponse.success && technicienResponse.data) {
+                  user = {
+                    ...user,
+                    technicienId: technicienResponse.data.id
+                  };
+                }
+              } catch (err) {
+                console.warn('Could not fetch technicien profile:', err);
+              }
+            }
+
+            set({
+              user,
+              token: authData.token,
+              refreshToken: authData.refreshToken,
+              isAuthenticated: true,
+              role: authData.role,
+            });
+
+            toast.success('Connexion avec Google réussie');
+          } else {
+            throw new Error(response.message || 'Échec de la connexion avec Google');
+          }
+        } catch (error) {
+          const errMsg = error instanceof Error ? error.message : 'Erreur lors de la connexion Google';
           toast.error(errMsg);
           throw error;
         }

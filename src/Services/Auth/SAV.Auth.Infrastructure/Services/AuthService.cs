@@ -1,9 +1,11 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using SAV.Auth.Application.Interfaces;
 using SAV.Auth.Domain.Entities;
 using SAV.Auth.Infrastructure.Data;
 using SAV.Shared.DTOs.Auth;
+using System.Net.Http.Json;
 
 namespace SAV.Auth.Infrastructure.Services;
 
@@ -13,17 +15,23 @@ public class AuthService : IAuthService
     private readonly ITokenService _tokenService;
     private readonly IEmailService _emailService;
     private readonly AuthDbContext _context;
+    private readonly IConfiguration _configuration;
+    private readonly HttpClient _httpClient;
 
     public AuthService(
         UserManager<ApplicationUser> userManager,
         ITokenService tokenService,
         IEmailService emailService,
-        AuthDbContext context)
+        AuthDbContext context,
+        IConfiguration configuration,
+        IHttpClientFactory httpClientFactory)
     {
         _userManager = userManager;
         _tokenService = tokenService;
         _emailService = emailService;
         _context = context;
+        _configuration = configuration;
+        _httpClient = httpClientFactory.CreateClient();
     }
 
     public async Task<AuthResponseDto?> RegisterAsync(RegisterDto registerDto)
@@ -351,9 +359,123 @@ public class AuthService : IAuthService
         return (true, errors);
     }
 
+    public async Task<AuthResponseDto?> GoogleLoginAsync(GoogleAuthDto googleAuthDto)
+    {
+        try
+        {
+            // Valider le token Google avec l'API Google
+            var googleClientId = _configuration["Google:ClientId"];
+            var validationUrl = $"https://oauth2.googleapis.com/tokeninfo?id_token={googleAuthDto.IdToken}";
+            
+            var response = await _httpClient.GetAsync(validationUrl);
+            
+            if (!response.IsSuccessStatusCode)
+            {
+                return null;
+            }
+
+            var googlePayload = await response.Content.ReadFromJsonAsync<GoogleTokenInfo>();
+            
+            if (googlePayload == null || googlePayload.Aud != googleClientId)
+            {
+                return null; // Le token n'est pas destiné à notre application
+            }
+
+            if (string.IsNullOrEmpty(googlePayload.Email))
+            {
+                return null;
+            }
+
+            // Chercher un utilisateur existant avec cet email
+            var existingUser = await _userManager.FindByEmailAsync(googlePayload.Email);
+
+            if (existingUser != null)
+            {
+                // L'utilisateur existe déjà, on le connecte
+                var accessToken = _tokenService.GenerateAccessToken(existingUser.Id, existingUser.Email!, existingUser.Role);
+                var refreshToken = _tokenService.GenerateRefreshToken();
+
+                var refreshTokenEntity = new RefreshToken
+                {
+                    Token = refreshToken,
+                    UserId = existingUser.Id,
+                    ExpiryDate = DateTime.UtcNow.AddDays(7)
+                };
+
+                _context.RefreshTokens.Add(refreshTokenEntity);
+                await _context.SaveChangesAsync();
+
+                return new AuthResponseDto
+                {
+                    Token = accessToken,
+                    RefreshToken = refreshToken,
+                    Email = existingUser.Email!,
+                    Role = existingUser.Role,
+                    ExpiresIn = 3600
+                };
+            }
+
+            // Créer un nouvel utilisateur (par défaut Client)
+            var newUser = new ApplicationUser
+            {
+                UserName = googlePayload.Email,
+                Email = googlePayload.Email,
+                Role = "Client",
+                EmailConfirmed = true, // L'email est vérifié par Google
+                GoogleId = googlePayload.Sub
+            };
+
+            // Créer l'utilisateur sans mot de passe (authentification via Google uniquement)
+            var createResult = await _userManager.CreateAsync(newUser);
+
+            if (!createResult.Succeeded)
+            {
+                return null;
+            }
+
+            var newAccessToken = _tokenService.GenerateAccessToken(newUser.Id, newUser.Email!, newUser.Role);
+            var newRefreshToken = _tokenService.GenerateRefreshToken();
+
+            var newRefreshTokenEntity = new RefreshToken
+            {
+                Token = newRefreshToken,
+                UserId = newUser.Id,
+                ExpiryDate = DateTime.UtcNow.AddDays(7)
+            };
+
+            _context.RefreshTokens.Add(newRefreshTokenEntity);
+            await _context.SaveChangesAsync();
+
+            return new AuthResponseDto
+            {
+                Token = newAccessToken,
+                RefreshToken = newRefreshToken,
+                Email = newUser.Email!,
+                Role = newUser.Role,
+                ExpiresIn = 3600
+            };
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
     private static string GenerateOtp()
     {
         var random = new Random();
         return random.Next(100000, 999999).ToString();
     }
+}
+
+// Classe pour désérialiser la réponse Google Token Info
+internal class GoogleTokenInfo
+{
+    public string? Iss { get; set; }
+    public string? Sub { get; set; } // Google User ID
+    public string? Aud { get; set; } // Client ID
+    public string? Email { get; set; }
+    public string? Email_verified { get; set; }
+    public string? Name { get; set; }
+    public string? Picture { get; set; }
 }

@@ -10,11 +10,13 @@ public class ReclamationService : IReclamationService
 {
     private readonly ClientsDbContext _context;
     private readonly IArticlesApiClient _articlesApiClient;
+    private readonly INotificationService _notificationService;
 
-    public ReclamationService(ClientsDbContext context, IArticlesApiClient articlesApiClient)
+    public ReclamationService(ClientsDbContext context, IArticlesApiClient articlesApiClient, INotificationService notificationService)
     {
         _context = context;
         _articlesApiClient = articlesApiClient;
+        _notificationService = notificationService;
     }
 
     public async Task<ReclamationDto?> CreateReclamationAsync(string userId, CreateReclamationDto dto)
@@ -53,6 +55,16 @@ public class ReclamationService : IReclamationService
 
         _context.Reclamations.Add(reclamation);
         await _context.SaveChangesAsync();
+
+        // Envoyer une notification au client
+        try
+        {
+            await _notificationService.NotifyReclamationCreatedAsync(reclamation.Id, client.Id, userId);
+        }
+        catch
+        {
+            // Ne pas bloquer si la notification échoue
+        }
 
         var articleInfo = await _articlesApiClient.GetArticleByIdAsync(articleAchat.ArticleId);
 
@@ -206,6 +218,23 @@ public class ReclamationService : IReclamationService
             }
 
             await _context.SaveChangesAsync();
+
+            // Envoyer une notification au client
+            if (reclamation.Client != null && !string.IsNullOrEmpty(reclamation.Client.UserId))
+            {
+                try
+                {
+                    await _notificationService.NotifyReclamationStatusChangedAsync(
+                        reclamation.Id,
+                        dto.Statut,
+                        reclamation.Client.UserId
+                    );
+                }
+                catch
+                {
+                    // Ne pas bloquer si la notification échoue
+                }
+            }
         }
 
         var articleInfo = await _articlesApiClient.GetArticleByIdAsync(reclamation.ArticleAchat!.ArticleId);
