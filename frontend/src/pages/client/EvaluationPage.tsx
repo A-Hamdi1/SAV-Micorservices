@@ -107,12 +107,12 @@ const EvaluationPage = () => {
 
   if (existingEvaluation) {
     return (
-      <div>
+      <div className="space-y-6">
         <PageHeader
-          title="évaluation"
+          title="Évaluation"
           breadcrumb={[
             { label: 'Mes réclamations', path: '/client/reclamations' },
-            { label: 'évaluation' },
+            { label: 'Évaluation' },
           ]}
         />
         <div className="max-w-2xl mx-auto">
@@ -123,7 +123,7 @@ const EvaluationPage = () => {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
               </div>
-              <h1 className="text-2xl font-bold text-black mb-4">évaluation déjà soumise</h1>
+              <h1 className="text-2xl font-bold text-black mb-4">Évaluation déjà soumise</h1>
               <p className="text-bodydark2 mb-6">
                 Vous avez déjà évalué cette intervention le {new Date(existingEvaluation.createdAt).toLocaleDateString('fr-FR')}.
               </p>
@@ -167,12 +167,12 @@ const EvaluationPage = () => {
 
   if (success) {
     return (
-      <div>
+      <div className="space-y-6">
         <PageHeader
-          title="évaluation"
+          title="Évaluation"
           breadcrumb={[
             { label: 'Mes réclamations', path: '/client/reclamations' },
-            { label: 'évaluation' },
+            { label: 'Évaluation' },
           ]}
         />
         <div className="max-w-2xl mx-auto">
@@ -194,13 +194,13 @@ const EvaluationPage = () => {
   }
 
   return (
-    <div>
+    <div className="space-y-6">
       <PageHeader
-        title="évaluer l'intervention"
+        title="Évaluer l'intervention"
         subtitle={`Intervention #${interventionId}`}
         breadcrumb={[
           { label: 'Mes réclamations', path: '/client/reclamations' },
-          { label: 'évaluation' },
+          { label: 'Évaluation' },
         ]}
       />
 

@@ -19,6 +19,7 @@ import ErrorMessage from '../../components/common/ErrorMessage';
 import EmptyState from '../../components/common/EmptyState';
 import Button from '../../components/common/Button';
 import Pagination from '../../components/common/Pagination';
+import { Card, CardBody } from '../../components/common/Card';
 
 const NotificationsPage = () => {
   const navigate = useNavigate();
@@ -116,48 +117,49 @@ const NotificationsPage = () => {
       />
 
       {/* Actions et filtres */}
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
-        <div className="flex flex-wrap items-center justify-between gap-4">
-          {/* Filtres */}
-          <div className="flex items-center gap-2">
-            <button
-              onClick={() => setFilter('all')}
-              className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                filter === 'all'
-                  ? 'bg-blue-600 text-white'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-              }`}
-            >
-              Toutes ({notifications?.length || 0})
-            </button>
-            <button
-              onClick={() => setFilter('unread')}
-              className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                filter === 'unread'
-                  ? 'bg-blue-600 text-white'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-              }`}
-            >
-              Non lues ({unreadCount})
-            </button>
-            <button
-              onClick={() => setFilter('read')}
-              className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                filter === 'read'
-                  ? 'bg-blue-600 text-white'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-              }`}
-            >
-              Lues ({readCount})
-            </button>
-          </div>
+      <Card>
+        <CardBody className="p-4">
+          <div className="flex flex-wrap items-center justify-between gap-4">
+            {/* Filtres */}
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => setFilter('all')}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                  filter === 'all'
+                    ? 'bg-primary-600 text-white'
+                    : 'bg-gray-2 text-bodydark2 hover:bg-gray-100'
+                }`}
+              >
+                Toutes ({notifications?.length || 0})
+              </button>
+              <button
+                onClick={() => setFilter('unread')}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                  filter === 'unread'
+                    ? 'bg-primary-600 text-white'
+                    : 'bg-gray-2 text-bodydark2 hover:bg-gray-100'
+                }`}
+              >
+                Non lues ({unreadCount})
+              </button>
+              <button
+                onClick={() => setFilter('read')}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                  filter === 'read'
+                    ? 'bg-primary-600 text-white'
+                    : 'bg-gray-2 text-bodydark2 hover:bg-gray-100'
+                }`}
+              >
+                Lues ({readCount})
+              </button>
+            </div>
 
-          {/* Actions groupées */}
-          <div className="flex items-center gap-2">
-            {unreadCount > 0 && (
-              <Button
-                variant="outline"
-                size="sm"
+            {/* Actions groupées */}
+            <div className="flex items-center gap-2">
+              {unreadCount > 0 && (
+                <Button
+                  variant="outline"
+                  size="sm"
                 onClick={() => markAllAsReadMutation.mutate()}
                 disabled={markAllAsReadMutation.isPending}
               >
@@ -180,10 +182,12 @@ const NotificationsPage = () => {
             )}
           </div>
         </div>
-      </div>
+        </CardBody>
+      </Card>
 
       {/* Liste des notifications */}
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+      <Card>
+        <CardBody className="p-0">
         {filteredNotifications.length === 0 ? (
           <EmptyState
             title="Aucune notification"
@@ -197,7 +201,7 @@ const NotificationsPage = () => {
             icon="🔔"
           />
         ) : (
-          <div className="divide-y divide-gray-200">
+          <div className="divide-y divide-stroke">
             {filteredNotifications.map((notification) => {
               const color = getNotificationColor(notification.type);
               const icon = getNotificationIcon(notification.type);
@@ -205,7 +209,7 @@ const NotificationsPage = () => {
               return (
                 <div
                   key={notification.id}
-                  className={`p-4 hover:bg-gray-50 transition-colors cursor-pointer ${
+                  className={`p-4 hover:bg-gray-2 transition-colors cursor-pointer ${
                     !notification.estLue ? 'bg-blue-50' : ''
                   }`}
                   onClick={() => handleNotificationClick(notification)}
@@ -220,10 +224,10 @@ const NotificationsPage = () => {
                     <div className="flex-1 min-w-0">
                       <div className="flex items-start justify-between gap-2">
                         <div>
-                          <h3 className={`text-sm font-medium ${!notification.estLue ? 'text-gray-900' : 'text-gray-600'}`}>
+                          <h3 className={`text-sm font-medium ${!notification.estLue ? 'text-black' : 'text-bodydark2'}`}>
                             {notification.titre}
                           </h3>
-                          <p className={`text-sm mt-1 ${!notification.estLue ? 'text-gray-700' : 'text-gray-500'}`}>
+                          <p className={`text-sm mt-1 ${!notification.estLue ? 'text-bodydark' : 'text-bodydark2'}`}>
                             {notification.message}
                           </p>
                         </div>
@@ -231,7 +235,7 @@ const NotificationsPage = () => {
                         {/* Actions */}
                         <div className="flex items-center gap-2">
                           {!notification.estLue && (
-                            <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                            <span className="badge badge-info">
                               Nouveau
                             </span>
                           )}
@@ -253,7 +257,7 @@ const NotificationsPage = () => {
                       </div>
                       
                       {/* Métadonnées */}
-                      <div className="flex items-center gap-4 mt-2 text-xs text-gray-400">
+                      <div className="flex items-center gap-4 mt-2 text-xs text-bodydark2">
                         <span>
                           {formatDistanceToNow(new Date(notification.dateCreation), { addSuffix: true, locale: fr })}
                         </span>
@@ -261,7 +265,7 @@ const NotificationsPage = () => {
                           {notification.type.replace(/([A-Z])/g, ' $1').trim()}
                         </span>
                         {notification.lienAction && (
-                          <span className="text-blue-500 hover:text-blue-700">
+                          <span className="text-primary-600 hover:text-primary-700">
                             Voir détails →
                           </span>
                         )}
@@ -273,7 +277,8 @@ const NotificationsPage = () => {
             })}
           </div>
         )}
-      </div>
+        </CardBody>
+      </Card>
 
       {/* Pagination */}
       {notifications && notifications.length >= pageSize && (

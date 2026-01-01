@@ -75,21 +75,23 @@ const TechnicienInterventionsPage = () => {
 
       {/* Filters */}
       <Card>
-        <CardBody>
-          <div className="flex flex-wrap gap-4 items-center">
-            <label className="text-sm font-medium text-gray-700">Filtrer par statut:</label>
-            <select
-              value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value)}
-              className="rounded-lg border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
-            >
-              <option value="">Tous les statuts</option>
-              <option value="Planifiee">Planifiée</option>
-              <option value="EnCours">En cours</option>
-              <option value="Terminee">Terminée</option>
-              <option value="Annulee">Annulée</option>
-            </select>
-            <span className="text-sm text-gray-500">
+        <CardBody className="p-4">
+          <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
+            <div className="flex items-center gap-4">
+              <label className="form-label mb-0">Filtrer par statut:</label>
+              <select
+                value={statusFilter}
+                onChange={(e) => setStatusFilter(e.target.value)}
+                className="form-select min-w-[180px]"
+              >
+                <option value="">Tous les statuts</option>
+                <option value="Planifiee">Planifiée</option>
+                <option value="EnCours">En cours</option>
+                <option value="Terminee">Terminée</option>
+                <option value="Annulee">Annulée</option>
+              </select>
+            </div>
+            <span className="text-sm text-bodydark2">
               {interventions.length} intervention(s) trouvée(s)
             </span>
           </div>
@@ -104,37 +106,37 @@ const TechnicienInterventionsPage = () => {
               <p className="text-2xl font-bold text-primary-600">
                 {interventions.filter(i => i.statut === 'Planifiee').length}
               </p>
-              <p className="text-sm text-gray-500">Planifiées</p>
+              <p className="text-sm text-bodydark2">Planifiées</p>
             </div>
           </CardBody>
         </Card>
         <Card>
           <CardBody>
             <div className="text-center">
-              <p className="text-2xl font-bold text-amber-600">
+              <p className="text-2xl font-bold text-warning">
                 {interventions.filter(i => i.statut === 'EnCours').length}
               </p>
-              <p className="text-sm text-gray-500">En cours</p>
+              <p className="text-sm text-bodydark2">En cours</p>
             </div>
           </CardBody>
         </Card>
         <Card>
           <CardBody>
             <div className="text-center">
-              <p className="text-2xl font-bold text-green-600">
+              <p className="text-2xl font-bold text-success">
                 {interventions.filter(i => i.statut === 'Terminee').length}
               </p>
-              <p className="text-sm text-gray-500">Terminées</p>
+              <p className="text-sm text-bodydark2">Terminées</p>
             </div>
           </CardBody>
         </Card>
         <Card>
           <CardBody>
             <div className="text-center">
-              <p className="text-2xl font-bold text-red-600">
+              <p className="text-2xl font-bold text-danger">
                 {interventions.filter(i => i.statut === 'Annulee').length}
               </p>
-              <p className="text-sm text-gray-500">Annulées</p>
+              <p className="text-sm text-bodydark2">Annulées</p>
             </div>
           </CardBody>
         </Card>

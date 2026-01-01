@@ -36,7 +36,7 @@ const CreateClientPage = () => {
   };
 
   return (
-    <>
+    <div className="space-y-6">
       <PageHeader
         title="Créer un client"
         subtitle="Ajouter un nouveau client au système"
@@ -145,7 +145,7 @@ const CreateClientPage = () => {
           </form>
         </CardBody>
       </Card>
-    </>
+    </div>
   );
 };
 
