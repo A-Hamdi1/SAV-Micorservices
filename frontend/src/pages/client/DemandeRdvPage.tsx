@@ -226,13 +226,13 @@ const DemandeRdvPage = () => {
 
       <div className="max-w-4xl mx-auto">
         {/* Tabs */}
-        <div className="flex border-b border-stroke mb-6">
+        <div className="flex border-b border-slate-200 mb-6">
           <button
             onClick={() => setActiveTab('new')}
             className={`px-6 py-3 font-medium transition-colors ${
               activeTab === 'new' 
-                ? 'border-b-2 border-primary text-primary' 
-                : 'text-bodydark2 hover:text-black'
+                ? 'border-b-2 border-primary-600 text-primary-600' 
+                : 'text-slate-500 hover:text-slate-900'
             }`}
           >
             ➕ Nouvelle demande
@@ -241,8 +241,8 @@ const DemandeRdvPage = () => {
             onClick={() => setActiveTab('history')}
             className={`px-6 py-3 font-medium transition-colors ${
               activeTab === 'history' 
-                ? 'border-b-2 border-primary text-primary' 
-                : 'text-bodydark2 hover:text-black'
+                ? 'border-b-2 border-primary-600 text-primary-600' 
+                : 'text-slate-500 hover:text-slate-900'
             }`}
           >
             📋 Mes demandes ({myDemandes.length})
@@ -256,32 +256,32 @@ const DemandeRdvPage = () => {
                 <div className="text-center py-8">
                   <div className="mx-auto flex items-center justify-center h-20 w-20 rounded-full bg-success/10 mb-6">
                     <svg className="h-12 w-12 text-success" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M5 13l4 4L19 7" />
                     </svg>
                   </div>
                   <h2 className="text-xl font-bold text-success mb-2">Demande envoyée !</h2>
-                  <p className="text-bodydark2">Vous serez notifié une fois le RDV confirmé par le responsable.</p>
+                  <p className="text-slate-500">Vous serez notifié une fois le RDV confirmé par le responsable.</p>
                 </div>
               ) : rdvActif ? (
                 // Client a déjà un RDV actif
                 <div className="text-center py-8">
                   <div className="mx-auto flex items-center justify-center h-20 w-20 rounded-full bg-warning/10 mb-6">
                     <svg className="h-12 w-12 text-warning" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
                   </div>
                   <h2 className="text-xl font-bold text-warning mb-2">
                     {rdvActif.statut === 'EnAttente' ? 'Demande en cours' : 'RDV confirmé'}
                   </h2>
-                  <p className="text-bodydark2 mb-4">
+                  <p className="text-slate-500 mb-4">
                     {rdvActif.statut === 'EnAttente' 
                       ? 'Vous avez déjà une demande de RDV en attente de confirmation.'
                       : 'Vous avez déjà un RDV confirmé. Vous pourrez en créer un nouveau une fois celui-ci passé.'}
                   </p>
                   
-                  <div className="bg-bodydark1/10 rounded-xl p-4 text-left max-w-md mx-auto">
-                    <div className="font-semibold text-black mb-2">{rdvActif.motif}</div>
-                    <div className="text-sm text-bodydark2 space-y-1">
+                  <div className="bg-slate-100 rounded-xl p-4 text-left max-w-md mx-auto">
+                    <div className="font-semibold text-slate-900 mb-2">{rdvActif.motif}</div>
+                    <div className="text-sm text-slate-500 space-y-1">
                       {rdvActif.statut === 'EnAttente' ? (
                         <p>📅 Date souhaitée: {new Date(rdvActif.dateSouhaitee || rdvActif.datePreferee || '').toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' })}</p>
                       ) : rdvActif.creneau && (
@@ -325,8 +325,8 @@ const DemandeRdvPage = () => {
                             }}
                             className={`relative p-4 rounded-xl border-2 text-left transition-all cursor-pointer select-none ${
                               motifType === motif.value
-                                ? 'border-primary bg-primary/10 ring-2 ring-primary/30 shadow-md'
-                                : 'border-stroke hover:border-primary/50 hover:bg-gray-50'
+                                ? 'border-primary-600 bg-primary-50 ring-2 ring-primary-200 shadow-md'
+                                : 'border-slate-200 hover:border-primary-300 hover:bg-slate-50'
                             }`}
                           >
                             {motifType === motif.value && (
@@ -386,7 +386,7 @@ const DemandeRdvPage = () => {
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                           </svg>
                           <p className="text-warning font-medium mb-1">Aucun créneau disponible</p>
-                          <p className="text-sm text-bodydark2">
+                          <p className="text-sm text-slate-500">
                             Aucun créneau n'est disponible pour cette date. Veuillez choisir une autre date.
                           </p>
                         </div>
@@ -403,8 +403,8 @@ const DemandeRdvPage = () => {
                               }}
                               className={`relative p-4 rounded-xl border-2 text-center transition-all cursor-pointer select-none ${
                                 selectedCreneauId === creneau.id
-                                  ? 'border-primary bg-primary/10 ring-2 ring-primary/30 shadow-md'
-                                  : 'border-stroke hover:border-primary/50 hover:bg-gray-50'
+                                  ? 'border-primary-600 bg-primary-50 ring-2 ring-primary-200 shadow-md'
+                                  : 'border-slate-200 hover:border-primary-300 hover:bg-slate-50'
                               }`}
                             >
                               {selectedCreneauId === creneau.id && (
@@ -414,13 +414,13 @@ const DemandeRdvPage = () => {
                                   </svg>
                                 </div>
                               )}
-                              <div className={`text-lg font-bold ${selectedCreneauId === creneau.id ? 'text-primary' : 'text-primary'}`}>
+                              <div className={`text-lg font-bold ${selectedCreneauId === creneau.id ? 'text-primary-600' : 'text-primary-600'}`}>
                                 {formatTime(creneau.dateDebut)}
                               </div>
-                              <div className="text-xs text-bodydark2">
+                              <div className="text-xs text-slate-500">
                                 à {formatTime(creneau.dateFin)}
                               </div>
-                              <div className={`text-xs mt-1 ${selectedCreneauId === creneau.id ? 'text-primary font-medium' : 'text-bodydark'}`}>
+                              <div className={`text-xs mt-1 ${selectedCreneauId === creneau.id ? 'text-primary-600 font-medium' : 'text-slate-600'}`}>
                                 {creneau.technicienNom}
                               </div>
                             </button>
@@ -504,19 +504,19 @@ const DemandeRdvPage = () => {
                     <div className="flex justify-between items-start">
                       <div className="flex-1">
                         <div className="flex items-center gap-3 mb-2">
-                          <span className="font-semibold text-black text-lg">
+                          <span className="font-semibold text-slate-900 text-lg">
                             {demande.motif || 'Service SAV'}
                           </span>
                           <StatusBadge status={demande.statut} />
                         </div>
                         
                         {demande.reclamationId && (
-                          <div className="text-sm text-bodydark2 mb-1">
+                          <div className="text-sm text-slate-500 mb-1">
                             🔗 Lié à la réclamation #{demande.reclamationId}
                           </div>
                         )}
                         
-                        <div className="text-sm text-bodydark2">
+                        <div className="text-sm text-slate-500">
                           📅 <strong>Date souhaitée:</strong> {new Date(demande.dateSouhaitee || demande.datePreferee || '').toLocaleDateString('fr-FR', {
                             weekday: 'long',
                             year: 'numeric',
@@ -532,14 +532,14 @@ const DemandeRdvPage = () => {
                         )}
                         
                         {demande.commentaire && (
-                          <div className="text-sm text-bodydark2 mt-2 italic bg-bodydark1/5 p-2 rounded">
+                          <div className="text-sm text-slate-500 mt-2 italic bg-slate-100 p-2 rounded">
                             💬 "{demande.commentaire}"
                           </div>
                         )}
                       </div>
                       
                       <div className="text-right">
-                        <div className="text-xs text-bodydark2 mb-2">
+                        <div className="text-xs text-slate-500 mb-2">
                           Demandé le<br />
                           {new Date(demande.createdAt || demande.dateCreation || '').toLocaleDateString('fr-FR')}
                         </div>
@@ -559,7 +559,7 @@ const DemandeRdvPage = () => {
                     {demande.statut === 'Confirmee' && demande.creneau && (
                       <div className="mt-4 p-3 bg-success/10 border border-success/20 rounded-xl text-success text-sm flex items-center">
                         <svg className="w-5 h-5 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
                         <span>
                           RDV confirmé pour le {new Date(demande.creneau.dateDebut).toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' })} de {formatTime(demande.creneau.dateDebut)} à {formatTime(demande.creneau.dateFin)}
@@ -570,7 +570,7 @@ const DemandeRdvPage = () => {
                     {demande.statut === 'Refusee' && (
                       <div className="mt-4 p-3 bg-danger/10 border border-danger/20 rounded-xl text-danger text-sm flex items-center">
                         <svg className="w-5 h-5 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
                         <span>Demande refusée. Veuillez créer une nouvelle demande avec des disponibilités différentes.</span>
                       </div>

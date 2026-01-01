@@ -73,17 +73,17 @@ const MyReclamationsPage = () => {
             <div className="flex flex-col items-center justify-center py-12">
               <div className="w-20 h-20 rounded-full bg-amber-100 flex items-center justify-center mb-6">
                 <svg className="w-10 h-10 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                 </svg>
               </div>
-              <h2 className="text-xl font-semibold text-black mb-2">Profil requis</h2>
-              <p className="text-bodydark2 text-center max-w-md mb-6">
+              <h2 className="text-xl font-semibold text-slate-900 mb-2">Profil requis</h2>
+              <p className="text-slate-500 text-center max-w-md mb-6">
                 Vous devez d'abord créer votre profil client avant de pouvoir créer des réclamations.
               </p>
               <Link to="/client/profile">
                 <Button variant="primary">
                   <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                   </svg>
                   Créer mon profil
                 </Button>
@@ -122,11 +122,11 @@ const MyReclamationsPage = () => {
             icon={
               showAddForm ? (
                 <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M6 18L18 6M6 6l12 12" />
                 </svg>
               ) : (
                 <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 4v16m8-8H4" />
                 </svg>
               )
             }
@@ -159,8 +159,8 @@ const MyReclamationsPage = () => {
                     ))}
                   </select>
                   <span className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none">
-                    <svg className="w-5 h-5 text-bodydark2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    <svg className="w-5 h-5 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 9l-7 7-7-7" />
                     </svg>
                   </span>
                 </div>
@@ -216,51 +216,51 @@ const MyReclamationsPage = () => {
               action={
                 <Button variant="primary" onClick={() => setShowAddForm(true)}>
                   <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 4v16m8-8H4" />
                   </svg>
                   Nouvelle réclamation
                 </Button>
               }
             />
           ) : (
-            <div className="divide-y divide-stroke">
+            <div className="divide-y divide-slate-200">
               {reclamationsList.map((reclamation) => (
                 <Link
                   key={reclamation.id}
                   to={`/client/reclamations/${reclamation.id}`}
-                  className="flex items-center gap-4 p-5 hover:bg-gray-2 transition-colors group"
+                  className="flex items-center gap-4 p-5 hover:bg-slate-50 transition-colors group"
                 >
                   <div className="flex-shrink-0">
-                    <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
-                      <svg className="w-6 h-6 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" />
+                    <div className="w-12 h-12 rounded-xl bg-primary-50 flex items-center justify-center group-hover:bg-primary-100 transition-colors">
+                      <svg className="w-6 h-6 text-primary-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" />
                       </svg>
                     </div>
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-3 mb-1">
-                      <p className="text-sm font-semibold text-black">
+                      <p className="text-sm font-semibold text-slate-900">
                         Réclamation #{reclamation.id}
                       </p>
-                      <span className="text-xs text-bodydark2">•</span>
-                      <p className="text-sm text-primary font-medium">
+                      <span className="text-xs text-slate-400">•</span>
+                      <p className="text-sm text-primary-600 font-medium">
                         {reclamation.articleNom}
                       </p>
                     </div>
-                    <p className="text-sm text-bodydark2 line-clamp-1">
+                    <p className="text-sm text-slate-500 line-clamp-1">
                       {reclamation.description}
                     </p>
                     <div className="flex items-center gap-4 mt-2">
-                      <p className="text-xs text-bodydark2 flex items-center gap-1">
+                      <p className="text-xs text-slate-500 flex items-center gap-1">
                         <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                         </svg>
                         {formatDate(reclamation.dateCreation)}
                       </p>
                       {reclamation.dateResolution && (
                         <p className="text-xs text-success flex items-center gap-1">
                           <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M5 13l4 4L19 7" />
                           </svg>
                           Résolue le {formatDate(reclamation.dateResolution)}
                         </p>
@@ -269,8 +269,8 @@ const MyReclamationsPage = () => {
                   </div>
                   <div className="flex-shrink-0 flex items-center gap-3">
                     <StatusBadge status={reclamation.statut} />
-                    <svg className="w-5 h-5 text-bodydark2 group-hover:text-primary transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    <svg className="w-5 h-5 text-slate-400 group-hover:text-primary-600 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 5l7 7-7 7" />
                     </svg>
                   </div>
                 </Link>

@@ -22,7 +22,7 @@ const LoadingSpinner = ({ size = 'md', text = 'Chargement...', fullScreen = fals
         </div>
       </div>
       {text && (
-        <p className="text-sm font-medium text-bodydark2 animate-pulse">{text}</p>
+        <p className="text-sm font-medium text-slate-500 animate-pulse">{text}</p>
       )}
     </div>
   );

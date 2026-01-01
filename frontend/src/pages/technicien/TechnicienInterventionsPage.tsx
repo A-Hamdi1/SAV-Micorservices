@@ -91,7 +91,7 @@ const TechnicienInterventionsPage = () => {
                 <option value="Annulee">Annulée</option>
               </select>
             </div>
-            <span className="text-sm text-bodydark2">
+            <span className="text-sm text-slate-500">
               {interventions.length} intervention(s) trouvée(s)
             </span>
           </div>
@@ -106,7 +106,7 @@ const TechnicienInterventionsPage = () => {
               <p className="text-2xl font-bold text-primary-600">
                 {interventions.filter(i => i.statut === 'Planifiee').length}
               </p>
-              <p className="text-sm text-bodydark2">Planifiées</p>
+              <p className="text-sm text-slate-500">Planifiées</p>
             </div>
           </CardBody>
         </Card>
@@ -116,7 +116,7 @@ const TechnicienInterventionsPage = () => {
               <p className="text-2xl font-bold text-warning">
                 {interventions.filter(i => i.statut === 'EnCours').length}
               </p>
-              <p className="text-sm text-bodydark2">En cours</p>
+              <p className="text-sm text-slate-500">En cours</p>
             </div>
           </CardBody>
         </Card>
@@ -126,7 +126,7 @@ const TechnicienInterventionsPage = () => {
               <p className="text-2xl font-bold text-success">
                 {interventions.filter(i => i.statut === 'Terminee').length}
               </p>
-              <p className="text-sm text-bodydark2">Terminées</p>
+              <p className="text-sm text-slate-500">Terminées</p>
             </div>
           </CardBody>
         </Card>
@@ -136,7 +136,7 @@ const TechnicienInterventionsPage = () => {
               <p className="text-2xl font-bold text-danger">
                 {interventions.filter(i => i.statut === 'Annulee').length}
               </p>
-              <p className="text-sm text-bodydark2">Annulées</p>
+              <p className="text-sm text-slate-500">Annulées</p>
             </div>
           </CardBody>
         </Card>
@@ -148,7 +148,7 @@ const TechnicienInterventionsPage = () => {
           <CardBody>
             <div className="text-center py-12">
               <svg
-                className="mx-auto h-12 w-12 text-gray-400"
+                className="mx-auto h-12 w-12 text-slate-400"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -156,12 +156,12 @@ const TechnicienInterventionsPage = () => {
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
-                  strokeWidth={2}
+                  strokeWidth={1.5}
                   d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
                 />
               </svg>
-              <h3 className="mt-2 text-sm font-medium text-gray-900">Aucune intervention</h3>
-              <p className="mt-1 text-sm text-gray-500">
+              <h3 className="mt-2 text-sm font-medium text-slate-900">Aucune intervention</h3>
+              <p className="mt-1 text-sm text-slate-500">
                 Vous n'avez pas encore d'intervention assignée.
               </p>
             </div>
@@ -191,7 +191,7 @@ const TechnicienInterventionsPage = () => {
                         </span>
                       )}
                     </div>
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-sm text-gray-600">
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-sm text-slate-600">
                       <div>
                         <span className="font-medium">Date:</span>{' '}
                         {formatDate(intervention.dateIntervention)}
@@ -219,8 +219,8 @@ const TechnicienInterventionsPage = () => {
                         disabled={updateStatutMutation.isPending}
                       >
                         <svg className="w-4 h-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
                         Démarrer
                       </Button>
@@ -233,7 +233,7 @@ const TechnicienInterventionsPage = () => {
                         disabled={updateStatutMutation.isPending}
                       >
                         <svg className="w-4 h-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
                         Terminer
                       </Button>

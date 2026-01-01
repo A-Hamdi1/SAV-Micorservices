@@ -265,41 +265,41 @@ const InterventionDetailsPage = () => {
             <CardBody>
               <dl className="space-y-4">
                 <div>
-                  <dt className="text-sm font-medium text-bodydark2">Réclamation ID</dt>
-                  <dd className="mt-1 text-sm text-black">{interv.reclamationId}</dd>
+                  <dt className="text-sm font-medium text-slate-500">Réclamation ID</dt>
+                  <dd className="mt-1 text-sm text-slate-900">{interv.reclamationId}</dd>
                 </div>
                 <div>
-                  <dt className="text-sm font-medium text-bodydark2">Technicien</dt>
-                  <dd className="mt-1 text-sm text-black">{interv.technicienNom}</dd>
+                  <dt className="text-sm font-medium text-slate-500">Technicien</dt>
+                  <dd className="mt-1 text-sm text-slate-900">{interv.technicienNom}</dd>
                 </div>
                 <div>
-                  <dt className="text-sm font-medium text-bodydark2">Date d'intervention</dt>
-                  <dd className="mt-1 text-sm text-black">{formatDate(interv.dateIntervention)}</dd>
+                  <dt className="text-sm font-medium text-slate-500">Date d'intervention</dt>
+                  <dd className="mt-1 text-sm text-slate-900">{formatDate(interv.dateIntervention)}</dd>
                 </div>
                 <div>
-                  <dt className="text-sm font-medium text-bodydark2">Gratuite</dt>
-                  <dd className="mt-1 text-sm text-black">
+                  <dt className="text-sm font-medium text-slate-500">Gratuite</dt>
+                  <dd className="mt-1 text-sm text-slate-900">
                     {interv.estGratuite ? 'Oui' : 'Non'}
                   </dd>
                 </div>
                 {interv.montantMainOeuvre && (
                   <div>
-                    <dt className="text-sm font-medium text-bodydark2">Main d'œuvre</dt>
-                    <dd className="mt-1 text-sm text-black">
+                    <dt className="text-sm font-medium text-slate-500">Main d'œuvre</dt>
+                    <dd className="mt-1 text-sm text-slate-900">
                       {formatCurrency(interv.montantMainOeuvre)}
                     </dd>
                   </div>
                 )}
                 <div>
-                  <dt className="text-sm font-medium text-bodydark2">Montant total</dt>
-                  <dd className="mt-1 text-sm font-bold text-black">
+                  <dt className="text-sm font-medium text-slate-500">Montant total</dt>
+                  <dd className="mt-1 text-sm font-bold text-slate-900">
                     {formatCurrency(interv.montantTotal)}
                   </dd>
                 </div>
                 {interv.commentaire && (
                   <div>
-                    <dt className="text-sm font-medium text-bodydark2">Commentaire</dt>
-                    <dd className="mt-1 text-sm text-black">{interv.commentaire}</dd>
+                    <dt className="text-sm font-medium text-slate-500">Commentaire</dt>
+                    <dd className="mt-1 text-sm text-slate-900">{interv.commentaire}</dd>
                   </div>
                 )}
               </dl>
@@ -324,7 +324,7 @@ const InterventionDetailsPage = () => {
             <CardBody>
 
               {!isInterventionClosed && showAddPiece && (
-                <div className="mb-4 p-4 bg-gray-2 rounded-lg">
+                <div className="mb-4 p-4 bg-slate-50 rounded-xl">
                   <form onSubmit={handleSubmitPiece(onSubmitPiece)} className="space-y-3">
                     <div>
                       <label className="form-label">
@@ -399,12 +399,12 @@ const InterventionDetailsPage = () => {
               {interv.piecesUtilisees && interv.piecesUtilisees.length > 0 ? (
                 <div className="space-y-4">
                   {interv.piecesUtilisees.map((piece) => (
-                    <div key={piece.id} className="border border-stroke rounded-lg p-4">
-                      <p className="text-sm font-medium text-black">{piece.pieceNom}</p>
-                      <p className="text-sm text-bodydark2">Ref: {piece.pieceReference}</p>
+                    <div key={piece.id} className="border border-slate-200 rounded-xl p-4">
+                      <p className="text-sm font-medium text-slate-900">{piece.pieceNom}</p>
+                      <p className="text-sm text-slate-500">Ref: {piece.pieceReference}</p>
                       <div className="mt-2 flex justify-between">
-                        <p className="text-sm text-bodydark2">Quantité: {piece.quantite}</p>
-                        <p className="text-sm font-medium text-black">
+                        <p className="text-sm text-slate-500">Quantité: {piece.quantite}</p>
+                        <p className="text-sm font-medium text-slate-900">
                           {formatCurrency(piece.sousTotal)}
                         </p>
                       </div>
@@ -412,7 +412,7 @@ const InterventionDetailsPage = () => {
                   ))}
                 </div>
               ) : (
-                <p className="text-bodydark2 text-sm">Aucune pièce utilisée</p>
+                <p className="text-slate-500 text-sm">Aucune pièce utilisée</p>
               )}
             </CardBody>
           </Card>
@@ -431,7 +431,7 @@ const InterventionDetailsPage = () => {
                       loading={isDownloadingPdf}
                       icon={
                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                         </svg>
                       }
                     >
@@ -445,7 +445,7 @@ const InterventionDetailsPage = () => {
                       loading={isDownloadingPdf}
                       icon={
                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                         </svg>
                       }
                     >
@@ -455,7 +455,7 @@ const InterventionDetailsPage = () => {
                 }
               />
               <CardBody>
-                <pre className="whitespace-pre-wrap text-sm text-bodydark2 bg-gray-2 p-4 rounded-lg">
+                <pre className="whitespace-pre-wrap text-sm text-slate-500 bg-slate-50 p-4 rounded-xl">
                   {facture.data}
                 </pre>
               </CardBody>

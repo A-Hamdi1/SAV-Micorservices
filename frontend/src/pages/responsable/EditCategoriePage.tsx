@@ -76,7 +76,7 @@ const EditCategoriePage = () => {
         <CardBody className="p-6">
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
             <div>
-              <label className="block text-sm font-medium text-black dark:text-white mb-2">
+              <label className="block text-sm font-medium text-slate-900 dark:text-white mb-2">
                 Nom de la catégorie *
               </label>
               <input
@@ -95,7 +95,7 @@ const EditCategoriePage = () => {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-black dark:text-white mb-2">
+              <label className="block text-sm font-medium text-slate-900 dark:text-white mb-2">
                 Description
               </label>
               <textarea
@@ -111,13 +111,13 @@ const EditCategoriePage = () => {
               )}
             </div>
 
-            <div className="p-4 bg-bodydark1/10 rounded-lg">
-              <p className="text-sm text-bodydark2">
+            <div className="p-4 bg-slate-100 rounded-xl">
+              <p className="text-sm text-slate-500">
                 <span className="font-medium">Articles associés:</span> {category.articlesCount} article{category.articlesCount !== 1 ? 's' : ''}
               </p>
             </div>
 
-            <div className="flex justify-end gap-4 pt-4 border-t border-stroke dark:border-strokedark">
+            <div className="flex justify-end gap-4 pt-4 border-t border-slate-200 dark:border-slate-700">
               <Button
                 type="button"
                 variant="outline"

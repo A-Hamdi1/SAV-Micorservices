@@ -124,10 +124,10 @@ const NotificationDropdown = () => {
       {/* Bouton de notification */}
       <button
         onClick={() => setDropdownOpen(!dropdownOpen)}
-        className="relative flex h-10 w-10 items-center justify-center rounded-full bg-gray-2 hover:bg-stroke transition-colors"
+        className="relative flex h-10 w-10 items-center justify-center rounded-full bg-slate-100 hover:bg-slate-200 transition-colors"
       >
         <svg
-          className="h-5 w-5 text-bodydark2"
+          className="h-5 w-5 text-slate-500"
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
@@ -135,7 +135,7 @@ const NotificationDropdown = () => {
           <path
             strokeLinecap="round"
             strokeLinejoin="round"
-            strokeWidth={2}
+            strokeWidth={1.5}
             d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
           />
         </svg>
@@ -148,10 +148,10 @@ const NotificationDropdown = () => {
 
       {/* Dropdown des notifications */}
       {dropdownOpen && (
-        <div className="absolute right-0 mt-4 flex w-80 sm:w-96 flex-col rounded-xl border border-stroke bg-white shadow-lg animate-fade-in z-50">
+        <div className="absolute right-0 mt-4 flex w-80 sm:w-96 flex-col rounded-xl border border-slate-200 bg-white shadow-lg animate-fade-in z-50">
           {/* Header */}
-          <div className="flex items-center justify-between px-4 py-3 border-b border-stroke">
-            <h3 className="text-sm font-semibold text-black">
+          <div className="flex items-center justify-between px-4 py-3 border-b border-slate-200">
+            <h3 className="text-sm font-semibold text-slate-900">
               Notifications
               {unreadCount > 0 && (
                 <span className="ml-2 inline-flex items-center justify-center h-5 w-5 text-xs font-medium bg-primary-100 text-primary-600 rounded-full">
@@ -184,7 +184,7 @@ const NotificationDropdown = () => {
                 <span className="text-sm">Aucune notification non lue</span>
               </div>
             ) : (
-              <ul className="divide-y divide-stroke">
+              <ul className="divide-y divide-slate-200">
                 {notifications.map((notification) => (
                   <li key={notification.id}>
                     <button
@@ -198,10 +198,10 @@ const NotificationDropdown = () => {
 
                       {/* Contenu */}
                       <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium text-black truncate">
+                        <p className="text-sm font-medium text-slate-900 truncate">
                           {notification.titre}
                         </p>
-                        <p className="text-xs text-bodydark2 line-clamp-2 mt-0.5">
+                        <p className="text-xs text-slate-500 line-clamp-2 mt-0.5">
                           {notification.message}
                         </p>
                         <p className="text-xs text-gray-400 mt-1">
@@ -221,7 +221,7 @@ const NotificationDropdown = () => {
           </div>
 
           {/* Footer - toujours affiché pour accéder à toutes les notifications */}
-          <div className="border-t border-stroke px-4 py-3">
+          <div className="border-t border-slate-200 px-4 py-3">
             <button
               onClick={() => {
                 const basePath = role === 'Client' ? '/client' : role === 'Technicien' ? '/technicien' : '/responsable';

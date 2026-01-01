@@ -153,7 +153,7 @@ const PaymentsManagementPage = () => {
       {showManualPayment && (
         <Card className="mb-6">
           <CardHeader>
-            <h2 className="text-lg font-semibold text-black">Enregistrer un paiement manuel</h2>
+            <h2 className="text-lg font-semibold text-slate-900">Enregistrer un paiement manuel</h2>
           </CardHeader>
           <CardBody>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -244,46 +244,46 @@ const PaymentsManagementPage = () => {
       {/* Liste des paiements */}
       <Card>
         <CardHeader>
-          <h2 className="text-lg font-semibold text-black">Historique des paiements</h2>
+          <h2 className="text-lg font-semibold text-slate-900">Historique des paiements</h2>
         </CardHeader>
         <CardBody className="p-0">
           {paymentsList.length === 0 ? (
             <div className="p-6">
-              <p className="text-bodydark2">Aucun paiement enregistré</p>
+              <p className="text-slate-500">Aucun paiement enregistré</p>
             </div>
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full table-auto">
                 <thead>
-                  <tr className="bg-gray-2 text-left">
-                    <th className="px-6 py-4 font-medium text-black">ID</th>
-                    <th className="px-6 py-4 font-medium text-black">Intervention</th>
-                    <th className="px-6 py-4 font-medium text-black">Montant</th>
-                    <th className="px-6 py-4 font-medium text-black">Méthode</th>
-                    <th className="px-6 py-4 font-medium text-black">Statut</th>
-                    <th className="px-6 py-4 font-medium text-black">Date</th>
-                    <th className="px-6 py-4 font-medium text-black">Actions</th>
+                  <tr className="bg-slate-50 text-left">
+                    <th className="px-6 py-4 font-medium text-slate-900">ID</th>
+                    <th className="px-6 py-4 font-medium text-slate-900">Intervention</th>
+                    <th className="px-6 py-4 font-medium text-slate-900">Montant</th>
+                    <th className="px-6 py-4 font-medium text-slate-900">Méthode</th>
+                    <th className="px-6 py-4 font-medium text-slate-900">Statut</th>
+                    <th className="px-6 py-4 font-medium text-slate-900">Date</th>
+                    <th className="px-6 py-4 font-medium text-slate-900">Actions</th>
                   </tr>
                 </thead>
                 <tbody>
                   {paymentsList.map((payment) => (
-                    <tr key={payment.id} className="border-b border-stroke hover:bg-gray-2">
-                      <td className="px-6 py-4 text-sm font-medium text-black">
+                    <tr key={payment.id} className="border-b border-slate-200 hover:bg-slate-50">
+                      <td className="px-6 py-4 text-sm font-medium text-slate-900">
                         #{payment.id}
                       </td>
-                      <td className="px-6 py-4 text-sm text-bodydark2">
+                      <td className="px-6 py-4 text-sm text-slate-500">
                         Intervention #{payment.interventionId}
                       </td>
-                      <td className="px-6 py-4 text-sm font-medium text-black">
+                      <td className="px-6 py-4 text-sm font-medium text-slate-900">
                         {formatCurrency(payment.montant)}
                       </td>
-                      <td className="px-6 py-4 text-sm text-bodydark2">
+                      <td className="px-6 py-4 text-sm text-slate-500">
                         {payment.methode}
                       </td>
                       <td className="px-6 py-4">
                         {getPaymentStatusBadge(payment.statut)}
                       </td>
-                      <td className="px-6 py-4 text-sm text-bodydark2">
+                      <td className="px-6 py-4 text-sm text-slate-500">
                         {formatDate(payment.createdAt)}
                       </td>
                       <td className="px-6 py-4 text-sm font-medium">

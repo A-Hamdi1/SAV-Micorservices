@@ -83,7 +83,7 @@ const CreateInterventionPage = () => {
                       type="number"
                       value={reclamationId}
                       disabled
-                      className="form-input bg-bodydark/10 text-bodydark2"
+                      className="form-input bg-slate-100 text-slate-500"
                     />
                   </>
                 ) : (

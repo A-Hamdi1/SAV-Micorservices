@@ -121,22 +121,22 @@ const StockManagementPage = () => {
       )}
 
       {/* Tabs */}
-      <div className="flex border-b border-stroke mb-6">
+      <div className="flex border-b border-slate-200 mb-6">
         <button
           onClick={() => setActiveTab('all')}
-          className={`px-6 py-3 font-medium transition-colors ${activeTab === 'all' ? 'border-b-2 border-primary text-primary' : 'text-bodydark2 hover:text-black'}`}
+          className={`px-6 py-3 font-medium transition-colors ${activeTab === 'all' ? 'border-b-2 border-primary-600 text-primary-600' : 'text-slate-500 hover:text-slate-900'}`}
         >
           Toutes les Pièces ({pieces.length})
         </button>
         <button
           onClick={() => setActiveTab('alerts')}
-          className={`px-6 py-3 font-medium transition-colors ${activeTab === 'alerts' ? 'border-b-2 border-primary text-primary' : 'text-bodydark2 hover:text-black'}`}
+          className={`px-6 py-3 font-medium transition-colors ${activeTab === 'alerts' ? 'border-b-2 border-primary-600 text-primary-600' : 'text-slate-500 hover:text-slate-900'}`}
         >
           ⚠️ Alertes Stock ({lowStockPieces.length})
         </button>
         <button
           onClick={() => setActiveTab('stats')}
-          className={`px-6 py-3 font-medium transition-colors ${activeTab === 'stats' ? 'border-b-2 border-primary text-primary' : 'text-bodydark2 hover:text-black'}`}
+          className={`px-6 py-3 font-medium transition-colors ${activeTab === 'stats' ? 'border-b-2 border-primary-600 text-primary-600' : 'text-slate-500 hover:text-slate-900'}`}
         >
           📊 Statistiques
         </button>
@@ -149,21 +149,21 @@ const StockManagementPage = () => {
             <div className="overflow-x-auto">
               <table className="w-full table-auto">
                 <thead>
-                  <tr className="bg-gray-2 text-left">
-                    <th className="px-6 py-4 font-medium text-black">Référence</th>
-                    <th className="px-6 py-4 font-medium text-black">Nom</th>
-                    <th className="px-6 py-4 font-medium text-black text-center">Stock</th>
-                    <th className="px-6 py-4 font-medium text-black text-right">Prix</th>
-                    <th className="px-6 py-4 font-medium text-black text-center">Actions</th>
+                  <tr className="bg-slate-50 text-left">
+                    <th className="px-6 py-4 font-medium text-slate-900">Référence</th>
+                    <th className="px-6 py-4 font-medium text-slate-900">Nom</th>
+                    <th className="px-6 py-4 font-medium text-slate-900 text-center">Stock</th>
+                    <th className="px-6 py-4 font-medium text-slate-900 text-right">Prix</th>
+                    <th className="px-6 py-4 font-medium text-slate-900 text-center">Actions</th>
                   </tr>
                 </thead>
                 <tbody>
                   {pieces.map((piece) => (
-                    <tr key={piece.id} className="border-b border-stroke hover:bg-gray-2">
-                      <td className="px-6 py-4 text-sm font-medium text-black">
+                    <tr key={piece.id} className="border-b border-slate-200 hover:bg-slate-50">
+                      <td className="px-6 py-4 text-sm font-medium text-slate-900">
                         {piece.reference}
                       </td>
-                      <td className="px-6 py-4 text-sm text-bodydark2">
+                      <td className="px-6 py-4 text-sm text-slate-500">
                         {piece.nom}
                       </td>
                       <td className="px-6 py-4 text-center">
@@ -172,7 +172,7 @@ const StockManagementPage = () => {
                         />
                         <span className="ml-2 font-medium">{piece.stock}</span>
                       </td>
-                      <td className="px-6 py-4 text-right text-sm text-bodydark2">
+                      <td className="px-6 py-4 text-right text-sm text-slate-500">
                         {piece.prix.toLocaleString('fr-FR', { style: 'currency', currency: 'EUR' })}
                       </td>
                       <td className="px-6 py-4 text-center space-x-2">
@@ -218,13 +218,13 @@ const StockManagementPage = () => {
                 <CardBody>
                   <div className="flex items-center justify-between">
                     <div>
-                      <div className="font-medium text-black">{piece.nom}</div>
-                      <div className="text-sm text-bodydark2">Réf: {piece.reference}</div>
+                      <div className="font-medium text-slate-900">{piece.nom}</div>
+                      <div className="text-sm text-slate-500">Réf: {piece.reference}</div>
                     </div>
                     <div className="flex items-center gap-4">
                       <div className="text-right">
                         <div className="text-2xl font-bold text-warning">{piece.stock}</div>
-                        <div className="text-xs text-bodydark2">en stock</div>
+                        <div className="text-xs text-slate-500">en stock</div>
                       </div>
                       <Button
                         variant="success"
@@ -247,26 +247,26 @@ const StockManagementPage = () => {
           {/* Pièces les plus utilisées */}
           <Card>
             <CardHeader>
-              <h2 className="text-lg font-semibold text-black">🔥 Pièces les Plus Utilisées</h2>
+              <h2 className="text-lg font-semibold text-slate-900">🔥 Pièces les Plus Utilisées</h2>
             </CardHeader>
             <CardBody>
               <div className="space-y-3">
                 {stats.piecesLesPlusUtilisees.map((piece, idx) => (
-                  <div key={piece.id} className="flex items-center justify-between border-b border-stroke pb-2">
+                  <div key={piece.id} className="flex items-center justify-between border-b border-slate-200 pb-2">
                     <div className="flex items-center gap-3">
                       <span className={`w-8 h-8 rounded-full flex items-center justify-center text-white font-bold ${
-                        idx === 0 ? 'bg-warning' : idx === 1 ? 'bg-bodydark' : idx === 2 ? 'bg-warning/70' : 'bg-bodydark2'
+                        idx === 0 ? 'bg-warning' : idx === 1 ? 'bg-bodydark' : idx === 2 ? 'bg-warning/70' : 'bg-slate-400'
                       }`}>
                         {idx + 1}
                       </span>
                       <div>
-                        <div className="font-medium text-black">{piece.nom}</div>
-                        <div className="text-xs text-bodydark2">{piece.reference}</div>
+                        <div className="font-medium text-slate-900">{piece.nom}</div>
+                        <div className="text-xs text-slate-500">{piece.reference}</div>
                       </div>
                     </div>
                     <div className="text-right">
-                      <div className="font-semibold text-black">{piece.nombreUtilisations} utilisations</div>
-                      <div className="text-xs text-bodydark2">Stock: {piece.stockActuel}</div>
+                      <div className="font-semibold text-slate-900">{piece.nombreUtilisations} utilisations</div>
+                      <div className="text-xs text-slate-500">Stock: {piece.stockActuel}</div>
                     </div>
                   </div>
                 ))}
@@ -277,27 +277,27 @@ const StockManagementPage = () => {
           {/* Mouvements récents */}
           <Card>
             <CardHeader>
-              <h2 className="text-lg font-semibold text-black">📋 Mouvements Récents</h2>
+              <h2 className="text-lg font-semibold text-slate-900">📋 Mouvements Récents</h2>
             </CardHeader>
             <CardBody>
               <div className="space-y-3">
                 {stats.mouvementsRecents.map((mvt) => (
-                  <div key={mvt.id} className="flex items-center justify-between border-b border-stroke pb-2">
+                  <div key={mvt.id} className="flex items-center justify-between border-b border-slate-200 pb-2">
                     <div className="flex items-center gap-3">
                       <span className={`w-8 h-8 rounded-full flex items-center justify-center text-white ${
-                        mvt.typeMouvement === 'Entree' ? 'bg-meta-3' : mvt.typeMouvement === 'Sortie' ? 'bg-meta-1' : 'bg-primary'
+                        mvt.typeMouvement === 'Entree' ? 'bg-meta-3' : mvt.typeMouvement === 'Sortie' ? 'bg-meta-1' : 'bg-primary-600'
                       }`}>
                         {mvt.typeMouvement === 'Entree' ? '+' : mvt.typeMouvement === 'Sortie' ? '-' : '~'}
                       </span>
                       <div>
-                        <div className="font-medium text-black">{mvt.pieceNom}</div>
-                        <div className="text-xs text-bodydark2">
+                        <div className="font-medium text-slate-900">{mvt.pieceNom}</div>
+                        <div className="text-xs text-slate-500">
                           {new Date(mvt.dateMouvement).toLocaleDateString('fr-FR')}
                         </div>
                       </div>
                     </div>
                     <div className={`font-semibold ${
-                      mvt.typeMouvement === 'Entree' ? 'text-meta-3' : mvt.typeMouvement === 'Sortie' ? 'text-meta-1' : 'text-primary'
+                      mvt.typeMouvement === 'Entree' ? 'text-meta-3' : mvt.typeMouvement === 'Sortie' ? 'text-meta-1' : 'text-primary-600'
                     }`}>
                       {mvt.typeMouvement === 'Entree' ? '+' : mvt.typeMouvement === 'Sortie' ? '-' : ''}{mvt.quantite}
                     </div>
@@ -314,13 +314,13 @@ const StockManagementPage = () => {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
           <Card className="w-full max-w-md mx-4">
             <CardHeader>
-              <h2 className="text-xl font-bold text-black">Ajouter du Stock</h2>
+              <h2 className="text-xl font-bold text-slate-900">Ajouter du Stock</h2>
             </CardHeader>
             <CardBody>
-              <p className="text-bodydark2 mb-4">
-                Pièce: <strong className="text-black">{selectedPiece.nom}</strong> ({selectedPiece.reference})
+              <p className="text-slate-500 mb-4">
+                Pièce: <strong className="text-slate-900">{selectedPiece.nom}</strong> ({selectedPiece.reference})
               </p>
-              <p className="text-bodydark2 mb-4">Stock actuel: <strong className="text-black">{selectedPiece.stock}</strong></p>
+              <p className="text-slate-500 mb-4">Stock actuel: <strong className="text-slate-900">{selectedPiece.stock}</strong></p>
               
               <div className="mb-4">
                 <label className="form-label">Quantité à ajouter</label>
@@ -360,46 +360,46 @@ const StockManagementPage = () => {
           <Card className="w-full max-w-2xl mx-4 max-h-[80vh] overflow-auto">
             <CardHeader>
               <div className="flex justify-between items-center">
-                <h2 className="text-xl font-bold text-black">Historique des Mouvements</h2>
+                <h2 className="text-xl font-bold text-slate-900">Historique des Mouvements</h2>
                 <button
                   onClick={() => { setSelectedPiece(null); setMouvements([]); }}
-                  className="text-bodydark2 hover:text-black"
+                  className="text-slate-500 hover:text-slate-900"
                 >
                   ❌
                 </button>
               </div>
             </CardHeader>
             <CardBody className="p-0">
-              <p className="text-bodydark2 px-6 py-4">
-                Pièce: <strong className="text-black">{selectedPiece.nom}</strong>
+              <p className="text-slate-500 px-6 py-4">
+                Pièce: <strong className="text-slate-900">{selectedPiece.nom}</strong>
               </p>
               
               <table className="w-full table-auto">
                 <thead>
-                  <tr className="bg-gray-2 text-left">
-                    <th className="px-4 py-3 font-medium text-black">Date</th>
-                    <th className="px-4 py-3 font-medium text-black text-center">Type</th>
-                    <th className="px-4 py-3 font-medium text-black text-center">Qté</th>
-                    <th className="px-4 py-3 font-medium text-black text-center">Avant</th>
-                    <th className="px-4 py-3 font-medium text-black text-center">Après</th>
-                    <th className="px-4 py-3 font-medium text-black">Raison</th>
+                  <tr className="bg-slate-50 text-left">
+                    <th className="px-4 py-3 font-medium text-slate-900">Date</th>
+                    <th className="px-4 py-3 font-medium text-slate-900 text-center">Type</th>
+                    <th className="px-4 py-3 font-medium text-slate-900 text-center">Qté</th>
+                    <th className="px-4 py-3 font-medium text-slate-900 text-center">Avant</th>
+                    <th className="px-4 py-3 font-medium text-slate-900 text-center">Après</th>
+                    <th className="px-4 py-3 font-medium text-slate-900">Raison</th>
                   </tr>
                 </thead>
                 <tbody>
                   {mouvements.map((mvt) => (
-                    <tr key={mvt.id} className="border-b border-stroke">
-                      <td className="px-4 py-3 text-sm text-bodydark2">
+                    <tr key={mvt.id} className="border-b border-slate-200">
+                      <td className="px-4 py-3 text-sm text-slate-500">
                         {new Date(mvt.dateMouvement).toLocaleString('fr-FR')}
                       </td>
                       <td className="px-4 py-3 text-center">
                         <StatusBadge status={mvt.typeMouvement} />
                       </td>
-                      <td className="px-4 py-3 text-center font-semibold text-black">
+                      <td className="px-4 py-3 text-center font-semibold text-slate-900">
                         {mvt.typeMouvement === 'Entree' ? '+' : '-'}{mvt.quantite}
                       </td>
-                      <td className="px-4 py-3 text-center text-bodydark2">{mvt.stockAvant}</td>
-                      <td className="px-4 py-3 text-center text-black font-medium">{mvt.stockApres}</td>
-                      <td className="px-4 py-3 text-sm text-bodydark2">{mvt.raison || '-'}</td>
+                      <td className="px-4 py-3 text-center text-slate-500">{mvt.stockAvant}</td>
+                      <td className="px-4 py-3 text-center text-slate-900 font-medium">{mvt.stockApres}</td>
+                      <td className="px-4 py-3 text-sm text-slate-500">{mvt.raison || '-'}</td>
                     </tr>
                   ))}
                 </tbody>

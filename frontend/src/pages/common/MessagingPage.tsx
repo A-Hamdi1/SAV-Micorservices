@@ -232,7 +232,7 @@ const MessagingPage: React.FC = () => {
       case 'ResponsableSAV':
         return 'bg-purple-100 text-purple-800';
       default:
-        return 'bg-gray-100 text-gray-800';
+        return 'bg-slate-100 text-slate-800';
     }
   };
 
@@ -252,11 +252,11 @@ const MessagingPage: React.FC = () => {
   return (
     <div className="h-[calc(100vh-12rem)] flex bg-white rounded-lg shadow-md overflow-hidden">
       {/* Conversations list / Contacts list */}
-      <div className={`w-full md:w-1/3 border-r border-gray-200 flex flex-col ${selectedConversation ? 'hidden md:flex' : 'flex'}`}>
+      <div className={`w-full md:w-1/3 border-r border-slate-200 flex flex-col ${selectedConversation ? 'hidden md:flex' : 'flex'}`}>
         {/* Header */}
-        <div className="p-4 border-b border-gray-200">
+        <div className="p-4 border-b border-slate-200">
           <div className="flex items-center justify-between mb-3">
-            <h2 className="text-xl font-semibold text-gray-800 flex items-center gap-2">
+            <h2 className="text-xl font-semibold text-slate-800 flex items-center gap-2">
               <ChatBubbleLeftRightIcon className="h-6 w-6 text-blue-600" />
               {showContacts ? 'Contacts' : 'Messages'}
               {!isConnected && (
@@ -265,7 +265,7 @@ const MessagingPage: React.FC = () => {
             </h2>
             <button
               onClick={() => setShowContacts(!showContacts)}
-              className={`p-2 rounded-lg transition-colors ${showContacts ? 'bg-blue-100 text-blue-600' : 'hover:bg-gray-100 text-gray-600'}`}
+              className={`p-2 rounded-lg transition-colors ${showContacts ? 'bg-blue-100 text-blue-600' : 'hover:bg-slate-100 text-slate-600'}`}
               title={showContacts ? 'Voir les conversations' : 'Voir les contacts'}
             >
               {showContacts ? (
@@ -277,13 +277,13 @@ const MessagingPage: React.FC = () => {
           </div>
           {/* Search */}
           <div className="relative">
-            <MagnifyingGlassIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+            <MagnifyingGlassIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-slate-400" />
             <input
               type="text"
               placeholder={showContacts ? "Rechercher un contact..." : "Rechercher..."}
               value={showContacts ? contactSearchTerm : searchTerm}
               onChange={(e) => showContacts ? setContactSearchTerm(e.target.value) : setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full pl-10 pr-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
         </div>
@@ -297,13 +297,13 @@ const MessagingPage: React.FC = () => {
                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
               </div>
             ) : filteredContacts.length === 0 ? (
-              <div className="p-4 text-center text-gray-500">
-                <UserGroupIcon className="h-12 w-12 mx-auto mb-2 text-gray-300" />
+              <div className="p-4 text-center text-slate-500">
+                <UserGroupIcon className="h-12 w-12 mx-auto mb-2 text-slate-300" />
                 <p>Aucun contact disponible</p>
               </div>
             ) : (
               <>
-                <div className="px-4 py-2 bg-gray-50 text-sm text-gray-600 font-medium">
+                <div className="px-4 py-2 bg-slate-50 text-sm text-slate-600 font-medium">
                   {role === 'ResponsableSAV' 
                     ? 'Clients et Techniciens' 
                     : 'Responsables SAV'}
@@ -312,22 +312,22 @@ const MessagingPage: React.FC = () => {
                   <div
                     key={contact.userId}
                     onClick={() => handleContactClick(contact)}
-                    className="p-4 border-b border-gray-100 cursor-pointer hover:bg-gray-50 transition-colors"
+                    className="p-4 border-b border-slate-100 cursor-pointer hover:bg-slate-50 transition-colors"
                   >
                     <div className="flex items-center gap-3">
                       <div className="flex-shrink-0">
-                        <UserCircleIcon className="h-12 w-12 text-gray-400" />
+                        <UserCircleIcon className="h-12 w-12 text-slate-400" />
                       </div>
                       <div className="flex-1 min-w-0">
                         <div className="flex justify-between items-start">
-                          <h3 className="font-medium text-gray-900 truncate">
+                          <h3 className="font-medium text-slate-900 truncate">
                             {contact.nom}
                           </h3>
                           <span className={`text-xs px-2 py-1 rounded-full ${getRoleBadgeColor(contact.role)}`}>
                             {getRoleLabel(contact.role)}
                           </span>
                         </div>
-                        <p className="text-sm text-gray-500 truncate">{contact.email}</p>
+                        <p className="text-sm text-slate-500 truncate">{contact.email}</p>
                         {contact.conversationId && (
                           <p className="text-xs text-blue-600 mt-1">Conversation existante</p>
                         )}
@@ -347,8 +347,8 @@ const MessagingPage: React.FC = () => {
                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
               </div>
             ) : filteredConversations.length === 0 ? (
-              <div className="p-4 text-center text-gray-500">
-                <ChatBubbleLeftRightIcon className="h-12 w-12 mx-auto mb-2 text-gray-300" />
+              <div className="p-4 text-center text-slate-500">
+                <ChatBubbleLeftRightIcon className="h-12 w-12 mx-auto mb-2 text-slate-300" />
                 <p>Aucune conversation</p>
                 <button
                   onClick={() => setShowContacts(true)}
@@ -363,27 +363,27 @@ const MessagingPage: React.FC = () => {
                 <div
                   key={conv.id}
                   onClick={() => handleSelectConversation(conv)}
-                  className={`p-4 border-b border-gray-100 cursor-pointer hover:bg-gray-50 transition-colors ${
+                  className={`p-4 border-b border-slate-100 cursor-pointer hover:bg-slate-50 transition-colors ${
                     selectedConversation?.id === conv.id ? 'bg-blue-50' : ''
                   }`}
                 >
                   <div className="flex items-start gap-3">
                     <div className="flex-shrink-0">
-                      <UserCircleIcon className="h-12 w-12 text-gray-400" />
+                      <UserCircleIcon className="h-12 w-12 text-slate-400" />
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex justify-between items-start">
-                        <h3 className="font-medium text-gray-900 truncate">
+                        <h3 className="font-medium text-slate-900 truncate">
                           {getInterlocutorName(conv, user?.id || '')}
                         </h3>
-                        <span className="text-xs text-gray-500 flex-shrink-0">
+                        <span className="text-xs text-slate-500 flex-shrink-0">
                           {formatLastMessageDate(conv.dernierMessageDate)}
                         </span>
                       </div>
                       {conv.sujet && (
                         <p className="text-sm text-blue-600 truncate">{conv.sujet}</p>
                       )}
-                      <p className="text-sm text-gray-500 truncate">
+                      <p className="text-sm text-slate-500 truncate">
                         {typingUsers[conv.id] ? (
                           <span className="text-blue-500 italic">
                             {typingUsers[conv.id]} est en train d'écrire...
@@ -411,32 +411,32 @@ const MessagingPage: React.FC = () => {
         {selectedConversation ? (
           <>
             {/* Conversation header */}
-            <div className="p-4 border-b border-gray-200 flex items-center gap-3">
+            <div className="p-4 border-b border-slate-200 flex items-center gap-3">
               <button
                 onClick={() => setSelectedConversation(null)}
-                className="md:hidden p-2 hover:bg-gray-100 rounded-lg"
+                className="md:hidden p-2 hover:bg-slate-100 rounded-lg"
               >
                 <ArrowLeftIcon className="h-5 w-5" />
               </button>
-              <UserCircleIcon className="h-10 w-10 text-gray-400" />
+              <UserCircleIcon className="h-10 w-10 text-slate-400" />
               <div>
-                <h3 className="font-medium text-gray-900">
+                <h3 className="font-medium text-slate-900">
                   {getInterlocutorName(selectedConversation, user?.id || '')}
                 </h3>
-                <p className="text-sm text-gray-500">
+                <p className="text-sm text-slate-500">
                   {selectedConversation.sujet || selectedConversation.participantRole}
                 </p>
               </div>
             </div>
 
             {/* Messages */}
-            <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50">
+            <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-slate-50">
               {loadingMessages ? (
                 <div className="flex justify-center items-center h-32">
                   <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
                 </div>
               ) : messages.length === 0 ? (
-                <div className="text-center text-gray-500 py-8">
+                <div className="text-center text-slate-500 py-8">
                   <p>Aucun message. Commencez la conversation !</p>
                 </div>
               ) : (
@@ -449,7 +449,7 @@ const MessagingPage: React.FC = () => {
                       className={`max-w-xs lg:max-w-md px-4 py-2 rounded-lg ${
                         message.estMoi
                           ? 'bg-blue-600 text-white'
-                          : 'bg-white text-gray-900 border border-gray-200'
+                          : 'bg-white text-slate-900 border border-slate-200'
                       }`}
                     >
                       {!message.estMoi && (
@@ -459,7 +459,7 @@ const MessagingPage: React.FC = () => {
                       )}
                       <p className="text-sm whitespace-pre-wrap">{message.contenu}</p>
                       <div className={`flex items-center justify-end gap-1 mt-1 ${
-                        message.estMoi ? 'text-blue-200' : 'text-gray-400'
+                        message.estMoi ? 'text-blue-200' : 'text-slate-400'
                       }`}>
                         <span className="text-xs">{formatMessageTime(message.dateEnvoi)}</span>
                         {message.estMoi && (
@@ -476,11 +476,11 @@ const MessagingPage: React.FC = () => {
               )}
               {typingUsers[selectedConversation.id] && (
                 <div className="flex justify-start">
-                  <div className="bg-gray-200 px-4 py-2 rounded-lg">
+                  <div className="bg-slate-200 px-4 py-2 rounded-lg">
                     <div className="flex space-x-1">
-                      <div className="w-2 h-2 bg-gray-500 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
-                      <div className="w-2 h-2 bg-gray-500 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
-                      <div className="w-2 h-2 bg-gray-500 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
+                      <div className="w-2 h-2 bg-slate-500 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
+                      <div className="w-2 h-2 bg-slate-500 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
+                      <div className="w-2 h-2 bg-slate-500 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
                     </div>
                   </div>
                 </div>
@@ -489,7 +489,7 @@ const MessagingPage: React.FC = () => {
             </div>
 
             {/* Message input */}
-            <form onSubmit={handleSendMessage} className="p-4 border-t border-gray-200 bg-white">
+            <form onSubmit={handleSendMessage} className="p-4 border-t border-slate-200 bg-white">
               <div className="flex gap-2">
                 <input
                   type="text"
@@ -499,7 +499,7 @@ const MessagingPage: React.FC = () => {
                     handleTyping();
                   }}
                   placeholder="Écrivez votre message..."
-                  className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="flex-1 px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
                 <button
                   type="submit"
@@ -512,9 +512,9 @@ const MessagingPage: React.FC = () => {
             </form>
           </>
         ) : (
-          <div className="flex-1 flex items-center justify-center text-gray-500">
+          <div className="flex-1 flex items-center justify-center text-slate-500">
             <div className="text-center">
-              <ChatBubbleLeftRightIcon className="h-16 w-16 mx-auto mb-4 text-gray-300" />
+              <ChatBubbleLeftRightIcon className="h-16 w-16 mx-auto mb-4 text-slate-300" />
               <p className="text-lg">Sélectionnez une conversation</p>
               <p className="text-sm mb-4">ou démarrez une nouvelle discussion</p>
               <button

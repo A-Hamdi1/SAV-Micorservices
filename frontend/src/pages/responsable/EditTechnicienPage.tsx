@@ -185,9 +185,9 @@ const EditTechnicienPage = () => {
                   <input
                     {...register('estDisponible')}
                     type="checkbox"
-                    className="w-5 h-5 rounded border-stroke text-primary focus:ring-primary"
+                    className="w-5 h-5 rounded border-slate-200 text-primary focus:ring-primary"
                   />
-                  <span className="text-sm text-black">Disponible</span>
+                  <span className="text-sm text-slate-900">Disponible</span>
                 </label>
               </div>
             </div>

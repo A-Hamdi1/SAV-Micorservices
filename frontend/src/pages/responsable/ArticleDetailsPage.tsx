@@ -124,7 +124,7 @@ const ArticleDetailsPage = () => {
               onClick={() => navigate(`/responsable/articles/${articleId}/edit`)}
             >
               <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
               </svg>
               Modifier
             </Button>
@@ -134,7 +134,7 @@ const ArticleDetailsPage = () => {
               loading={deleteMutation.isPending}
             >
               <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
               </svg>
               Supprimer
             </Button>
@@ -147,25 +147,25 @@ const ArticleDetailsPage = () => {
           <CardHeader title="Informations" />
           <CardBody>
             <dl className="space-y-4">
-              <div className="flex justify-between py-3 border-b border-stroke">
-                <dt className="text-sm font-medium text-bodydark2">Référence</dt>
-                <dd className="text-sm text-black font-semibold">{articleData.reference}</dd>
+              <div className="flex justify-between py-3 border-b border-slate-200">
+                <dt className="text-sm font-medium text-slate-500">Référence</dt>
+                <dd className="text-sm text-slate-900 font-semibold">{articleData.reference}</dd>
               </div>
-              <div className="flex justify-between py-3 border-b border-stroke">
-                <dt className="text-sm font-medium text-bodydark2">Catégorie</dt>
-                <dd className="text-sm text-black">{articleData.categorie}</dd>
+              <div className="flex justify-between py-3 border-b border-slate-200">
+                <dt className="text-sm font-medium text-slate-500">Catégorie</dt>
+                <dd className="text-sm text-slate-900">{articleData.categorie}</dd>
               </div>
-              <div className="flex justify-between py-3 border-b border-stroke">
-                <dt className="text-sm font-medium text-bodydark2">Prix de vente</dt>
-                <dd className="text-sm text-primary font-bold">{formatCurrency(articleData.prixVente)}</dd>
+              <div className="flex justify-between py-3 border-b border-slate-200">
+                <dt className="text-sm font-medium text-slate-500">Prix de vente</dt>
+                <dd className="text-sm text-primary-600 font-bold">{formatCurrency(articleData.prixVente)}</dd>
               </div>
-              <div className="flex justify-between py-3 border-b border-stroke">
-                <dt className="text-sm font-medium text-bodydark2">Durée de garantie</dt>
-                <dd className="text-sm text-black">{articleData.dureeGarantie} mois</dd>
+              <div className="flex justify-between py-3 border-b border-slate-200">
+                <dt className="text-sm font-medium text-slate-500">Durée de garantie</dt>
+                <dd className="text-sm text-slate-900">{articleData.dureeGarantie} mois</dd>
               </div>
               <div className="flex justify-between py-3">
-                <dt className="text-sm font-medium text-bodydark2">Date de création</dt>
-                <dd className="text-sm text-black">{formatDate(articleData.createdAt)}</dd>
+                <dt className="text-sm font-medium text-slate-500">Date de création</dt>
+                <dd className="text-sm text-slate-900">{formatDate(articleData.createdAt)}</dd>
               </div>
             </dl>
           </CardBody>
@@ -186,7 +186,7 @@ const ArticleDetailsPage = () => {
           />
           <CardBody>
             {showAddPiece && (
-              <div className="mb-4 p-4 bg-bodydark/5 rounded-lg border border-stroke">
+              <div className="mb-4 p-4 bg-slate-50 rounded-xl border border-slate-200">
                 <form onSubmit={handleSubmitPiece(onSubmitPiece)} className="space-y-3">
                   <div>
                     <label className="form-label">Nom *</label>
@@ -271,14 +271,14 @@ const ArticleDetailsPage = () => {
             {pieces?.data && pieces.data.length > 0 ? (
               <div className="space-y-4">
                 {pieces.data.map((piece) => (
-                  <div key={piece.id} className="border border-stroke rounded-lg p-4 hover:bg-bodydark/5 transition-colors">
-                    <p className="text-sm font-semibold text-black">{piece.nom}</p>
-                    <p className="text-sm text-bodydark2">Ref: {piece.reference}</p>
+                  <div key={piece.id} className="border border-slate-200 rounded-xl p-4 hover:bg-slate-50 transition-colors">
+                    <p className="text-sm font-semibold text-slate-900">{piece.nom}</p>
+                    <p className="text-sm text-slate-500">Ref: {piece.reference}</p>
                     <div className="mt-2 flex justify-between items-center">
                       <span className={`text-xs px-2 py-1 rounded-full ${piece.stock > 0 ? 'bg-success/10 text-success' : 'bg-danger/10 text-danger'}`}>
                         Stock: {piece.stock}
                       </span>
-                      <p className="text-sm font-bold text-primary">
+                      <p className="text-sm font-bold text-primary-600">
                         {formatCurrency(piece.prix)}
                       </p>
                     </div>

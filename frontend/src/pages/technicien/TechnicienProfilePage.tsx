@@ -37,11 +37,11 @@ const TechnicienProfilePage = () => {
             <div className="flex flex-col items-center justify-center py-12">
               <div className="w-20 h-20 rounded-full bg-red-100 flex items-center justify-center mb-6">
                 <svg className="w-10 h-10 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                 </svg>
               </div>
-              <h2 className="text-xl font-semibold text-black mb-2">Profil non configuré</h2>
-              <p className="text-bodydark2 text-center max-w-md">
+              <h2 className="text-xl font-semibold text-slate-900 mb-2">Profil non configuré</h2>
+              <p className="text-slate-500 text-center max-w-md">
                 Votre profil technicien n'est pas encore configuré. Veuillez contacter le responsable SAV.
               </p>
             </div>
@@ -67,7 +67,7 @@ const TechnicienProfilePage = () => {
       {/* Profile Information */}
       <Card>
         <CardHeader>
-          <h3 className="text-lg font-semibold text-black">Informations personnelles</h3>
+          <h3 className="text-lg font-semibold text-slate-900">Informations personnelles</h3>
         </CardHeader>
         <CardBody>
           <div className="flex flex-col md:flex-row gap-6">
@@ -84,28 +84,28 @@ const TechnicienProfilePage = () => {
             </div>
             <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="text-sm text-bodydark2">Nom complet</label>
-                <p className="font-medium text-black">{profile.nomComplet}</p>
+                <label className="text-sm text-slate-500">Nom complet</label>
+                <p className="font-medium text-slate-900">{profile.nomComplet}</p>
               </div>
               <div>
-                <label className="text-sm text-bodydark2">Email</label>
-                <p className="font-medium text-black">{profile.email}</p>
+                <label className="text-sm text-slate-500">Email</label>
+                <p className="font-medium text-slate-900">{profile.email}</p>
               </div>
               <div>
-                <label className="text-sm text-bodydark2">Téléphone</label>
-                <p className="font-medium text-black">{profile.telephone}</p>
+                <label className="text-sm text-slate-500">Téléphone</label>
+                <p className="font-medium text-slate-900">{profile.telephone}</p>
               </div>
               <div>
-                <label className="text-sm text-bodydark2">Spécialité</label>
-                <p className="font-medium text-black">{profile.specialite}</p>
+                <label className="text-sm text-slate-500">Spécialité</label>
+                <p className="font-medium text-slate-900">{profile.specialite}</p>
               </div>
               <div>
-                <label className="text-sm text-bodydark2">Date d'embauche</label>
-                <p className="font-medium text-black">{formatDate(profile.dateEmbauche)}</p>
+                <label className="text-sm text-slate-500">Date d'embauche</label>
+                <p className="font-medium text-slate-900">{formatDate(profile.dateEmbauche)}</p>
               </div>
               <div>
-                <label className="text-sm text-bodydark2">Inscrit depuis</label>
-                <p className="font-medium text-black">{formatDate(profile.createdAt)}</p>
+                <label className="text-sm text-slate-500">Inscrit depuis</label>
+                <p className="font-medium text-slate-900">{formatDate(profile.createdAt)}</p>
               </div>
             </div>
           </div>
@@ -120,33 +120,33 @@ const TechnicienProfilePage = () => {
             <LoadingSpinner />
           ) : stats ? (
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-              <div className="text-center p-4 bg-gray-2 rounded-lg">
+              <div className="text-center p-4 bg-slate-50 rounded-xl">
                 <p className="text-2xl font-bold text-primary-600">{stats.nombreInterventionsTotal}</p>
-                <p className="text-sm text-bodydark2">Total interventions</p>
+                <p className="text-sm text-slate-500">Total interventions</p>
               </div>
-              <div className="text-center p-4 bg-gray-2 rounded-lg">
+              <div className="text-center p-4 bg-slate-50 rounded-xl">
                 <p className="text-2xl font-bold text-success">{stats.nombreInterventionsTerminees}</p>
-                <p className="text-sm text-bodydark2">Terminées</p>
+                <p className="text-sm text-slate-500">Terminées</p>
               </div>
-              <div className="text-center p-4 bg-gray-2 rounded-lg">
+              <div className="text-center p-4 bg-slate-50 rounded-xl">
                 <p className="text-2xl font-bold text-warning">{stats.nombreInterventionsEnCours}</p>
-                <p className="text-sm text-bodydark2">En cours</p>
+                <p className="text-sm text-slate-500">En cours</p>
               </div>
-              <div className="text-center p-4 bg-gray-2 rounded-lg">
+              <div className="text-center p-4 bg-slate-50 rounded-xl">
                 <p className="text-2xl font-bold text-primary-600">{stats.tauxReussite}%</p>
-                <p className="text-sm text-bodydark2">Taux de réussite</p>
+                <p className="text-sm text-slate-500">Taux de réussite</p>
               </div>
-              <div className="text-center p-4 bg-gray-2 rounded-lg">
+              <div className="text-center p-4 bg-slate-50 rounded-xl">
                 <p className="text-2xl font-bold text-primary-600">{stats.chiffreAffaireTotal.toFixed(2)} €</p>
-                <p className="text-sm text-bodydark2">CA Total</p>
+                <p className="text-sm text-slate-500">CA Total</p>
               </div>
-              <div className="text-center p-4 bg-gray-2 rounded-lg">
+              <div className="text-center p-4 bg-slate-50 rounded-xl">
                 <p className="text-2xl font-bold text-primary-600">{stats.chiffreAffaireMoyen.toFixed(2)} €</p>
-                <p className="text-sm text-bodydark2">CA Moyen</p>
+                <p className="text-sm text-slate-500">CA Moyen</p>
               </div>
             </div>
           ) : (
-            <p className="text-bodydark2 text-center py-4">Statistiques non disponibles</p>
+            <p className="text-slate-500 text-center py-4">Statistiques non disponibles</p>
           )}
         </CardBody>
       </Card>
@@ -159,7 +159,7 @@ const TechnicienProfilePage = () => {
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="text-left text-bodydark2 border-b">
+                  <tr className="text-left text-slate-500 border-b border-slate-200">
                     <th className="pb-3 font-medium">ID</th>
                     <th className="pb-3 font-medium">Date</th>
                     <th className="pb-3 font-medium">Statut</th>
@@ -198,7 +198,7 @@ const TechnicienProfilePage = () => {
               </table>
             </div>
           ) : (
-            <p className="text-bodydark2 text-center py-4">Aucune intervention récente</p>
+            <p className="text-slate-500 text-center py-4">Aucune intervention récente</p>
           )}
         </CardBody>
       </Card>

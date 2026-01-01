@@ -122,33 +122,33 @@ const ArticleAchatDetailsPage = () => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <Card>
           <CardHeader>
-            <h2 className="text-lg font-semibold text-black">Informations</h2>
+            <h2 className="text-lg font-semibold text-slate-900">Informations</h2>
           </CardHeader>
           <CardBody>
             <dl className="space-y-4">
               <div>
-                <dt className="text-sm font-medium text-bodydark2">Client ID</dt>
-                <dd className="mt-1 text-sm text-black">{articleData.clientId}</dd>
+                <dt className="text-sm font-medium text-slate-500">Client ID</dt>
+                <dd className="mt-1 text-sm text-slate-900">{articleData.clientId}</dd>
               </div>
               <div>
-                <dt className="text-sm font-medium text-bodydark2">Article</dt>
-                <dd className="mt-1 text-sm text-black">{articleData.articleNom}</dd>
+                <dt className="text-sm font-medium text-slate-500">Article</dt>
+                <dd className="mt-1 text-sm text-slate-900">{articleData.articleNom}</dd>
               </div>
               <div>
-                <dt className="text-sm font-medium text-bodydark2">Référence</dt>
-                <dd className="mt-1 text-sm text-black">{articleData.articleReference}</dd>
+                <dt className="text-sm font-medium text-slate-500">Référence</dt>
+                <dd className="mt-1 text-sm text-slate-900">{articleData.articleReference}</dd>
               </div>
               <div>
-                <dt className="text-sm font-medium text-bodydark2">Numéro de série</dt>
-                <dd className="mt-1 text-sm text-black">{articleData.numeroSerie}</dd>
+                <dt className="text-sm font-medium text-slate-500">Numéro de série</dt>
+                <dd className="mt-1 text-sm text-slate-900">{articleData.numeroSerie}</dd>
               </div>
               <div>
-                <dt className="text-sm font-medium text-bodydark2">Date d'achat</dt>
-                <dd className="mt-1 text-sm text-black">{formatDate(articleData.dateAchat)}</dd>
+                <dt className="text-sm font-medium text-slate-500">Date d'achat</dt>
+                <dd className="mt-1 text-sm text-slate-900">{formatDate(articleData.dateAchat)}</dd>
               </div>
               <div>
-                <dt className="text-sm font-medium text-bodydark2">Durée de garantie</dt>
-                <dd className="mt-1 text-sm text-black">{articleData.dureeGarantieJours} jours</dd>
+                <dt className="text-sm font-medium text-slate-500">Durée de garantie</dt>
+                <dd className="mt-1 text-sm text-slate-900">{articleData.dureeGarantieJours} jours</dd>
               </div>
             </dl>
           </CardBody>
@@ -156,7 +156,7 @@ const ArticleAchatDetailsPage = () => {
 
         <Card>
           <CardHeader>
-            <h2 className="text-lg font-semibold text-black">Modifier</h2>
+            <h2 className="text-lg font-semibold text-slate-900">Modifier</h2>
           </CardHeader>
           <CardBody>
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">

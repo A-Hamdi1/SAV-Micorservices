@@ -73,7 +73,7 @@ const ResponsableCalendarPage = () => {
           <CardBody>
             <div className="text-center">
               <p className="text-3xl font-bold text-primary-600">{interventions.length}</p>
-              <p className="text-sm text-gray-500">Total interventions</p>
+              <p className="text-sm text-slate-500">Total interventions</p>
             </div>
           </CardBody>
         </Card>
@@ -83,7 +83,7 @@ const ResponsableCalendarPage = () => {
               <p className="text-3xl font-bold text-blue-600">
                 {interventions.filter(i => i.statut === 'Planifiee').length}
               </p>
-              <p className="text-sm text-gray-500">Planifiées</p>
+              <p className="text-sm text-slate-500">Planifiées</p>
             </div>
           </CardBody>
         </Card>
@@ -93,7 +93,7 @@ const ResponsableCalendarPage = () => {
               <p className="text-3xl font-bold text-amber-600">
                 {interventions.filter(i => i.statut === 'EnCours').length}
               </p>
-              <p className="text-sm text-gray-500">En cours</p>
+              <p className="text-sm text-slate-500">En cours</p>
             </div>
           </CardBody>
         </Card>
@@ -103,7 +103,7 @@ const ResponsableCalendarPage = () => {
               <p className="text-3xl font-bold text-green-600">
                 {interventions.filter(i => i.statut === 'Terminee').length}
               </p>
-              <p className="text-sm text-gray-500">Terminées</p>
+              <p className="text-sm text-slate-500">Terminées</p>
             </div>
           </CardBody>
         </Card>
@@ -113,7 +113,7 @@ const ResponsableCalendarPage = () => {
               <p className="text-3xl font-bold text-red-600">
                 {interventions.filter(i => i.statut === 'Annulee').length}
               </p>
-              <p className="text-sm text-gray-500">Annulées</p>
+              <p className="text-sm text-slate-500">Annulées</p>
             </div>
           </CardBody>
         </Card>
@@ -129,23 +129,23 @@ const ResponsableCalendarPage = () => {
       {/* Legend */}
       <Card>
         <CardBody>
-          <h4 className="font-semibold text-black mb-4">Légende des statuts</h4>
+          <h4 className="font-semibold text-slate-900 mb-4">Légende des statuts</h4>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div className="flex items-center gap-2">
               <div className="w-4 h-4 rounded bg-blue-100"></div>
-              <span className="text-sm text-bodydark2">Planifiée</span>
+              <span className="text-sm text-slate-500">Planifiée</span>
             </div>
             <div className="flex items-center gap-2">
               <div className="w-4 h-4 rounded bg-yellow-100"></div>
-              <span className="text-sm text-bodydark2">En cours</span>
+              <span className="text-sm text-slate-500">En cours</span>
             </div>
             <div className="flex items-center gap-2">
               <div className="w-4 h-4 rounded bg-green-100"></div>
-              <span className="text-sm text-bodydark2">Terminée</span>
+              <span className="text-sm text-slate-500">Terminée</span>
             </div>
             <div className="flex items-center gap-2">
               <div className="w-4 h-4 rounded bg-red-100"></div>
-              <span className="text-sm text-bodydark2">Annulée</span>
+              <span className="text-sm text-slate-500">Annulée</span>
             </div>
           </div>
         </CardBody>
@@ -161,7 +161,7 @@ const ResponsableCalendarPage = () => {
         <div className="space-y-4">
           {selectedDateEvents.length > 0 ? (
             <>
-              <p className="text-sm text-gray-500">
+              <p className="text-sm text-slate-500">
                 {selectedDateEvents.length} intervention{selectedDateEvents.length > 1 ? 's' : ''} pour cette date
               </p>
               <div className="space-y-3 max-h-96 overflow-y-auto">
@@ -195,14 +195,14 @@ const ResponsableCalendarPage = () => {
             </>
           ) : (
             <div className="text-center py-8">
-              <svg className="w-16 h-16 mx-auto text-bodydark2 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <svg className="w-16 h-16 mx-auto text-slate-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
               </svg>
-              <p className="text-bodydark2">Aucune intervention pour cette date</p>
+              <p className="text-slate-500">Aucune intervention pour cette date</p>
             </div>
           )}
 
-          <div className="flex justify-end pt-4 border-t border-stroke">
+          <div className="flex justify-end pt-4 border-t border-slate-200">
             <button
               onClick={handleCloseModal}
               className="btn btn-outline btn-sm"

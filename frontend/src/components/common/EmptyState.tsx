@@ -17,19 +17,19 @@ const EmptyState = ({ icon, title, description, action }: EmptyStateProps) => {
         strokeLinecap="round"
         strokeLinejoin="round"
         strokeWidth={1}
-        d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"
+        d="M2.25 13.5h3.86a2.25 2.25 0 012.012 1.244l.256.512a2.25 2.25 0 002.013 1.244h3.218a2.25 2.25 0 002.013-1.244l.256-.512a2.25 2.25 0 012.013-1.244h3.859m-19.5.338V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18v-4.162c0-.224-.034-.447-.1-.661L19.24 5.338a2.25 2.25 0 00-2.15-1.588H6.911a2.25 2.25 0 00-2.15 1.588L2.35 13.177a2.25 2.25 0 00-.1.661z"
       />
     </svg>
   );
 
   return (
-    <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-stroke bg-gray-2 py-16 px-4">
-      <div className="text-bodydark mb-4">
+    <div className="flex flex-col items-center justify-center rounded-2xl border-2 border-dashed border-slate-200 bg-slate-50/50 py-16 px-6">
+      <div className="text-slate-300 mb-5">
         {icon || defaultIcon}
       </div>
-      <h3 className="text-lg font-medium text-bodydark2 mb-1">{title}</h3>
+      <h3 className="text-lg font-semibold text-slate-700 mb-2">{title}</h3>
       {description && (
-        <p className="text-sm text-bodydark2 mb-4 text-center max-w-sm">{description}</p>
+        <p className="text-sm text-slate-500 mb-6 text-center max-w-sm leading-relaxed">{description}</p>
       )}
       {action && <div className="mt-2">{action}</div>}
     </div>

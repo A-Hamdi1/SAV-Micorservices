@@ -54,7 +54,7 @@ const CreateArticlePage = () => {
   }
 
   return (
-    <>
+    <div className="space-y-6">
       <PageHeader
         title="Créer un article"
         subtitle="Ajouter un nouvel article au catalogue"
@@ -67,6 +67,17 @@ const CreateArticlePage = () => {
 
       <Card>
         <CardBody>
+          <div className="flex items-center gap-3 mb-6 pb-6 border-b border-slate-200">
+            <div className="p-3 rounded-xl bg-gradient-to-br from-purple-500 to-purple-600 shadow-sm">
+              <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+              </svg>
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold text-slate-900">Informations de l'article</h3>
+              <p className="text-sm text-slate-500">Remplissez les détails du nouvel article</p>
+            </div>
+          </div>
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
               <div>
@@ -179,7 +190,7 @@ const CreateArticlePage = () => {
           </form>
         </CardBody>
       </Card>
-    </>
+    </div>
   );
 };
 

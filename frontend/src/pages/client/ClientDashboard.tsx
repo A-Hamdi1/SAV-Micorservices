@@ -100,7 +100,7 @@ const ClientDashboard = () => {
               className="inline-flex items-center gap-2 rounded-lg bg-white/10 backdrop-blur-sm px-4 py-2 text-sm font-medium text-white hover:bg-white/20 transition-colors"
             >
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 4v16m8-8H4" />
               </svg>
               Nouvelle réclamation
             </Link>
@@ -115,8 +115,8 @@ const ClientDashboard = () => {
           value={articles?.data?.length || 0}
           color="primary"
           icon={
-            <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+            <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M21 7.5l-9-5.25L3 7.5m18 0l-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9" />
             </svg>
           }
         />
@@ -125,8 +125,8 @@ const ClientDashboard = () => {
           value={articlesEnGarantie}
           color="success"
           icon={
-            <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+            <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
             </svg>
           }
         />
@@ -135,8 +135,8 @@ const ClientDashboard = () => {
           value={reclamations?.data?.length || 0}
           color="info"
           icon={
-            <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+            <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 002.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 00-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75 2.25 2.25 0 00-.1-.664m-5.8 0A2.251 2.251 0 0113.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25z" />
             </svg>
           }
         />
@@ -145,8 +145,8 @@ const ClientDashboard = () => {
           value={reclamationsEnCours}
           color="warning"
           icon={
-            <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+            <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
           }
         />
@@ -160,13 +160,13 @@ const ClientDashboard = () => {
           <CardBody>
             {reclamationsByStatus.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-12">
-                <div className="w-16 h-16 rounded-full bg-gray-2 flex items-center justify-center mb-4">
-                  <svg className="w-8 h-8 text-bodydark2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z" />
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z" />
+                <div className="w-16 h-16 rounded-full bg-slate-100 flex items-center justify-center mb-4">
+                  <svg className="w-8 h-8 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 6a7.5 7.5 0 107.5 7.5h-7.5V6z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 10.5H21A7.5 7.5 0 0013.5 3v7.5z" />
                   </svg>
                 </div>
-                <p className="text-bodydark2 text-sm">Aucune donnée disponible</p>
+                <p className="text-slate-500 text-sm">Aucune donnée disponible</p>
               </div>
             ) : (
               <div className="h-72">
@@ -199,7 +199,7 @@ const ClientDashboard = () => {
                     <Legend
                       verticalAlign="bottom"
                       height={36}
-                      formatter={(value: string) => <span className="text-sm text-black">{value}</span>}
+                      formatter={(value: string) => <span className="text-sm text-slate-900">{value}</span>}
                     />
                   </PieChart>
                 </ResponsiveContainer>
@@ -247,7 +247,7 @@ const ClientDashboard = () => {
                     type="monotone"
                     dataKey="reclamations"
                     stroke="#6366F1"
-                    strokeWidth={2}
+                    strokeWidth={1.5}
                     fillOpacity={1}
                     fill="url(#colorReclamations)"
                     name="Réclamations"
@@ -272,7 +272,7 @@ const ClientDashboard = () => {
               >
                 Voir tout
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 5l7 7-7 7" />
                 </svg>
               </Link>
             }
@@ -280,12 +280,12 @@ const ClientDashboard = () => {
           <CardBody className="p-0">
             {recentReclamations.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-12 px-4">
-                <div className="w-16 h-16 rounded-full bg-gray-2 flex items-center justify-center mb-4">
-                  <svg className="w-8 h-8 text-bodydark2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                <div className="w-16 h-16 rounded-full bg-slate-100 flex items-center justify-center mb-4">
+                  <svg className="w-8 h-8 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 002.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 00-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75 2.25 2.25 0 00-.1-.664m-5.8 0A2.251 2.251 0 0113.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25z" />
                   </svg>
                 </div>
-                <p className="text-bodydark2 text-sm">Aucune réclamation</p>
+                <p className="text-slate-500 text-sm">Aucune réclamation</p>
                 <Link
                   to="/client/reclamations"
                   className="mt-4 text-sm font-medium text-primary-600 hover:text-primary-700"
@@ -294,28 +294,28 @@ const ClientDashboard = () => {
                 </Link>
               </div>
             ) : (
-              <div className="divide-y divide-stroke">
+              <div className="divide-y divide-slate-100">
                 {recentReclamations.map((reclamation) => (
                   <Link
                     key={reclamation.id}
                     to={`/client/reclamations/${reclamation.id}`}
-                    className="flex items-center justify-between p-4 hover:bg-gray-2 transition-colors"
+                    className="flex items-center justify-between p-4 hover:bg-slate-50 transition-colors"
                   >
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-3">
-                        <div className="flex-shrink-0 w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
-                          <svg className="w-5 h-5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" />
+                        <div className="flex-shrink-0 w-10 h-10 rounded-xl bg-primary-50 flex items-center justify-center">
+                          <svg className="w-5 h-5 text-primary-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M8.625 12a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H8.25m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H12m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 01-2.555-.337A5.972 5.972 0 015.41 20.97a5.969 5.969 0 01-.474-.065 4.48 4.48 0 00.978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25z" />
                           </svg>
                         </div>
                         <div className="flex-1 min-w-0">
-                          <p className="text-sm font-medium text-black truncate">
+                          <p className="text-sm font-medium text-slate-900 truncate">
                             Réclamation #{reclamation.id}
                           </p>
-                          <p className="text-xs text-bodydark2 truncate mt-0.5">
+                          <p className="text-xs text-slate-500 truncate mt-0.5">
                             {reclamation.description}
                           </p>
-                          <p className="text-xs text-bodydark2 mt-1">
+                          <p className="text-xs text-slate-400 mt-1">
                             {formatDate(reclamation.dateCreation)}
                           </p>
                         </div>
@@ -342,7 +342,7 @@ const ClientDashboard = () => {
               >
                 Voir tout
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 5l7 7-7 7" />
                 </svg>
               </Link>
             }
@@ -350,34 +350,34 @@ const ClientDashboard = () => {
           <CardBody className="p-0">
             {recentArticles.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-12 px-4">
-                <div className="w-16 h-16 rounded-full bg-gray-2 flex items-center justify-center mb-4">
-                  <svg className="w-8 h-8 text-bodydark2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                <div className="w-16 h-16 rounded-full bg-slate-100 flex items-center justify-center mb-4">
+                  <svg className="w-8 h-8 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M21 7.5l-9-5.25L3 7.5m18 0l-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9" />
                   </svg>
                 </div>
-                <p className="text-bodydark2 text-sm">Aucun article enregistré</p>
+                <p className="text-slate-500 text-sm">Aucun article enregistré</p>
               </div>
             ) : (
-              <div className="divide-y divide-stroke">
+              <div className="divide-y divide-slate-100">
                 {recentArticles.map((article) => (
                   <div
                     key={article.id}
-                    className="flex items-center justify-between p-4 hover:bg-gray-2 transition-colors"
+                    className="flex items-center justify-between p-4 hover:bg-slate-50 transition-colors"
                   >
                     <div className="flex items-center gap-3 flex-1 min-w-0">
-                      <div className="flex-shrink-0 w-10 h-10 rounded-lg bg-gray-2 flex items-center justify-center">
-                        <svg className="w-5 h-5 text-bodydark2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                      <div className="flex-shrink-0 w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center">
+                        <svg className="w-5 h-5 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M21 7.5l-9-5.25L3 7.5m18 0l-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9" />
                         </svg>
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium text-black truncate">
+                        <p className="text-sm font-medium text-slate-900 truncate">
                           {article.articleNom}
                         </p>
-                        <p className="text-xs text-bodydark2 mt-0.5">
+                        <p className="text-xs text-slate-500 mt-0.5">
                           Ref: {article.articleReference}
                         </p>
-                        <p className="text-xs text-bodydark2 mt-1">
+                        <p className="text-xs text-slate-400 mt-1">
                           Acheté le {formatDate(article.dateAchat)}
                         </p>
                       </div>
@@ -408,58 +408,58 @@ const ClientDashboard = () => {
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
             <Link
               to="/client/reclamations"
-              className="flex items-center gap-4 rounded-xl border border-stroke bg-white p-4 hover:border-primary-500 hover:shadow-md transition-all"
+              className="flex items-center gap-4 rounded-2xl border border-slate-200 bg-white p-4 hover:border-primary-400 hover:shadow-lg hover:shadow-primary-500/10 transition-all"
             >
-              <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary-50">
-                <svg className="w-6 h-6 text-primary-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary-50">
+                <svg className="w-6 h-6 text-primary-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
                 </svg>
               </div>
               <div>
-                <p className="text-sm font-medium text-black">Nouvelle réclamation</p>
-                <p className="text-xs text-bodydark2">Signaler un problème</p>
+                <p className="text-sm font-medium text-slate-900">Nouvelle réclamation</p>
+                <p className="text-xs text-slate-500">Signaler un problème</p>
               </div>
             </Link>
 
             <Link
               to="/client/articles"
-              className="flex items-center gap-4 rounded-xl border border-stroke bg-white p-4 hover:border-primary-500 hover:shadow-md transition-all"
+              className="flex items-center gap-4 rounded-2xl border border-slate-200 bg-white p-4 hover:border-emerald-400 hover:shadow-lg hover:shadow-emerald-500/10 transition-all"
             >
-              <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-green-50">
-                <svg className="w-6 h-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-50">
+                <svg className="w-6 h-6 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M21 7.5l-9-5.25L3 7.5m18 0l-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9" />
                 </svg>
               </div>
               <div>
-                <p className="text-sm font-medium text-black">Mes articles</p>
-                <p className="text-xs text-bodydark2">Consulter mes produits</p>
+                <p className="text-sm font-medium text-slate-900">Mes articles</p>
+                <p className="text-xs text-slate-500">Consulter mes produits</p>
               </div>
             </Link>
 
             <Link
               to="/client/profile"
-              className="flex items-center gap-4 rounded-xl border border-stroke bg-white p-4 hover:border-primary-500 hover:shadow-md transition-all"
+              className="flex items-center gap-4 rounded-2xl border border-slate-200 bg-white p-4 hover:border-sky-400 hover:shadow-lg hover:shadow-sky-500/10 transition-all"
             >
-              <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-blue-50">
-                <svg className="w-6 h-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-sky-50">
+                <svg className="w-6 h-6 text-sky-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
                 </svg>
               </div>
               <div>
-                <p className="text-sm font-medium text-black">Mon profil</p>
-                <p className="text-xs text-bodydark2">Modifier mes infos</p>
+                <p className="text-sm font-medium text-slate-900">Mon profil</p>
+                <p className="text-xs text-slate-500">Modifier mes infos</p>
               </div>
             </Link>
 
-            <div className="flex items-center gap-4 rounded-xl border border-stroke bg-white p-4 hover:border-primary-500 hover:shadow-md transition-all cursor-pointer">
-              <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-amber-50">
-                <svg className="w-6 h-6 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            <div className="flex items-center gap-4 rounded-2xl border border-slate-200 bg-white p-4 hover:border-amber-400 hover:shadow-lg hover:shadow-amber-500/10 transition-all cursor-pointer">
+              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-amber-50">
+                <svg className="w-6 h-6 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z" />
                 </svg>
               </div>
               <div>
-                <p className="text-sm font-medium text-black">Aide & Support</p>
-                <p className="text-xs text-bodydark2">Besoin d'assistance ?</p>
+                <p className="text-sm font-medium text-slate-900">Aide & Support</p>
+                <p className="text-xs text-slate-500">Besoin d'assistance ?</p>
               </div>
             </div>
           </div>

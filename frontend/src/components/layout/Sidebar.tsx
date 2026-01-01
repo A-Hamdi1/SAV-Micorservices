@@ -13,7 +13,7 @@ const DashboardIcon = () => (
     <path
       strokeLinecap="round"
       strokeLinejoin="round"
-      strokeWidth={2}
+      strokeWidth={1.5}
       d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"
     />
   </svg>
@@ -29,7 +29,7 @@ const ReclamationIcon = () => (
     <path
       strokeLinecap="round"
       strokeLinejoin="round"
-      strokeWidth={2}
+      strokeWidth={1.5}
       d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"
     />
   </svg>
@@ -45,13 +45,13 @@ const InterventionIcon = () => (
     <path
       strokeLinecap="round"
       strokeLinejoin="round"
-      strokeWidth={2}
+      strokeWidth={1.5}
       d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
     />
     <path
       strokeLinecap="round"
       strokeLinejoin="round"
-      strokeWidth={2}
+      strokeWidth={1.5}
       d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
     />
   </svg>
@@ -67,7 +67,7 @@ const ClientIcon = () => (
     <path
       strokeLinecap="round"
       strokeLinejoin="round"
-      strokeWidth={2}
+      strokeWidth={1.5}
       d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
     />
   </svg>
@@ -83,7 +83,7 @@ const ArticleIcon = () => (
     <path
       strokeLinecap="round"
       strokeLinejoin="round"
-      strokeWidth={2}
+      strokeWidth={1.5}
       d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"
     />
   </svg>
@@ -99,7 +99,7 @@ const TechnicienIcon = () => (
     <path
       strokeLinecap="round"
       strokeLinejoin="round"
-      strokeWidth={2}
+      strokeWidth={1.5}
       d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
     />
   </svg>
@@ -115,7 +115,7 @@ const ProfileIcon = () => (
     <path
       strokeLinecap="round"
       strokeLinejoin="round"
-      strokeWidth={2}
+      strokeWidth={1.5}
       d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z"
     />
   </svg>
@@ -132,7 +132,7 @@ const CalendarIcon = () => (
     <path
       strokeLinecap="round"
       strokeLinejoin="round"
-      strokeWidth={2}
+      strokeWidth={1.5}
       d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
     />
   </svg>
@@ -148,7 +148,7 @@ const PaymentIcon = () => (
     <path
       strokeLinecap="round"
       strokeLinejoin="round"
-      strokeWidth={2}
+      strokeWidth={1.5}
       d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"
     />
   </svg>
@@ -164,7 +164,7 @@ const AnalyticsIcon = () => (
     <path
       strokeLinecap="round"
       strokeLinejoin="round"
-      strokeWidth={2}
+      strokeWidth={1.5}
       d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
     />
   </svg>
@@ -180,7 +180,7 @@ const EvaluationIcon = () => (
     <path
       strokeLinecap="round"
       strokeLinejoin="round"
-      strokeWidth={2}
+      strokeWidth={1.5}
       d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"
     />
   </svg>
@@ -196,7 +196,7 @@ const CategoryIcon = () => (
     <path
       strokeLinecap="round"
       strokeLinejoin="round"
-      strokeWidth={2}
+      strokeWidth={1.5}
       d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"
     />
   </svg>
@@ -212,7 +212,7 @@ const AppointmentIcon = () => (
     <path
       strokeLinecap="round"
       strokeLinejoin="round"
-      strokeWidth={2}
+      strokeWidth={1.5}
       d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
     />
   </svg>
@@ -228,7 +228,7 @@ const ChevronDownIcon = () => (
     <path
       strokeLinecap="round"
       strokeLinejoin="round"
-      strokeWidth={2}
+      strokeWidth={1.5}
       d="M19 9l-7 7-7-7"
     />
   </svg>
@@ -374,21 +374,21 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
       {/* Overlay for mobile */}
       {sidebarOpen && (
         <div
-          className="fixed inset-0 z-40 bg-black bg-opacity-50 lg:hidden"
+          className="fixed inset-0 z-40 bg-slate-900/60 backdrop-blur-sm lg:hidden"
           onClick={() => setSidebarOpen(false)}
         />
       )}
 
       {/* Sidebar */}
       <aside
-        className={`fixed left-0 top-0 z-50 flex h-screen w-72 flex-col overflow-y-hidden bg-sidebar duration-300 ease-linear lg:static lg:translate-x-0 ${
+        className={`fixed left-0 top-0 z-50 flex h-screen w-72 flex-col overflow-y-hidden bg-gradient-to-b from-slate-900 to-slate-800 duration-300 ease-linear lg:static lg:translate-x-0 ${
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
         {/* Sidebar Header */}
-        <div className="flex items-center justify-between gap-2 px-6 py-5.5 lg:py-6.5">
-          <Link to="/" className="flex items-center gap-2">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary-600">
+        <div className="flex items-center justify-between gap-2 px-6 py-6 lg:py-7">
+          <Link to="/" className="flex items-center gap-3 group">
+            <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-primary-500 to-primary-600 shadow-lg shadow-primary-500/30 group-hover:shadow-primary-500/50 transition-all duration-300">
               <svg
                 className="w-6 h-6 text-white"
                 fill="none"
@@ -398,27 +398,20 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M13 10V3L4 14h7v7l9-11h-7z"
+                  strokeWidth={1.5}
+                  d="M11.42 15.17L17.25 21A2.652 2.652 0 0021 17.25l-5.877-5.877M11.42 15.17l2.496-3.03c.317-.384.74-.626 1.208-.766M11.42 15.17l-4.655 5.653a2.548 2.548 0 11-3.586-3.586l6.837-5.63m5.108-.233c.55-.164 1.163-.188 1.743-.14a4.5 4.5 0 004.486-6.336l-3.276 3.277a3.004 3.004 0 01-2.25-2.25l3.276-3.276a4.5 4.5 0 00-6.336 4.486c.091 1.076-.071 2.264-.904 2.95l-.102.085m-1.745 1.437L5.909 7.5H4.5L2.25 3.75l1.5-1.5L7.5 4.5v1.409l4.26 4.26m-1.745 1.437l1.745-1.437m6.615 8.206L15.75 15.75M4.867 19.125h.008v.008h-.008v-.008z"
                 />
               </svg>
             </div>
             <span className="text-2xl font-bold text-white">SAV Pro</span>
-            {/* <Link to="/" className="flex items-center gap-2">
-              <img
-                src={logo}
-                alt="SmartSAV"
-                className="h-10 w-10 object-contain"
-              />
-            </Link> */}
           </Link>
 
           <button
             onClick={() => setSidebarOpen(false)}
-            className="block lg:hidden text-bodydark1 hover:text-white"
+            className="block lg:hidden p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-white/10 transition-colors"
           >
             <svg
-              className="w-6 h-6"
+              className="w-5 h-5"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -426,7 +419,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
-                strokeWidth={2}
+                strokeWidth={1.5}
                 d="M6 18L18 6M6 6l12 12"
               />
             </svg>
@@ -435,24 +428,26 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
 
         {/* Sidebar Menu */}
         <div className="flex flex-col overflow-y-auto duration-300 ease-linear scrollbar-hide">
-          <nav className="mt-1 px-4 py-3 lg:mt-2 lg:px-6">
+          <nav className="mt-1 px-4 py-3 lg:mt-2 lg:px-5">
             <div>
-              <h3 className="mb-2 ml-4 text-sm font-semibold text-bodydark2 uppercase tracking-wider">
+              <h3 className="mb-3 ml-4 text-xs font-semibold text-slate-500 uppercase tracking-widest">
                 Menu
               </h3>
 
-              <ul className="mb-6 flex flex-col gap-1.5">
+              <ul className="mb-6 flex flex-col gap-1">
                 {menuItems.map((item) => (
                   <li key={item.label}>
                     {item.children ? (
                       <div>
                         <button
                           onClick={() => toggleSubMenu(item.label)}
-                          className={`group relative flex w-full items-center gap-2.5 rounded-lg py-3 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-sidebar-hover ${
-                            isActive(item.path) ? "bg-sidebar-hover" : ""
+                          className={`group relative flex w-full items-center gap-3 rounded-xl py-3 px-4 font-medium text-slate-300 duration-200 ease-in-out hover:bg-white/5 hover:text-white ${
+                            isActive(item.path) ? "bg-white/10 text-white" : ""
                           }`}
                         >
-                          {item.icon}
+                          <span className="text-slate-400 group-hover:text-primary-400 transition-colors">
+                            {item.icon}
+                          </span>
                           {item.label}
                           <span
                             className={`ml-auto transition-transform duration-200 ${
@@ -469,22 +464,22 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                             openSubMenu === item.label ? "max-h-40" : "max-h-0"
                           }`}
                         >
-                          <ul className="mb-2 mt-2 flex flex-col gap-1 pl-6">
+                          <ul className="mb-2 mt-1 flex flex-col gap-0.5 pl-6">
                             {item.children.map((child) => (
                               <li key={child.path}>
                                 <Link
                                   to={child.path}
-                                  className={`group relative flex items-center gap-2.5 rounded-lg py-2 px-4 font-medium duration-300 ease-in-out hover:text-white ${
+                                  className={`group relative flex items-center gap-3 rounded-lg py-2 px-4 text-sm font-medium duration-200 ease-in-out hover:text-white ${
                                     location.pathname === child.path
                                       ? "text-white"
-                                      : "text-bodydark2"
+                                      : "text-slate-400"
                                   }`}
                                 >
                                   <span
-                                    className={`h-1.5 w-1.5 rounded-full ${
+                                    className={`h-1.5 w-1.5 rounded-full transition-colors ${
                                       location.pathname === child.path
                                         ? "bg-primary-500"
-                                        : "bg-bodydark2"
+                                        : "bg-slate-500 group-hover:bg-primary-400"
                                     }`}
                                   ></span>
                                   {child.label}
@@ -497,13 +492,15 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                     ) : (
                       <Link
                         to={item.path}
-                        className={`group relative flex items-center gap-2.5 rounded-lg py-3 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-sidebar-hover ${
+                        className={`group relative flex items-center gap-3 rounded-xl py-3 px-4 font-medium duration-200 ease-in-out ${
                           isActive(item.path)
-                            ? "bg-sidebar-hover text-white"
-                            : ""
+                            ? "bg-gradient-to-r from-primary-600 to-primary-500 text-white shadow-lg shadow-primary-500/30"
+                            : "text-slate-300 hover:bg-white/5 hover:text-white"
                         }`}
                       >
-                        {item.icon}
+                        <span className={`transition-colors ${isActive(item.path) ? "text-white" : "text-slate-400 group-hover:text-primary-400"}`}>
+                          {item.icon}
+                        </span>
                         {item.label}
                       </Link>
                     )}
@@ -515,23 +512,24 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
         </div>
 
         {/* Sidebar Footer */}
-        <div className="mt-auto border-t border-strokedark px-6 py-4">
-          <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary-600">
-              <span className="text-sm font-medium text-white">
+        <div className="mt-auto border-t border-slate-700/50 px-5 py-4">
+          <div className="flex items-center gap-3 p-3 rounded-xl bg-white/5">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-primary-500 to-primary-600 shadow-lg shadow-primary-500/20">
+              <span className="text-sm font-semibold text-white">
                 {user?.prenom && user?.nom ? `${user.prenom.charAt(0)}${user.nom.charAt(0)}`.toUpperCase() : (role === "Client" ? "CL" : role === "Technicien" ? "TC" : "RS")}
               </span>
             </div>
-            <div>
-              <p className="text-sm font-medium text-white">
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-semibold text-white truncate">
                 {user?.prenom && user?.nom ? `${user.prenom} ${user.nom}` : (role === "Client"
                   ? "Client"
                   : role === "Technicien"
                   ? "Technicien"
                   : "Responsable SAV")}
               </p>
-              <p className="text-xs text-bodydark2">
-                {role === "Client" ? "Client" : role === "Technicien" ? "Technicien" : "Responsable"} • Connecté
+              <p className="text-xs text-slate-400 flex items-center gap-1.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                Connecté
               </p>
             </div>
           </div>

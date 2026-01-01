@@ -17,25 +17,25 @@ const StatusBadge = ({ status, size = 'md', text, label, type = 'general' }: Sta
     const statusLower = status.toLowerCase();
     // Success states
     if (['success', 'succès', 'reussi', 'terminee', 'resolue', 'paye', 'libre', 'confirmee', 'confirme'].some(s => statusLower.includes(s))) {
-      return 'bg-green-100 text-green-700 border-green-200';
+      return 'bg-emerald-50 text-emerald-700 border-emerald-200 ring-1 ring-emerald-600/10';
     }
     // Danger states
     if (['danger', 'error', 'erreur', 'annulee', 'rejetee', 'echoue', 'rembourse', 'refusee', 'refuse'].some(s => statusLower.includes(s))) {
-      return 'bg-red-100 text-red-700 border-red-200';
+      return 'bg-red-50 text-red-700 border-red-200 ring-1 ring-red-600/10';
     }
     // Warning states
     if (['warning', 'avertissement', 'enattente', 'attente'].some(s => statusLower.includes(s))) {
-      return 'bg-amber-100 text-amber-700 border-amber-200';
+      return 'bg-amber-50 text-amber-700 border-amber-200 ring-1 ring-amber-600/10';
     }
     // Progress states
     if (['encours', 'cours', 'reserve', 'réservé'].some(s => statusLower.includes(s))) {
-      return 'bg-blue-100 text-blue-700 border-blue-200';
+      return 'bg-sky-50 text-sky-700 border-sky-200 ring-1 ring-sky-600/10';
     }
     // Planned states
     if (['planifiee', 'planifié'].some(s => statusLower.includes(s))) {
-      return 'bg-purple-100 text-purple-700 border-purple-200';
+      return 'bg-violet-50 text-violet-700 border-violet-200 ring-1 ring-violet-600/10';
     }
-    return 'bg-gray-2 text-bodydark2 border-stroke';
+    return 'bg-slate-50 text-slate-600 border-slate-200 ring-1 ring-slate-600/10';
   };
 
   const getStatusLabel = (status: string): string => {
@@ -71,17 +71,17 @@ const StatusBadge = ({ status, size = 'md', text, label, type = 'general' }: Sta
   const getDotColor = (status: string) => {
     const colorClass = getStatusColor(status);
     if (colorClass.includes('amber')) return 'bg-amber-500';
-    if (colorClass.includes('blue')) return 'bg-blue-500';
-    if (colorClass.includes('green') || colorClass.includes('emerald')) return 'bg-green-500';
+    if (colorClass.includes('sky')) return 'bg-sky-500';
+    if (colorClass.includes('emerald')) return 'bg-emerald-500';
     if (colorClass.includes('red')) return 'bg-red-500';
-    if (colorClass.includes('purple')) return 'bg-purple-500';
-    return 'bg-gray-500';
+    if (colorClass.includes('violet')) return 'bg-violet-500';
+    return 'bg-slate-400';
   };
 
   const sizeClasses = {
-    sm: 'px-2 py-0.5 text-xs',
-    md: 'px-3 py-1 text-sm',
-    lg: 'px-4 py-1.5 text-base',
+    sm: 'px-2.5 py-0.5 text-xs',
+    md: 'px-3 py-1 text-xs',
+    lg: 'px-4 py-1.5 text-sm',
   };
 
   // Use text or label if provided, otherwise use status label
@@ -89,9 +89,9 @@ const StatusBadge = ({ status, size = 'md', text, label, type = 'general' }: Sta
 
   return (
     <span
-      className={`inline-flex items-center rounded-full border font-medium ${getStatusColor(status)} ${sizeClasses[size]}`}
+      className={`inline-flex items-center rounded-full border font-semibold ${getStatusColor(status)} ${sizeClasses[size]}`}
     >
-      <span className={`mr-1.5 h-1.5 w-1.5 rounded-full ${getDotColor(status)}`}></span>
+      <span className={`mr-1.5 h-1.5 w-1.5 rounded-full ${getDotColor(status)} animate-pulse`}></span>
       {displayText}
     </span>
   );

@@ -28,29 +28,29 @@ const Button = ({
   className = '',
 }: ButtonProps) => {
   const baseClasses =
-    'inline-flex items-center justify-center gap-2 rounded-lg font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60';
+    'inline-flex items-center justify-center gap-2.5 rounded-xl font-semibold transition-all duration-200 focus:outline-none focus:ring-4 disabled:cursor-not-allowed disabled:opacity-50';
 
   const variantClasses = {
     primary:
-      'bg-primary-600 text-white hover:bg-primary-700 focus:ring-primary-500 shadow-sm',
+      'bg-gradient-to-r from-primary-600 to-primary-500 text-white hover:from-primary-700 hover:to-primary-600 focus:ring-primary-500/30 shadow-lg shadow-primary-500/25',
     secondary:
-      'bg-bodydark2 text-white hover:bg-bodydark focus:ring-bodydark shadow-sm',
+      'bg-slate-700 text-white hover:bg-slate-800 focus:ring-slate-500/30 shadow-lg shadow-slate-500/20',
     success:
-      'bg-green-600 text-white hover:bg-green-700 focus:ring-green-500 shadow-sm',
+      'bg-gradient-to-r from-emerald-600 to-emerald-500 text-white hover:from-emerald-700 hover:to-emerald-600 focus:ring-emerald-500/30 shadow-lg shadow-emerald-500/25',
     danger:
-      'bg-red-600 text-white hover:bg-red-700 focus:ring-red-500 shadow-sm',
+      'bg-gradient-to-r from-red-600 to-red-500 text-white hover:from-red-700 hover:to-red-600 focus:ring-red-500/30 shadow-lg shadow-red-500/25',
     warning:
-      'bg-amber-500 text-white hover:bg-amber-600 focus:ring-amber-500 shadow-sm',
+      'bg-gradient-to-r from-amber-500 to-amber-400 text-white hover:from-amber-600 hover:to-amber-500 focus:ring-amber-500/30 shadow-lg shadow-amber-500/25',
     outline:
-      'border-2 border-stroke bg-transparent text-black hover:bg-gray-2 focus:ring-stroke',
+      'border-2 border-slate-200 bg-white text-slate-700 hover:bg-slate-50 hover:border-slate-300 focus:ring-slate-500/20',
     ghost:
-      'bg-transparent text-black hover:bg-gray-2 focus:ring-stroke',
+      'bg-transparent text-slate-600 hover:bg-slate-100 focus:ring-slate-500/20',
   };
 
   const sizeClasses = {
-    sm: 'px-3 py-1.5 text-sm',
+    sm: 'px-3.5 py-2 text-sm',
     md: 'px-5 py-2.5 text-sm',
-    lg: 'px-6 py-3 text-base',
+    lg: 'px-7 py-3.5 text-base',
   };
 
   const LoadingSpinner = () => (

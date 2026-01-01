@@ -142,44 +142,44 @@ const PaymentPage = () => {
       <div className="max-w-2xl mx-auto">
         <Card>
           <CardHeader>
-            <h2 className="text-lg font-semibold text-black">Récapitulatif</h2>
+            <h2 className="text-lg font-semibold text-slate-900">Récapitulatif</h2>
           </CardHeader>
           <CardBody>
             {/* Détails de l'intervention */}
             <dl className="space-y-4">
-              <div className="flex justify-between items-center py-2 border-b border-stroke">
-                <dt className="text-sm text-bodydark2">Date d'intervention</dt>
-                <dd className="text-sm font-medium text-black">{formatDate(interv.dateIntervention)}</dd>
+              <div className="flex justify-between items-center py-2 border-b border-slate-200">
+                <dt className="text-sm text-slate-500">Date d'intervention</dt>
+                <dd className="text-sm font-medium text-slate-900">{formatDate(interv.dateIntervention)}</dd>
               </div>
-              <div className="flex justify-between items-center py-2 border-b border-stroke">
-                <dt className="text-sm text-bodydark2">Technicien</dt>
-                <dd className="text-sm font-medium text-black">{interv.technicienNom}</dd>
+              <div className="flex justify-between items-center py-2 border-b border-slate-200">
+                <dt className="text-sm text-slate-500">Technicien</dt>
+                <dd className="text-sm font-medium text-slate-900">{interv.technicienNom}</dd>
               </div>
-              <div className="flex justify-between items-center py-2 border-b border-stroke">
-                <dt className="text-sm text-bodydark2">Statut</dt>
+              <div className="flex justify-between items-center py-2 border-b border-slate-200">
+                <dt className="text-sm text-slate-500">Statut</dt>
                 <dd><StatusBadge status={interv.statut} /></dd>
               </div>
               {interv.montantMainOeuvre && interv.montantMainOeuvre > 0 && (
-                <div className="flex justify-between items-center py-2 border-b border-stroke">
-                  <dt className="text-sm text-bodydark2">Main d'œuvre</dt>
-                  <dd className="text-sm font-medium text-black">{formatCurrency(interv.montantMainOeuvre)}</dd>
+                <div className="flex justify-between items-center py-2 border-b border-slate-200">
+                  <dt className="text-sm text-slate-500">Main d'œuvre</dt>
+                  <dd className="text-sm font-medium text-slate-900">{formatCurrency(interv.montantMainOeuvre)}</dd>
                 </div>
               )}
               {interv.piecesUtilisees && interv.piecesUtilisees.length > 0 && (
-                <div className="py-3 border-b border-stroke">
-                  <dt className="text-sm font-medium text-black mb-3">Pièces utilisées</dt>
+                <div className="py-3 border-b border-slate-200">
+                  <dt className="text-sm font-medium text-slate-900 mb-3">Pièces utilisées</dt>
                   <div className="space-y-2">
                     {interv.piecesUtilisees.map((piece) => (
-                      <div key={piece.id} className="flex justify-between text-sm bg-gray-2 dark:bg-meta-4 rounded-lg px-3 py-2">
-                        <span className="text-bodydark2">{piece.pieceNom} x{piece.quantite}</span>
-                        <span className="font-medium text-black">{formatCurrency(piece.sousTotal)}</span>
+                      <div key={piece.id} className="flex justify-between text-sm bg-slate-50 dark:bg-meta-4 rounded-xl px-3 py-2">
+                        <span className="text-slate-500">{piece.pieceNom} x{piece.quantite}</span>
+                        <span className="font-medium text-slate-900">{formatCurrency(piece.sousTotal)}</span>
                       </div>
                     ))}
                   </div>
                 </div>
               )}
               <div className="flex justify-between items-center py-3 bg-primary/5 rounded-xl px-4 -mx-1">
-                <dt className="text-lg font-bold text-black">Total à payer</dt>
+                <dt className="text-lg font-bold text-slate-900">Total à payer</dt>
                 <dd className="text-xl font-bold text-primary">{formatCurrency(interv.montantTotal)}</dd>
               </div>
             </dl>
@@ -189,7 +189,7 @@ const PaymentPage = () => {
               <div className="bg-success/10 border border-success/20 rounded-xl p-4 mt-6">
                 <div className="flex items-center">
                   <svg className="w-5 h-5 text-success mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
                   <p className="text-success font-medium">Intervention gratuite (sous garantie)</p>
                 </div>
@@ -200,7 +200,7 @@ const PaymentPage = () => {
               <div className="bg-success/10 border border-success/20 rounded-xl p-4 mt-6">
                 <div className="flex items-center">
                   <svg className="w-5 h-5 text-success mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
                   <div>
                     <p className="text-success font-medium">Paiement effectué</p>
@@ -216,7 +216,7 @@ const PaymentPage = () => {
               <div className="bg-primary/10 border border-primary/20 rounded-xl p-4 mt-6">
                 <div className="flex items-center">
                   <svg className="w-5 h-5 text-primary mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
                   <p className="text-primary font-medium">Paiement en cours de traitement</p>
                 </div>
@@ -227,7 +227,7 @@ const PaymentPage = () => {
               <div className="bg-warning/10 border border-warning/20 rounded-xl p-4 mt-6">
                 <div className="flex items-center">
                   <svg className="w-5 h-5 text-warning mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
                   <p className="text-warning font-medium">Paiement en attente</p>
                 </div>
@@ -238,7 +238,7 @@ const PaymentPage = () => {
               <div className="bg-danger/10 border border-danger/20 rounded-xl p-4 mt-6">
                 <div className="flex items-center">
                   <svg className="w-5 h-5 text-danger mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
                   <p className="text-danger font-medium">Le paiement a échoué. Veuillez réessayer.</p>
                 </div>
@@ -261,15 +261,15 @@ const PaymentPage = () => {
                   ) : (
                     <>
                       <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
                       </svg>
                       Payer {formatCurrency(interv.montantTotal)} avec Stripe
                     </>
                   )}
                 </Button>
-                <p className="mt-3 text-center text-sm text-bodydark2">
+                <p className="mt-3 text-center text-sm text-slate-500">
                   <svg className="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                   </svg>
                   Paiement sécurisé par Stripe
                 </p>
@@ -277,8 +277,8 @@ const PaymentPage = () => {
             )}
 
             {interv.statut !== 'Terminee' && (
-              <div className="bg-bodydark1/10 border border-stroke rounded-xl p-4 mt-6 text-center">
-                <p className="text-bodydark2">
+              <div className="bg-slate-100 border border-slate-200 rounded-xl p-4 mt-6 text-center">
+                <p className="text-slate-500">
                   Le paiement sera disponible une fois l'intervention terminée.
                 </p>
               </div>

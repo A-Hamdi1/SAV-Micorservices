@@ -64,7 +64,7 @@ const CreateClientPage = () => {
                 {errors.userId && (
                   <p className="mt-1 text-sm text-danger">{errors.userId.message}</p>
                 )}
-                <p className="mt-1 text-xs text-bodydark2">
+                <p className="mt-1 text-xs text-slate-400">
                   L'utilisateur doit déjà exister dans le système
                 </p>
               </div>

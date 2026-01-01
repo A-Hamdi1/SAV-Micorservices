@@ -101,7 +101,7 @@ const Calendar = ({ events, onEventClick, onDateClick }: CalendarProps) => {
           className="p-2 hover:bg-primary-700 rounded-lg transition-colors"
         >
           <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 19l-7-7 7-7" />
           </svg>
         </button>
         <h2 className="text-xl font-semibold capitalize">
@@ -112,7 +112,7 @@ const Calendar = ({ events, onEventClick, onDateClick }: CalendarProps) => {
           className="p-2 hover:bg-primary-700 rounded-lg transition-colors"
         >
           <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 5l7 7-7 7" />
           </svg>
         </button>
       </div>
