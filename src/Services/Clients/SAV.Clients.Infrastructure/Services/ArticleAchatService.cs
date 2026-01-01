@@ -105,7 +105,18 @@ public class ArticleAchatService : IArticleAchatService
 
         if (sousGarantie.HasValue)
         {
-            query = query.Where(a => a.SousGarantie == sousGarantie.Value);
+            // Calculate SousGarantie in SQL: (DateTime.UtcNow - DateAchat).TotalDays <= DureeGarantieJours
+            var now = DateTime.UtcNow;
+            if (sousGarantie.Value)
+            {
+                // Filter articles still under warranty
+                query = query.Where(a => EF.Functions.DateDiffDay(a.DateAchat, now) <= a.DureeGarantieJours);
+            }
+            else
+            {
+                // Filter articles out of warranty
+                query = query.Where(a => EF.Functions.DateDiffDay(a.DateAchat, now) > a.DureeGarantieJours);
+            }
         }
 
         var articlesAchetes = await query

@@ -5,7 +5,7 @@ public class RegisterDto
     public string Email { get; set; } = string.Empty;
     public string Password { get; set; } = string.Empty;
     public string ConfirmPassword { get; set; } = string.Empty;
-    public string Role { get; set; } = "Client"; // "Client" or "ResponsableSAV"
+    public string Role { get; set; } = "Client"; // "Client", "Technicien" or "ResponsableSAV"
 }
 
 public class LoginDto
@@ -29,6 +29,7 @@ public class UserDto
     public string Email { get; set; } = string.Empty;
     public string Role { get; set; } = string.Empty;
     public int? ClientId { get; set; } // ID du client si l'utilisateur est un client
+    public int? TechnicienId { get; set; } // ID du technicien si l'utilisateur est un technicien
 }
 
 public class RefreshTokenDto

@@ -3,12 +3,17 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { articlesApi } from '../../api/articles';
+import { categoriesApi } from '../../api/categories';
 import { UpdateArticleDto } from '../../types';
 import LoadingSpinner from '../../components/common/LoadingSpinner';
 import { toast } from 'react-toastify';
 import PageHeader from '../../components/common/PageHeader';
 import { Card, CardBody } from '../../components/common/Card';
 import Button from '../../components/common/Button';
+
+interface ExtendedUpdateArticleDto extends UpdateArticleDto {
+  categorieId?: number;
+}
 
 const EditArticlePage = () => {
   const navigate = useNavigate();
@@ -22,8 +27,13 @@ const EditArticlePage = () => {
     enabled: !!articleId,
   });
 
+  const { data: categories = [], isLoading: categoriesLoading } = useQuery({
+    queryKey: ['categories'],
+    queryFn: () => categoriesApi.getAll(),
+  });
+
   const updateMutation = useMutation({
-    mutationFn: (data: UpdateArticleDto) => articlesApi.updateArticle(articleId, data),
+    mutationFn: (data: ExtendedUpdateArticleDto) => articlesApi.updateArticle(articleId, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['article', articleId] });
       queryClient.invalidateQueries({ queryKey: ['articles'] });
@@ -37,12 +47,13 @@ const EditArticlePage = () => {
     handleSubmit,
     formState: { errors },
     reset,
-  } = useForm<UpdateArticleDto>();
+  } = useForm<ExtendedUpdateArticleDto>();
 
   useEffect(() => {
     if (article?.data) {
       reset({
         nom: article.data.nom,
+        categorieId: article.data.categorieId || undefined,
         categorie: article.data.categorie,
         prixVente: article.data.prixVente,
         dureeGarantie: article.data.dureeGarantie,
@@ -50,7 +61,7 @@ const EditArticlePage = () => {
     }
   }, [article?.data, reset]);
 
-  if (isLoading) {
+  if (isLoading || categoriesLoading) {
     return <LoadingSpinner fullScreen />;
   }
 
@@ -76,9 +87,16 @@ const EditArticlePage = () => {
     );
   }
 
-  const onSubmit = async (data: UpdateArticleDto) => {
+  const onSubmit = async (data: ExtendedUpdateArticleDto) => {
     try {
-      await updateMutation.mutateAsync(data);
+      // Find the category name for backward compatibility
+      const selectedCategory = categories.find(c => c.id === Number(data.categorieId));
+      const submitData = {
+        ...data,
+        categorie: selectedCategory?.nom || data.categorie || '',
+        categorieId: data.categorieId ? Number(data.categorieId) : undefined,
+      };
+      await updateMutation.mutateAsync(submitData);
     } catch (error) {
       console.error('Error updating article:', error);
     }
@@ -116,16 +134,22 @@ const EditArticlePage = () => {
               </div>
 
               <div>
-                <label htmlFor="categorie" className="form-label">
+                <label htmlFor="categorieId" className="form-label">
                   Catégorie *
                 </label>
-                <input
-                  {...register('categorie', { required: 'Catégorie requise' })}
-                  type="text"
-                  className="form-input"
-                />
-                {errors.categorie && (
-                  <p className="mt-1 text-sm text-danger">{errors.categorie.message}</p>
+                <select
+                  {...register('categorieId', { required: 'Catégorie requise' })}
+                  className="form-select"
+                >
+                  <option value="">Sélectionner une catégorie</option>
+                  {categories.map((category) => (
+                    <option key={category.id} value={category.id}>
+                      {category.nom}
+                    </option>
+                  ))}
+                </select>
+                {errors.categorieId && (
+                  <p className="mt-1 text-sm text-danger">{errors.categorieId.message}</p>
                 )}
               </div>
 

@@ -36,6 +36,7 @@ public class UpdateInterventionDto
 public class UpdateInterventionStatutDto
 {
     public string Statut { get; set; } = string.Empty;
+    public string? Commentaire { get; set; }
 }
 
 public class PieceUtiliseeDto

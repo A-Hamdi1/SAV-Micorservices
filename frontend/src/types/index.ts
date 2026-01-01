@@ -1,5 +1,5 @@
 // User Roles - Type-safe role definitions
-export type UserRole = 'Client' | 'ResponsableSAV' | 'Admin';
+export type UserRole = 'Client' | 'Technicien' | 'ResponsableSAV' | 'Admin';
 
 // Auth Types
 export interface User {
@@ -7,6 +7,7 @@ export interface User {
   email: string;
   role: UserRole;
   clientId?: number; // ID du client si l'utilisateur est un client
+  technicienId?: number; // ID du technicien si l'utilisateur est un technicien
 }
 
 export interface AuthResponse {
@@ -67,6 +68,7 @@ export interface ArticleDto {
   id: number;
   reference: string;
   nom: string;
+  categorieId?: number;
   categorie: string;
   prixVente: number;
   dureeGarantie: number;
@@ -76,6 +78,7 @@ export interface ArticleDto {
 export interface CreateArticleDto {
   reference: string;
   nom: string;
+  categorieId?: number;
   categorie: string;
   prixVente: number;
   dureeGarantie: number;
@@ -83,6 +86,7 @@ export interface CreateArticleDto {
 
 export interface UpdateArticleDto {
   nom: string;
+  categorieId?: number;
   categorie: string;
   prixVente: number;
   dureeGarantie: number;
@@ -220,6 +224,7 @@ export interface UpdateInterventionDto {
 
 export interface UpdateInterventionStatutDto {
   statut: string;
+  commentaire?: string;
 }
 
 export interface PieceUtiliseeDto {
@@ -252,6 +257,7 @@ export interface UpdateInterventionTechnicienDto {
 // Technicien Types
 export interface TechnicienDto {
   id: number;
+  userId?: string;
   nom: string;
   prenom: string;
   nomComplet: string;
@@ -266,6 +272,7 @@ export interface TechnicienDto {
 
 export interface TechnicienDetailsDto {
   id: number;
+  userId?: string;
   nom: string;
   prenom: string;
   nomComplet: string;
@@ -283,6 +290,7 @@ export interface CreateTechnicienDto {
   nom: string;
   prenom: string;
   email: string;
+  password?: string;
   telephone: string;
   specialite: string;
   dateEmbauche?: string;

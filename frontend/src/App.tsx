@@ -49,6 +49,21 @@ import StockManagementPage from './pages/responsable/StockManagementPage';
 import RdvManagementPage from './pages/responsable/RdvManagementPage';
 import PaymentsManagementPage from './pages/responsable/PaymentsManagementPage';
 import EvaluationsListPage from './pages/responsable/EvaluationsListPage';
+import CategoriesListPage from './pages/responsable/CategoriesListPage';
+import CreateCategoriePage from './pages/responsable/CreateCategoriePage';
+import EditCategoriePage from './pages/responsable/EditCategoriePage';
+
+// Client Calendar
+import ClientCalendarPage from './pages/client/ClientCalendarPage';
+
+// Technicien Pages
+import TechnicienDashboard from './pages/technicien/TechnicienDashboard';
+import TechnicienInterventionsPage from './pages/technicien/TechnicienInterventionsPage';
+import TechnicienCalendarPage from './pages/technicien/TechnicienCalendarPage';
+import TechnicienProfilePage from './pages/technicien/TechnicienProfilePage';
+
+// Responsable Calendar
+import ResponsableCalendarPage from './pages/responsable/ResponsableCalendarPage';
 
 // Composant pour la redirection par défaut
 const DefaultRedirect = () => {
@@ -57,6 +72,8 @@ const DefaultRedirect = () => {
   if (isAuthenticated) {
     if (role === 'Client') {
       return <Navigate to="/client/dashboard" replace />;
+    } else if (role === 'Technicien') {
+      return <Navigate to="/technicien/dashboard" replace />;
     } else if (role === 'ResponsableSAV' || role === 'Admin') {
       return <Navigate to="/responsable/dashboard" replace />;
     }
@@ -88,6 +105,7 @@ function App() {
                   <Route path="reclamations" element={<MyReclamationsPage />} />
                   <Route path="reclamations/:id" element={<ReclamationDetailsPage />} />
                   <Route path="evaluation/:interventionId" element={<EvaluationPage />} />
+                  <Route path="calendrier" element={<ClientCalendarPage />} />
                   <Route path="rdv" element={<DemandeRdvPage />} />
                   <Route path="payment/:interventionId" element={<PaymentPage />} />
                   <Route path="payment/:interventionId/success" element={<PaymentSuccessPage />} />
@@ -118,6 +136,9 @@ function App() {
                 <Route path="articles/new" element={<CreateArticlePage />} />
                 <Route path="articles/:id" element={<ArticleDetailsPage />} />
                 <Route path="articles/:id/edit" element={<EditArticlePage />} />
+                <Route path="categories" element={<CategoriesListPage />} />
+                <Route path="categories/new" element={<CreateCategoriePage />} />
+                <Route path="categories/:id/edit" element={<EditCategoriePage />} />
                 <Route path="interventions" element={<InterventionsListPage />} />
                 <Route path="interventions/new" element={<CreateInterventionPage />} />
                 <Route path="interventions/new/:reclamationId" element={<CreateInterventionPage />} />
@@ -133,9 +154,28 @@ function App() {
                 <Route path="analytics" element={<AnalyticsDashboardPage />} />
                 <Route path="stock" element={<StockManagementPage />} />
                 <Route path="rdv" element={<RdvManagementPage />} />
+                <Route path="calendrier" element={<ResponsableCalendarPage />} />
                 <Route path="payments" element={<PaymentsManagementPage />} />
                 <Route path="evaluations" element={<EvaluationsListPage />} />
                 <Route path="*" element={<Navigate to="/responsable/dashboard" replace />} />
+              </Routes>
+            </Layout>
+          </ProtectedRoute>
+        }
+      />
+
+      {/* Technicien Routes */}
+      <Route
+        path="/technicien/*"
+        element={
+          <ProtectedRoute requiredRole="Technicien">
+            <Layout>
+              <Routes>
+                <Route path="dashboard" element={<TechnicienDashboard />} />
+                <Route path="interventions" element={<TechnicienInterventionsPage />} />
+                <Route path="calendrier" element={<TechnicienCalendarPage />} />
+                <Route path="profile" element={<TechnicienProfilePage />} />
+                <Route path="*" element={<Navigate to="/technicien/dashboard" replace />} />
               </Routes>
             </Layout>
           </ProtectedRoute>

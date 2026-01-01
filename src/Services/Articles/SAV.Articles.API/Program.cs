@@ -71,6 +71,7 @@ builder.Services.AddAuthentication(options =>
 
 builder.Services.AddScoped<IArticleService, ArticleService>();
 builder.Services.AddScoped<IPieceDetacheeService, PieceDetacheeService>();
+builder.Services.AddScoped<ICategorieService, CategorieService>();
 
 builder.Services.AddCors(options =>
 {

@@ -9,9 +9,50 @@ import {
   TechnicienStatsDto,
   TechniciensStatsGlobalesDto,
   InterventionDto,
+  UpdateInterventionStatutDto,
 } from '../types';
 
 export const techniciensApi = {
+  // ==================== ENDPOINTS POUR TECHNICIEN (son propre profil) ====================
+  
+  getMyProfile: async (): Promise<ApiResponse<TechnicienDetailsDto>> => {
+    const response = await axiosInstance.get<ApiResponse<TechnicienDetailsDto>>('/api/techniciens/me');
+    return response.data;
+  },
+
+  getMyInterventions: async (
+    statut?: string,
+    dateDebut?: string,
+    dateFin?: string
+  ): Promise<ApiResponse<InterventionDto[]>> => {
+    const response = await axiosInstance.get<ApiResponse<InterventionDto[]>>(
+      '/api/techniciens/me/interventions',
+      {
+        params: { statut, dateDebut, dateFin },
+      }
+    );
+    return response.data;
+  },
+
+  getMyStats: async (): Promise<ApiResponse<TechnicienStatsDto>> => {
+    const response = await axiosInstance.get<ApiResponse<TechnicienStatsDto>>(
+      '/api/techniciens/me/stats'
+    );
+    return response.data;
+  },
+
+  updateMyInterventionStatut: async (
+    interventionId: number,
+    data: UpdateInterventionStatutDto
+  ): Promise<ApiResponse<InterventionDto>> => {
+    const response = await axiosInstance.put<ApiResponse<InterventionDto>>(
+      `/api/techniciens/me/interventions/${interventionId}/statut`,
+      data
+    );
+    return response.data;
+  },
+
+  // ==================== ENDPOINTS POUR RESPONSABLE ====================
   getAllTechniciens: async (disponible?: boolean): Promise<ApiResponse<TechnicienDto[]>> => {
     const response = await axiosInstance.get<ApiResponse<TechnicienDto[]>>('/api/techniciens', {
       params: { disponible },

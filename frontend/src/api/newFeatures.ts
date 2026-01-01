@@ -404,10 +404,15 @@ export interface InterventionsParJour {
 }
 
 export const analyticsApi = {
-  getAnalytics: (dateDebut?: string, dateFin?: string) =>
-    api.get<{ data: AnalyticsData }>('/api/interventions/analytics', {
-      params: { dateDebut, dateFin }
-    }),
+  getAnalytics: (dateDebut?: string, dateFin?: string) => {
+    // Use dateDebut's year if available (more likely to have data), otherwise use dateFin's year
+    const annee = dateDebut 
+      ? new Date(dateDebut).getFullYear() 
+      : (dateFin ? new Date(dateFin).getFullYear() : undefined);
+    return api.get<{ data: AnalyticsData }>('/api/interventions/analytics', {
+      params: { annee }
+    });
+  },
 };
 
 // =============== EXPORT ===============

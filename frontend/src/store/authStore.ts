@@ -3,6 +3,7 @@ import { persist, createJSONStorage } from 'zustand/middleware';
 import { User, UserRole } from '../types';
 import { authApi } from '../api/auth';
 import { clientsApi } from '../api/clients';
+import { techniciensApi } from '../api/techniciens';
 import { toast } from 'react-toastify';
 
 interface AuthState {
@@ -98,6 +99,21 @@ export const useAuthStore = create<AuthState>()(
                 }
               } catch (err) {
                 console.warn('Could not fetch client profile:', err);
+              }
+            }
+
+            // Si l'utilisateur est un technicien, récupérer son technicienId
+            if (authData.role === 'Technicien') {
+              try {
+                const technicienResponse = await techniciensApi.getMyProfile();
+                if (technicienResponse.success && technicienResponse.data) {
+                  user = {
+                    ...user,
+                    technicienId: technicienResponse.data.id
+                  };
+                }
+              } catch (err) {
+                console.warn('Could not fetch technicien profile:', err);
               }
             }
 
