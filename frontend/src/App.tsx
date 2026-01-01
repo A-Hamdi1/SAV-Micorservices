@@ -74,7 +74,7 @@ const DefaultRedirect = () => {
       return <Navigate to="/client/dashboard" replace />;
     } else if (role === 'Technicien') {
       return <Navigate to="/technicien/dashboard" replace />;
-    } else if (role === 'ResponsableSAV' || role === 'Admin') {
+    } else if (role === 'ResponsableSAV') {
       return <Navigate to="/responsable/dashboard" replace />;
     }
   }

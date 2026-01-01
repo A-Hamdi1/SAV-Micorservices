@@ -14,8 +14,8 @@ const ProtectedRoute = ({ children, requiredRole }: ProtectedRouteProps) => {
   }
 
   if (requiredRole) {
-    // Admin peut accéder aux routes ResponsableSAV
-    if (requiredRole === 'ResponsableSAV' && (role === 'ResponsableSAV' || role === 'Admin')) {
+    // ResponsableSAV peut accéder à ses routes
+    if (requiredRole === 'ResponsableSAV' && role === 'ResponsableSAV') {
       return <>{children}</>;
     }
     // Technicien accède à ses routes
@@ -33,7 +33,7 @@ const ProtectedRoute = ({ children, requiredRole }: ProtectedRouteProps) => {
         return <Navigate to="/client/dashboard" replace />;
       } else if (role === 'Technicien') {
         return <Navigate to="/technicien/dashboard" replace />;
-      } else if (role === 'ResponsableSAV' || role === 'Admin') {
+      } else if (role === 'ResponsableSAV') {
         return <Navigate to="/responsable/dashboard" replace />;
       }
       return <Navigate to="/login" replace />;

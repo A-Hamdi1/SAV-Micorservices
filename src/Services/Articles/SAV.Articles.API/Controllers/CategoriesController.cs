@@ -79,7 +79,7 @@ public class CategoriesController : ControllerBase
     }
 
     [HttpPost]
-    [Authorize(Roles = $"{Roles.ResponsableSAV},{Roles.Admin}")]
+    [Authorize(Roles = Roles.ResponsableSAV)]
     public async Task<ActionResult<ApiResponse<CategorieDto>>> CreateCategorie([FromBody] CreateCategorieDto dto)
     {
         try
@@ -105,7 +105,7 @@ public class CategoriesController : ControllerBase
     }
 
     [HttpPut("{id}")]
-    [Authorize(Roles = $"{Roles.ResponsableSAV},{Roles.Admin}")]
+    [Authorize(Roles = Roles.ResponsableSAV)]
     public async Task<ActionResult<ApiResponse<CategorieDto>>> UpdateCategorie(int id, [FromBody] UpdateCategorieDto dto)
     {
         try
@@ -140,7 +140,7 @@ public class CategoriesController : ControllerBase
     }
 
     [HttpDelete("{id}")]
-    [Authorize(Roles = $"{Roles.ResponsableSAV},{Roles.Admin}")]
+    [Authorize(Roles = Roles.ResponsableSAV)]
     public async Task<ActionResult<ApiResponse<bool>>> DeleteCategorie(int id)
     {
         try

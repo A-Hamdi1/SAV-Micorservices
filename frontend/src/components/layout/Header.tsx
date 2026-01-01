@@ -130,16 +130,16 @@ const Header = ({ sidebarOpen, setSidebarOpen }: HeaderProps) => {
             >
               <span className="hidden text-right lg:block">
                 <span className="block text-sm font-medium text-black">
-                  {role === 'Admin' ? 'Administrateur' : role === 'Client' ? 'Client' : 'Responsable SAV'}
+                  {role === 'Client' ? 'Client' : role === 'Technicien' ? 'Technicien' : 'Responsable SAV'}
                 </span>
                 <span className="block text-xs text-bodydark2">
-                  {role === 'Admin' ? 'Admin' : role}
+                  {role}
                 </span>
               </span>
 
               <span className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-r from-primary-500 to-primary-600">
                 <span className="text-sm font-medium text-white">
-                  {role === 'Client' ? 'CL' : role === 'Admin' ? 'AD' : 'RS'}
+                  {role === 'Client' ? 'CL' : role === 'Technicien' ? 'TC' : 'RS'}
                 </span>
               </span>
 
@@ -166,12 +166,12 @@ const Header = ({ sidebarOpen, setSidebarOpen }: HeaderProps) => {
                 <div className="flex items-center gap-3 px-6 py-4 border-b border-stroke">
                   <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-r from-primary-500 to-primary-600">
                     <span className="text-lg font-medium text-white">
-                      {role === 'Client' ? 'CL' : role === 'Admin' ? 'AD' : 'RS'}
+                      {role === 'Client' ? 'CL' : role === 'Technicien' ? 'TC' : 'RS'}
                     </span>
                   </div>
                   <div>
                     <span className="block text-sm font-semibold text-black">
-                      {role === 'Admin' ? 'Administrateur' : role === 'Client' ? 'Client' : 'Responsable SAV'}
+                      {role === 'Client' ? 'Client' : role === 'Technicien' ? 'Technicien' : 'Responsable SAV'}
                     </span>
                     <span className="block text-xs text-bodydark2">
                       Compte actif

@@ -36,7 +36,7 @@ const Navbar = () => {
                     <Link to="/client/profile" className={navLinkClass}>Mon profil</Link>
                   </>
                 )}
-                {(role === 'ResponsableSAV' || role === 'Admin') && (
+                {role === 'ResponsableSAV' && (
                   <>
                     <Link to="/responsable/dashboard" className={navLinkClass}>Tableau de bord</Link>
                     <Link to="/responsable/reclamations" className={navLinkClass}>Réclamations</Link>
@@ -52,7 +52,7 @@ const Navbar = () => {
           <div className="flex items-center">
             {isAuthenticated ? (
               <div className="flex items-center space-x-4">
-                <span className="text-bodydark2 text-sm">{role === 'Admin' ? 'Administrateur' : role}</span>
+                <span className="text-bodydark2 text-sm">{role}</span>
                 <button
                   onClick={handleLogout}
                   className="bg-danger hover:bg-danger/90 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"

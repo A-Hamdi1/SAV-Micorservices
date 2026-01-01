@@ -1,5 +1,5 @@
 // User Roles - Type-safe role definitions
-export type UserRole = 'Client' | 'Technicien' | 'ResponsableSAV' | 'Admin';
+export type UserRole = 'Client' | 'Technicien' | 'ResponsableSAV';
 
 // Auth Types
 export interface User {
