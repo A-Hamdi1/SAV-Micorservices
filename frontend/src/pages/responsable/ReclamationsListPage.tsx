@@ -61,9 +61,9 @@ const ReclamationsListPage = () => {
                 </select>
               </div>
             </div>
-            <div className="flex items-center gap-2 text-sm text-bodydark2">
+            <div className="flex items-center gap-2 text-sm text-slate-500">
               <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
               </svg>
               <span>{totalCount} réclamation(s)</span>
             </div>
@@ -79,18 +79,18 @@ const ReclamationsListPage = () => {
               title="Aucune réclamation"
               description="Il n'y a pas de réclamations correspondant à vos critères."
               icon={
-                <svg className="w-12 h-12 text-bodydark2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                <svg className="w-12 h-12 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
                 </svg>
               }
             />
           ) : (
-            <div className="divide-y divide-stroke">
+            <div className="divide-y divide-slate-200">
               {reclamations.map((reclamation) => (
                 <Link
                   key={reclamation.id}
                   to={`/responsable/reclamations/${reclamation.id}`}
-                  className="flex items-start justify-between p-5 hover:bg-gray-2 transition-colors"
+                  className="flex items-start justify-between p-5 hover:bg-slate-50 transition-colors"
                 >
                   <div className="flex items-start gap-4 flex-1 min-w-0">
                     <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center shadow-sm">
@@ -98,28 +98,28 @@ const ReclamationsListPage = () => {
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 mb-1">
-                        <h3 className="text-sm font-semibold text-black">
+                        <h3 className="text-sm font-semibold text-slate-900">
                           {reclamation.clientPrenom} {reclamation.clientNom}
                         </h3>
                         <StatusBadge status={reclamation.statut} size="sm" />
                       </div>
-                      <p className="text-sm text-bodydark2 mb-2">
+                      <p className="text-sm text-slate-500 mb-2">
                         {reclamation.articleNom}
                       </p>
-                      <p className="text-sm text-bodydark2 line-clamp-2">
+                      <p className="text-sm text-slate-500 line-clamp-2">
                         {reclamation.description}
                       </p>
-                      <div className="flex items-center gap-2 mt-2 text-xs text-bodydark2">
+                      <div className="flex items-center gap-2 mt-2 text-xs text-slate-400">
                         <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                         </svg>
                         <span>{formatDate(reclamation.dateCreation)}</span>
                       </div>
                     </div>
                   </div>
                   <div className="flex-shrink-0 ml-4">
-                    <svg className="w-5 h-5 text-bodydark2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    <svg className="w-5 h-5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 5l7 7-7 7" />
                     </svg>
                   </div>
                 </Link>

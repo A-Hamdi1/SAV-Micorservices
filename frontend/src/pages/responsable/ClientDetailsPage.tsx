@@ -98,16 +98,16 @@ const ClientDetailsPage = () => {
             <CardBody>
               <dl className="space-y-4">
                 <div>
-                  <dt className="text-sm font-medium text-bodydark2">Téléphone</dt>
-                  <dd className="mt-1 text-sm text-black">{clientData.telephone}</dd>
+                  <dt className="text-sm font-medium text-slate-500">Téléphone</dt>
+                  <dd className="mt-1 text-sm text-slate-900">{clientData.telephone}</dd>
                 </div>
                 <div>
-                  <dt className="text-sm font-medium text-bodydark2">Adresse</dt>
-                  <dd className="mt-1 text-sm text-black">{clientData.adresse}</dd>
+                  <dt className="text-sm font-medium text-slate-500">Adresse</dt>
+                  <dd className="mt-1 text-sm text-slate-900">{clientData.adresse}</dd>
                 </div>
                 <div>
-                  <dt className="text-sm font-medium text-bodydark2">Date d'inscription</dt>
-                  <dd className="mt-1 text-sm text-black">{formatDate(clientData.createdAt)}</dd>
+                  <dt className="text-sm font-medium text-slate-500">Date d'inscription</dt>
+                  <dd className="mt-1 text-sm text-slate-900">{formatDate(clientData.createdAt)}</dd>
                 </div>
               </dl>
             </CardBody>
@@ -123,7 +123,7 @@ const ClientDetailsPage = () => {
                   {reclamations.data.map((reclamation) => (
                     <div
                       key={reclamation.id}
-                      className="border border-stroke rounded-lg p-4"
+                      className="border border-slate-200 rounded-xl p-4"
                     >
                       <div className="flex justify-between items-start mb-2">
                         <Link
@@ -134,16 +134,16 @@ const ClientDetailsPage = () => {
                         </Link>
                         <StatusBadge status={reclamation.statut} />
                       </div>
-                      <p className="text-sm text-bodydark2">{reclamation.articleNom}</p>
-                      <p className="text-sm text-bodydark2 mt-1">{reclamation.description}</p>
-                      <p className="text-xs text-bodydark2 mt-2">
+                      <p className="text-sm text-slate-500">{reclamation.articleNom}</p>
+                      <p className="text-sm text-slate-500 mt-1">{reclamation.description}</p>
+                      <p className="text-xs text-slate-400 mt-2">
                         {formatDate(reclamation.dateCreation)}
                       </p>
                     </div>
                   ))}
                 </div>
               ) : (
-                <p className="text-bodydark2 text-sm">Aucune réclamation</p>
+                <p className="text-slate-500 text-sm">Aucune réclamation</p>
               )}
             </CardBody>
           </Card>
@@ -156,11 +156,11 @@ const ClientDetailsPage = () => {
                   {articles.data.map((article) => (
                     <div
                       key={article.id}
-                      className="border border-stroke rounded-lg p-4"
+                      className="border border-slate-200 rounded-xl p-4"
                     >
-                      <p className="text-sm font-medium text-black">{article.articleNom}</p>
-                      <p className="text-sm text-bodydark2">Ref: {article.articleReference}</p>
-                      <p className="text-sm text-bodydark2">N° série: {article.numeroSerie}</p>
+                      <p className="text-sm font-medium text-slate-900">{article.articleNom}</p>
+                      <p className="text-sm text-slate-500">Ref: {article.articleReference}</p>
+                      <p className="text-sm text-slate-500">N° série: {article.numeroSerie}</p>
                       <div className="mt-2 flex items-center">
                         <span
                           className={`px-2 py-1 text-xs rounded-full ${
@@ -176,7 +176,7 @@ const ClientDetailsPage = () => {
                   ))}
                 </div>
               ) : (
-                <p className="text-bodydark2 text-sm">Aucun article acheté</p>
+                <p className="text-slate-500 text-sm">Aucun article acheté</p>
               )}
             </CardBody>
           </Card>

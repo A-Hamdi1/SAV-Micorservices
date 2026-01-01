@@ -26,8 +26,6 @@ import PaymentCancelPage from './pages/client/PaymentCancelPage';
 import ResponsableDashboard from './pages/responsable/ResponsableDashboard';
 import ClientsListPage from './pages/responsable/ClientsListPage';
 import ClientDetailsPage from './pages/responsable/ClientDetailsPage';
-import CreateClientPage from './pages/responsable/CreateClientPage';
-import EditClientPage from './pages/responsable/EditClientPage';
 import ReclamationsListPage from './pages/responsable/ReclamationsListPage';
 import ReclamationDetailsPageResponsable from './pages/responsable/ReclamationDetailsPage';
 import ArticlesListPage from './pages/responsable/ArticlesListPage';

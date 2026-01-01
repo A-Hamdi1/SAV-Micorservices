@@ -74,28 +74,28 @@ const ReclamationDetailsPage = () => {
           <CardHeader title="Informations" />
           <CardBody>
             <dl className="space-y-4">
-              <div className="flex justify-between py-3 border-b border-stroke">
-                <dt className="text-sm font-medium text-bodydark2">Article</dt>
-                <dd className="text-sm text-black font-semibold">{rec.articleNom}</dd>
+              <div className="flex justify-between py-3 border-b border-slate-200">
+                <dt className="text-sm font-medium text-slate-500">Article</dt>
+                <dd className="text-sm text-slate-900 font-semibold">{rec.articleNom}</dd>
               </div>
-              <div className="py-3 border-b border-stroke">
-                <dt className="text-sm font-medium text-bodydark2 mb-2">Description</dt>
-                <dd className="text-sm text-black">{rec.description}</dd>
+              <div className="py-3 border-b border-slate-200">
+                <dt className="text-sm font-medium text-slate-500 mb-2">Description</dt>
+                <dd className="text-sm text-slate-900">{rec.description}</dd>
               </div>
-              <div className="flex justify-between py-3 border-b border-stroke">
-                <dt className="text-sm font-medium text-bodydark2">Date de création</dt>
-                <dd className="text-sm text-black">{formatDate(rec.dateCreation)}</dd>
+              <div className="flex justify-between py-3 border-b border-slate-200">
+                <dt className="text-sm font-medium text-slate-500">Date de création</dt>
+                <dd className="text-sm text-slate-900">{formatDate(rec.dateCreation)}</dd>
               </div>
               {rec.dateResolution && (
-                <div className="flex justify-between py-3 border-b border-stroke">
-                  <dt className="text-sm font-medium text-bodydark2">Date de résolution</dt>
+                <div className="flex justify-between py-3 border-b border-slate-200">
+                  <dt className="text-sm font-medium text-slate-500">Date de résolution</dt>
                   <dd className="text-sm text-success">{formatDate(rec.dateResolution)}</dd>
                 </div>
               )}
               {rec.commentaireResponsable && (
                 <div className="py-3">
-                  <dt className="text-sm font-medium text-bodydark2 mb-2">Commentaire responsable</dt>
-                  <dd className="text-sm text-black bg-bodydark/5 p-3 rounded-lg">{rec.commentaireResponsable}</dd>
+                  <dt className="text-sm font-medium text-slate-500 mb-2">Commentaire responsable</dt>
+                  <dd className="text-sm text-slate-900 bg-slate-50 p-3 rounded-xl">{rec.commentaireResponsable}</dd>
                 </div>
               )}
             </dl>
@@ -110,7 +110,7 @@ const ReclamationDetailsPage = () => {
                 <Link to="/client/rdv">
                   <Button variant="outline" size="sm">
                     <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                     </svg>
                     Demander RDV
                   </Button>
@@ -124,14 +124,14 @@ const ReclamationDetailsPage = () => {
                 {interventions.data.map((intervention) => (
                   <div
                     key={intervention.id}
-                    className="border border-stroke rounded-xl p-4 hover:bg-bodydark/5 transition-colors"
+                    className="border border-slate-200 rounded-xl p-4 hover:bg-slate-50 transition-colors"
                   >
                     <div className="flex justify-between items-start mb-3">
                       <div className="flex items-center gap-2">
-                        <span className="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-primary/10 text-primary text-xs font-bold">
+                        <span className="inline-flex items-center justify-center w-8 h-8 rounded-xl bg-primary-50 text-primary text-xs font-bold">
                           #{intervention.id}
                         </span>
-                        <span className="text-sm font-semibold text-black">
+                        <span className="text-sm font-semibold text-slate-900">
                           Intervention
                         </span>
                       </div>
@@ -139,28 +139,28 @@ const ReclamationDetailsPage = () => {
                     </div>
                     
                     <div className="ml-10 space-y-2">
-                      <div className="flex items-center gap-2 text-sm text-bodydark2">
+                      <div className="flex items-center gap-2 text-sm text-slate-500">
                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                         </svg>
                         <span>{intervention.technicienNom}</span>
                       </div>
-                      <div className="flex items-center gap-2 text-sm text-bodydark2">
+                      <div className="flex items-center gap-2 text-sm text-slate-500">
                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                         </svg>
                         <span>{formatDate(intervention.dateIntervention)}</span>
                       </div>
                       {intervention.montantTotal > 0 && (
                         <div className="flex items-center gap-2 text-sm font-bold text-primary">
                           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                           </svg>
                           <span>{formatCurrency(intervention.montantTotal)}</span>
                         </div>
                       )}
                       {intervention.commentaire && (
-                        <p className="text-sm text-bodydark2 bg-bodydark/5 p-2 rounded mt-2">
+                        <p className="text-sm text-slate-500 bg-slate-50 p-2 rounded-xl mt-2">
                           {intervention.commentaire}
                         </p>
                       )}
@@ -173,7 +173,7 @@ const ReclamationDetailsPage = () => {
                           <Link to={`/client/payment/${intervention.id}`}>
                             <Button variant="success" size="sm">
                               <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
                               </svg>
                               Payer
                             </Button>
@@ -182,7 +182,7 @@ const ReclamationDetailsPage = () => {
                         <Link to={`/client/evaluation/${intervention.id}`}>
                           <Button variant="warning" size="sm">
                             <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
                             </svg>
                             évaluer
                           </Button>

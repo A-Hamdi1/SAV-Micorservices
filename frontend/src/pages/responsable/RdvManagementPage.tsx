@@ -180,28 +180,28 @@ const RdvManagementPage = () => {
       </div>
 
       {/* Tabs */}
-      <div className="flex border-b border-stroke mb-6 overflow-x-auto">
+      <div className="flex border-b border-slate-200 mb-6 overflow-x-auto">
         <button
           onClick={() => setActiveTab('demandes')}
-          className={`px-6 py-3 font-medium transition-colors whitespace-nowrap ${activeTab === 'demandes' ? 'border-b-2 border-primary text-primary' : 'text-bodydark2 hover:text-black'}`}
+          className={`px-6 py-3 font-medium transition-colors whitespace-nowrap ${activeTab === 'demandes' ? 'border-b-2 border-primary-600 text-primary-600' : 'text-slate-500 hover:text-slate-900'}`}
         >
           📨 Demandes ({demandes.length})
         </button>
         <button
           onClick={() => setActiveTab('historique')}
-          className={`px-6 py-3 font-medium transition-colors whitespace-nowrap ${activeTab === 'historique' ? 'border-b-2 border-primary text-primary' : 'text-bodydark2 hover:text-black'}`}
+          className={`px-6 py-3 font-medium transition-colors whitespace-nowrap ${activeTab === 'historique' ? 'border-b-2 border-primary-600 text-primary-600' : 'text-slate-500 hover:text-slate-900'}`}
         >
           📋 Historique ({historique.length})
         </button>
         <button
           onClick={() => setActiveTab('creneaux')}
-          className={`px-6 py-3 font-medium transition-colors whitespace-nowrap ${activeTab === 'creneaux' ? 'border-b-2 border-primary text-primary' : 'text-bodydark2 hover:text-black'}`}
+          className={`px-6 py-3 font-medium transition-colors whitespace-nowrap ${activeTab === 'creneaux' ? 'border-b-2 border-primary-600 text-primary-600' : 'text-slate-500 hover:text-slate-900'}`}
         >
           📆 Créneaux
         </button>
         <button
           onClick={() => setActiveTab('generer')}
-          className={`px-6 py-3 font-medium transition-colors whitespace-nowrap ${activeTab === 'generer' ? 'border-b-2 border-primary text-primary' : 'text-bodydark2 hover:text-black'}`}
+          className={`px-6 py-3 font-medium transition-colors whitespace-nowrap ${activeTab === 'generer' ? 'border-b-2 border-primary-600 text-primary-600' : 'text-slate-500 hover:text-slate-900'}`}
         >
           ⚙️ Générer Créneaux
         </button>
@@ -225,14 +225,14 @@ const RdvManagementPage = () => {
                 <CardBody>
                   <div className="flex justify-between items-start gap-4">
                     <div className="flex-1">
-                      <div className="font-medium text-black text-lg">
+                      <div className="font-medium text-slate-900 text-lg">
                         {demande.motif || 'Service SAV'}
                       </div>
-                      <div className="text-sm text-bodydark2 mt-1">
+                      <div className="text-sm text-slate-500 mt-1">
                         {demande.reclamationId ? (
                           <span>🔗 Lié à la réclamation #{demande.reclamationId}</span>
                         ) : (
-                          <span className="text-primary">📅 RDV indépendant</span>
+                          <span className="text-primary-600">📅 RDV indépendant</span>
                         )}
                         <span className="mx-2">•</span>
                         Client ID: {demande.clientId}
@@ -242,13 +242,13 @@ const RdvManagementPage = () => {
                       {demande.creneau ? (
                         <div className="mt-3 p-3 bg-success/10 border border-success/20 rounded-lg">
                           <div className="text-sm font-medium text-success mb-1">📅 Créneau sélectionné par le client</div>
-                          <div className="text-sm text-black">
+                          <div className="text-sm text-slate-900">
                             <strong>{new Date(demande.creneau.dateDebut).toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}</strong>
                           </div>
-                          <div className="text-sm text-bodydark2">
+                          <div className="text-sm text-slate-500">
                             🕐 {new Date(demande.creneau.dateDebut).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })} - {new Date(demande.creneau.dateFin).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}
                           </div>
-                          <div className="text-sm text-bodydark2">
+                          <div className="text-sm text-slate-500">
                             👨‍🔧 Technicien: {demande.creneau.technicienNom || `Tech #${demande.creneau.technicienId}`}
                           </div>
                         </div>
@@ -263,11 +263,11 @@ const RdvManagementPage = () => {
                       )}
                       
                       {demande.commentaire && (
-                        <div className="text-sm text-bodydark2 mt-2 italic">
+                        <div className="text-sm text-slate-500 mt-2 italic">
                           💬 "{demande.commentaire}"
                         </div>
                       )}
-                      <div className="text-xs text-bodydark2 mt-2">
+                      <div className="text-xs text-slate-500 mt-2">
                         Créée le {new Date(demande.createdAt || demande.dateCreation || '').toLocaleString('fr-FR')}
                       </div>
                     </div>
@@ -302,7 +302,7 @@ const RdvManagementPage = () => {
               <CardBody>
                 <div className="bg-bodydark1/20 border border-bodydark1/30 rounded-xl p-6 text-center">
                   <span className="text-4xl mb-2 block">📭</span>
-                  <p className="text-bodydark2 font-medium">Aucun historique de RDV</p>
+                  <p className="text-slate-500 font-medium">Aucun historique de RDV</p>
                 </div>
               </CardBody>
             </Card>
@@ -313,21 +313,21 @@ const RdvManagementPage = () => {
                   <div className="flex justify-between items-start">
                     <div className="flex-1">
                       <div className="flex items-center gap-3 mb-2">
-                        <span className="font-medium text-black text-lg">
+                        <span className="font-medium text-slate-900 text-lg">
                           {demande.motif || 'Service SAV'}
                         </span>
                         <StatusBadge status={demande.statut} />
                       </div>
-                      <div className="text-sm text-bodydark2 mt-1">
+                      <div className="text-sm text-slate-500 mt-1">
                         {demande.reclamationId ? (
                           <span>🔗 Réclamation #{demande.reclamationId}</span>
                         ) : (
-                          <span className="text-primary">📅 RDV indépendant</span>
+                          <span className="text-primary-600">📅 RDV indépendant</span>
                         )}
                         <span className="mx-2">•</span>
                         Client ID: {demande.clientId}
                       </div>
-                      <div className="text-sm text-bodydark2 mt-2">
+                      <div className="text-sm text-slate-500 mt-2">
                         <strong>Date souhaitée:</strong> {new Date(demande.dateSouhaitee || demande.datePreferee || '').toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
                       </div>
                       {demande.creneau && (
@@ -336,12 +336,12 @@ const RdvManagementPage = () => {
                         </div>
                       )}
                       {demande.commentaire && (
-                        <div className="text-sm text-bodydark2 mt-1 italic">
+                        <div className="text-sm text-slate-500 mt-1 italic">
                           💬 "{demande.commentaire}"
                         </div>
                       )}
                     </div>
-                    <div className="text-right text-xs text-bodydark2">
+                    <div className="text-right text-xs text-slate-500">
                       <div>Créée: {new Date(demande.createdAt || '').toLocaleDateString('fr-FR')}</div>
                       {demande.traiteeAt && (
                         <div>Traitée: {new Date(demande.traiteeAt).toLocaleDateString('fr-FR')}</div>
@@ -362,30 +362,30 @@ const RdvManagementPage = () => {
             <div className="overflow-x-auto">
               <table className="w-full table-auto">
                 <thead>
-                  <tr className="bg-gray-2 text-left">
-                    <th className="px-6 py-4 font-medium text-black">Date/Heure</th>
-                    <th className="px-6 py-4 font-medium text-black text-center">Technicien</th>
-                    <th className="px-6 py-4 font-medium text-black text-center">Fin</th>
-                    <th className="px-6 py-4 font-medium text-black text-center">Statut</th>
-                    <th className="px-6 py-4 font-medium text-black text-center">Intervention</th>
+                  <tr className="bg-slate-50 text-left">
+                    <th className="px-6 py-4 font-medium text-slate-900">Date/Heure</th>
+                    <th className="px-6 py-4 font-medium text-slate-900 text-center">Technicien</th>
+                    <th className="px-6 py-4 font-medium text-slate-900 text-center">Fin</th>
+                    <th className="px-6 py-4 font-medium text-slate-900 text-center">Statut</th>
+                    <th className="px-6 py-4 font-medium text-slate-900 text-center">Intervention</th>
                   </tr>
                 </thead>
                 <tbody>
                   {creneaux.map((creneau) => (
-                    <tr key={creneau.id} className="border-b border-stroke hover:bg-gray-2">
-                      <td className="px-6 py-4 text-sm font-medium text-black">
+                    <tr key={creneau.id} className="border-b border-slate-200 hover:bg-slate-50">
+                      <td className="px-6 py-4 text-sm font-medium text-slate-900">
                         {new Date(creneau.dateDebut).toLocaleString('fr-FR')}
                       </td>
-                      <td className="px-6 py-4 text-center text-sm text-bodydark2">
+                      <td className="px-6 py-4 text-center text-sm text-slate-500">
                         {creneau.technicienNom || `Tech #${creneau.technicienId}`}
                       </td>
-                      <td className="px-6 py-4 text-center text-sm text-bodydark2">
+                      <td className="px-6 py-4 text-center text-sm text-slate-500">
                         {new Date(creneau.dateFin).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}
                       </td>
                       <td className="px-6 py-4 text-center">
                         <StatusBadge status={creneau.estReserve ? 'Réservé' : 'Libre'} />
                       </td>
-                      <td className="px-6 py-4 text-center text-sm text-bodydark2">
+                      <td className="px-6 py-4 text-center text-sm text-slate-500">
                         {creneau.interventionId || '-'}
                       </td>
                     </tr>
@@ -395,8 +395,8 @@ const RdvManagementPage = () => {
             </div>
             {/* Pagination */}
             {creneauxStats.totalPages > 1 && (
-              <div className="p-4 border-t border-stroke flex items-center justify-between">
-                <div className="text-sm text-bodydark2">
+              <div className="p-4 border-t border-slate-200 flex items-center justify-between">
+                <div className="text-sm text-slate-500">
                   Page {currentPage} sur {creneauxStats.totalPages} ({creneauxStats.totalCount} créneaux)
                 </div>
                 <div className="flex gap-2">
@@ -446,7 +446,7 @@ const RdvManagementPage = () => {
       {activeTab === 'generer' && (
         <Card className="max-w-2xl">
           <CardHeader>
-            <h2 className="text-lg font-semibold text-black">Générer des Créneaux Automatiquement</h2>
+            <h2 className="text-lg font-semibold text-slate-900">Générer des Créneaux Automatiquement</h2>
           </CardHeader>
           <CardBody>
             <div className="grid grid-cols-2 gap-4 mb-6">
@@ -534,12 +534,12 @@ const RdvManagementPage = () => {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
           <Card className="w-full max-w-md mx-4">
             <CardHeader>
-              <h2 className="text-xl font-bold text-black">Refuser la Demande</h2>
+              <h2 className="text-xl font-bold text-slate-900">Refuser la Demande</h2>
             </CardHeader>
             <CardBody>
               <div className="mb-4">
-                <p className="text-bodydark2">Demande #{demandeToRefuse.id}</p>
-                <p className="text-sm text-black font-medium mt-1">{demandeToRefuse.motif}</p>
+                <p className="text-slate-500">Demande #{demandeToRefuse.id}</p>
+                <p className="text-sm text-slate-900 font-medium mt-1">{demandeToRefuse.motif}</p>
               </div>
               
               <div className="mb-4">

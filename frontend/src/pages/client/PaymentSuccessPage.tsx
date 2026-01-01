@@ -41,7 +41,7 @@ const PaymentSuccessPage = () => {
         <Card>
           <CardBody className="py-12 text-center">
             <LoadingSpinner />
-            <p className="mt-4 text-bodydark2">Confirmation du paiement en cours...</p>
+            <p className="mt-4 text-slate-500">Confirmation du paiement en cours...</p>
           </CardBody>
         </Card>
       </div>
@@ -54,12 +54,12 @@ const PaymentSuccessPage = () => {
         <CardBody className="py-12 text-center">
           <div className="mx-auto flex items-center justify-center h-20 w-20 rounded-full bg-success/10 mb-6">
             <svg className="h-12 w-12 text-success" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M5 13l4 4L19 7" />
             </svg>
           </div>
           
-          <h1 className="text-2xl font-bold text-black mb-2">Paiement réussi !</h1>
-          <p className="text-bodydark2 mb-8">
+          <h1 className="text-2xl font-bold text-slate-900 mb-2">Paiement réussi !</h1>
+          <p className="text-slate-500 mb-8">
             Votre paiement pour l'intervention #{interventionId} a été effectué avec succès.
           </p>
 

@@ -92,7 +92,7 @@ const AnalyticsDashboardPage = () => {
         actions={
           <div className="flex flex-wrap gap-4">
             <div className="flex items-center gap-2">
-              <label className="text-sm text-bodydark2">Du:</label>
+              <label className="text-sm text-slate-500">Du:</label>
               <input
                 type="date"
                 value={dateDebut}
@@ -101,7 +101,7 @@ const AnalyticsDashboardPage = () => {
               />
             </div>
             <div className="flex items-center gap-2">
-              <label className="text-sm text-bodydark2">Au:</label>
+              <label className="text-sm text-slate-500">Au:</label>
               <input
                 type="date"
                 value={dateFin}
@@ -140,24 +140,24 @@ const AnalyticsDashboardPage = () => {
         {/* Interventions par Statut */}
         <Card>
           <CardHeader>
-            <h2 className="text-lg font-semibold text-black">Interventions par Statut</h2>
+            <h2 className="text-lg font-semibold text-slate-900">Interventions par Statut</h2>
           </CardHeader>
           <CardBody>
             <div className="space-y-3">
               {analytics.interventionsParStatut.map((item) => (
                 <div key={item.statut} className="flex items-center">
-                  <div className="w-28 text-sm text-bodydark2">{item.statut}</div>
+                  <div className="w-28 text-sm text-slate-500">{item.statut}</div>
                   <div className="flex-1 mx-3">
-                    <div className="h-6 bg-gray-2 rounded-full overflow-hidden">
+                    <div className="h-6 bg-slate-100 rounded-full overflow-hidden">
                       <div
-                        className="h-full bg-primary rounded-full transition-all duration-500"
+                        className="h-full bg-primary-600 rounded-full transition-all duration-500"
                         style={{ width: `${item.pourcentage}%` }}
                       />
                     </div>
                   </div>
                   <div className="w-20 text-right">
-                    <span className="font-semibold text-black">{item.nombre}</span>
-                    <span className="text-bodydark2 text-sm ml-1">({item.pourcentage.toFixed(1)}%)</span>
+                    <span className="font-semibold text-slate-900">{item.nombre}</span>
+                    <span className="text-slate-500 text-sm ml-1">({item.pourcentage.toFixed(1)}%)</span>
                   </div>
                 </div>
               ))}
@@ -168,20 +168,20 @@ const AnalyticsDashboardPage = () => {
         {/* CA Mensuel */}
         <Card>
           <CardHeader>
-            <h2 className="text-lg font-semibold text-black">Chiffre d'Affaires Mensuel</h2>
+            <h2 className="text-lg font-semibold text-slate-900">Chiffre d'Affaires Mensuel</h2>
           </CardHeader>
           <CardBody>
             <div className="space-y-3">
               {analytics.chiffreAffairesMensuel.map((ca) => (
-                <div key={`${ca.annee}-${ca.mois}`} className="flex items-center justify-between border-b border-stroke pb-2">
-                  <span className="text-bodydark2">
+                <div key={`${ca.annee}-${ca.mois}`} className="flex items-center justify-between border-b border-slate-200 pb-2">
+                  <span className="text-slate-500">
                     {ca.moisNom || new Date(ca.annee, ca.mois - 1).toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' })}
                   </span>
                   <div className="text-right">
                     <div className="font-semibold text-meta-3">
                       {(ca.montant || ca.montantTTC || 0).toLocaleString('fr-FR', { style: 'currency', currency: 'EUR' })}
                     </div>
-                    <div className="text-xs text-bodydark2">{ca.nombreInterventions || ca.nombreFactures || 0} interventions</div>
+                    <div className="text-xs text-slate-500">{ca.nombreInterventions || ca.nombreFactures || 0} interventions</div>
                   </div>
                 </div>
               ))}
@@ -193,27 +193,27 @@ const AnalyticsDashboardPage = () => {
       {/* Performance Techniciens */}
       <Card className="mb-6">
         <CardHeader>
-          <h2 className="text-lg font-semibold text-black">🔧 Performance des Techniciens</h2>
+          <h2 className="text-lg font-semibold text-slate-900">🔧 Performance des Techniciens</h2>
         </CardHeader>
         <CardBody className="p-0">
           <div className="overflow-x-auto">
             <table className="w-full table-auto">
               <thead>
-                <tr className="bg-gray-2 text-left">
-                  <th className="px-6 py-4 font-medium text-black">Technicien</th>
-                  <th className="px-6 py-4 font-medium text-black text-center">Interventions</th>
-                  <th className="px-6 py-4 font-medium text-black text-center">Terminées</th>
-                  <th className="px-6 py-4 font-medium text-black text-center">Taux Réussite</th>
-                  <th className="px-6 py-4 font-medium text-black text-center">Durée Moy.</th>
-                  <th className="px-6 py-4 font-medium text-black text-center">Note</th>
+                <tr className="bg-slate-50 text-left">
+                  <th className="px-6 py-4 font-medium text-slate-900">Technicien</th>
+                  <th className="px-6 py-4 font-medium text-slate-900 text-center">Interventions</th>
+                  <th className="px-6 py-4 font-medium text-slate-900 text-center">Terminées</th>
+                  <th className="px-6 py-4 font-medium text-slate-900 text-center">Taux Réussite</th>
+                  <th className="px-6 py-4 font-medium text-slate-900 text-center">Durée Moy.</th>
+                  <th className="px-6 py-4 font-medium text-slate-900 text-center">Note</th>
                 </tr>
               </thead>
               <tbody>
                 {(analytics.topTechniciens || analytics.technicienPerformances || []).map((tech) => (
-                  <tr key={tech.technicienId} className="border-b border-stroke hover:bg-gray-2">
-                    <td className="px-6 py-4 font-medium text-black">{tech.technicienNom}</td>
-                    <td className="text-center px-6 py-4 text-bodydark2">{tech.nombreInterventions}</td>
-                    <td className="text-center px-6 py-4 text-bodydark2">{tech.interventionsTerminees}</td>
+                  <tr key={tech.technicienId} className="border-b border-slate-200 hover:bg-slate-50">
+                    <td className="px-6 py-4 font-medium text-slate-900">{tech.technicienNom}</td>
+                    <td className="text-center px-6 py-4 text-slate-500">{tech.nombreInterventions}</td>
+                    <td className="text-center px-6 py-4 text-slate-500">{tech.interventionsTerminees}</td>
                     <td className="text-center px-6 py-4">
                       <span className={`px-2 py-1 rounded-full text-sm ${
                         (tech.tauxReussite || 0) >= 80 ? 'bg-meta-3/10 text-meta-3' :
@@ -223,7 +223,7 @@ const AnalyticsDashboardPage = () => {
                         {(tech.tauxReussite || 0).toFixed(1)}%
                       </span>
                     </td>
-                    <td className="text-center px-6 py-4 text-bodydark2">{(tech.dureeMoyenne || 0).toFixed(0)} min</td>
+                    <td className="text-center px-6 py-4 text-slate-500">{(tech.dureeMoyenne || 0).toFixed(0)} min</td>
                     <td className="text-center px-6 py-4">
                       <span className="text-warning">★</span> {(tech.noteMoyenne || 0).toFixed(1)}
                     </td>
@@ -238,16 +238,16 @@ const AnalyticsDashboardPage = () => {
       {/* Articles Problématiques */}
       <Card className="mb-6">
         <CardHeader>
-          <h2 className="text-lg font-semibold text-black">🛏 Articles Problématiques</h2>
+          <h2 className="text-lg font-semibold text-slate-900">🛏 Articles Problématiques</h2>
         </CardHeader>
         <CardBody>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {(analytics.topArticlesProblemes || analytics.articlesProblematiques || []).map((article) => (
-              <div key={article.articleId} className="border border-stroke rounded-xl p-4 hover:shadow-md transition-shadow">
-                <div className="font-medium text-black">{article.articleNom}</div>
-                <div className="text-sm text-bodydark2 mt-1">{article.nombreReclamations} réclamations</div>
+              <div key={article.articleId} className="border border-slate-200 rounded-xl p-4 hover:shadow-md transition-shadow">
+                <div className="font-medium text-slate-900">{article.articleNom}</div>
+                <div className="text-sm text-slate-500 mt-1">{article.nombreReclamations} réclamations</div>
                 <div className="mt-2">
-                  <div className="h-2 bg-gray-2 rounded-full">
+                  <div className="h-2 bg-slate-100 rounded-full">
                     <div
                       className="h-full bg-meta-1 rounded-full"
                       style={{ width: `${Math.min((article.tauxProbleme || 0.1) * 100, 100)}%` }}
@@ -263,7 +263,7 @@ const AnalyticsDashboardPage = () => {
       {/* Export Buttons */}
       <Card>
         <CardHeader>
-          <h2 className="text-lg font-semibold text-black">📥 Exporter les Données</h2>
+          <h2 className="text-lg font-semibold text-slate-900">📥 Exporter les Données</h2>
         </CardHeader>
         <CardBody>
           <div className="flex flex-wrap gap-4">
@@ -296,7 +296,7 @@ const AnalyticsDashboardPage = () => {
               <span className="mr-2">📊</span> Rapport Mensuel (Excel)
             </Button>
           </div>
-          {exporting && <p className="text-sm text-bodydark2 mt-2">Export en cours...</p>}
+          {exporting && <p className="text-sm text-slate-500 mt-2">Export en cours...</p>}
         </CardBody>
       </Card>
     </div>

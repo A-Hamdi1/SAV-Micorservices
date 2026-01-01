@@ -88,22 +88,22 @@ const ClientProfilePage = () => {
               </div>
               {profile ? (
                 <>
-                  <h3 className="text-lg font-semibold text-black mb-1">
+                  <h3 className="text-lg font-semibold text-slate-900 mb-1">
                     {profile.prenom} {profile.nom}
                   </h3>
-                  <p className="text-sm text-bodydark2 mb-4">{profile.telephone}</p>
-                  <div className="flex items-center gap-2 text-sm text-bodydark2">
+                  <p className="text-sm text-slate-500 mb-4">{profile.telephone}</p>
+                  <div className="flex items-center gap-2 text-sm text-slate-500">
                     <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                     </svg>
                     <span>{profile.adresse}</span>
                   </div>
                 </>
               ) : (
                 <div className="text-center">
-                  <p className="text-bodydark2 mb-2">Aucun profil créé</p>
-                  <p className="text-xs text-bodydark2">Remplissez le formulaire pour créer votre profil</p>
+                  <p className="text-slate-500 mb-2">Aucun profil créé</p>
+                  <p className="text-xs text-slate-400">Remplissez le formulaire pour créer votre profil</p>
                 </div>
               )}
             </CardBody>
@@ -158,8 +158,8 @@ const ClientProfilePage = () => {
                         className="form-input pl-10"
                         placeholder="06 00 00 00 00"
                       />
-                      <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-bodydark2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                      <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                       </svg>
                     </div>
                     {errors.telephone && (
@@ -178,9 +178,9 @@ const ClientProfilePage = () => {
                         className="form-input pl-10"
                         placeholder="123 Rue Example, 75000 Paris"
                       />
-                      <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-bodydark2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                      <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                       </svg>
                     </div>
                     {errors.adresse && (
@@ -189,7 +189,7 @@ const ClientProfilePage = () => {
                   </div>
                 </div>
 
-                <div className="flex justify-end pt-4 border-t border-stroke">
+                <div className="flex justify-end pt-4 border-t border-slate-200">
                   <Button
                     type="submit"
                     variant="primary"

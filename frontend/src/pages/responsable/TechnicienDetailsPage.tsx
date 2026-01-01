@@ -126,20 +126,20 @@ const TechnicienDetailsPage = () => {
           <CardBody>
             <dl className="space-y-4">
               <div>
-                <dt className="text-sm font-medium text-bodydark2">Email</dt>
-                <dd className="mt-1 text-sm text-black">{tech.email}</dd>
+                <dt className="text-sm font-medium text-slate-500">Email</dt>
+                <dd className="mt-1 text-sm text-slate-900">{tech.email}</dd>
               </div>
               <div>
-                <dt className="text-sm font-medium text-bodydark2">Téléphone</dt>
-                <dd className="mt-1 text-sm text-black">{tech.telephone}</dd>
+                <dt className="text-sm font-medium text-slate-500">Téléphone</dt>
+                <dd className="mt-1 text-sm text-slate-900">{tech.telephone}</dd>
               </div>
               <div>
-                <dt className="text-sm font-medium text-bodydark2">Spécialité</dt>
-                <dd className="mt-1 text-sm text-black">{tech.specialite}</dd>
+                <dt className="text-sm font-medium text-slate-500">Spécialité</dt>
+                <dd className="mt-1 text-sm text-slate-900">{tech.specialite}</dd>
               </div>
               <div>
-                <dt className="text-sm font-medium text-bodydark2">Date d'embauche</dt>
-                <dd className="mt-1 text-sm text-black">{formatDate(tech.dateEmbauche)}</dd>
+                <dt className="text-sm font-medium text-slate-500">Date d'embauche</dt>
+                <dd className="mt-1 text-sm text-slate-900">{formatDate(tech.dateEmbauche)}</dd>
               </div>
             </dl>
           </CardBody>
@@ -151,24 +151,24 @@ const TechnicienDetailsPage = () => {
             <CardBody>
               <dl className="space-y-4">
                 <div>
-                  <dt className="text-sm font-medium text-bodydark2">Interventions totales</dt>
-                  <dd className="mt-1 text-sm text-black">{tech.stats.nombreInterventionsTotal}</dd>
+                  <dt className="text-sm font-medium text-slate-500">Interventions totales</dt>
+                  <dd className="mt-1 text-sm text-slate-900">{tech.stats.nombreInterventionsTotal}</dd>
                 </div>
                 <div>
-                  <dt className="text-sm font-medium text-bodydark2">Interventions terminées</dt>
-                  <dd className="mt-1 text-sm text-black">
+                  <dt className="text-sm font-medium text-slate-500">Interventions terminées</dt>
+                  <dd className="mt-1 text-sm text-slate-900">
                     {tech.stats.nombreInterventionsTerminees}
                   </dd>
                 </div>
                 <div>
-                  <dt className="text-sm font-medium text-bodydark2">Taux de réussite</dt>
-                  <dd className="mt-1 text-sm text-black">
+                  <dt className="text-sm font-medium text-slate-500">Taux de réussite</dt>
+                  <dd className="mt-1 text-sm text-slate-900">
                     {tech.stats.tauxReussite.toFixed(1)}%
                   </dd>
                 </div>
                 <div>
-                  <dt className="text-sm font-medium text-bodydark2">Chiffre d'affaires total</dt>
-                  <dd className="mt-1 text-sm font-bold text-black">
+                  <dt className="text-sm font-medium text-slate-500">Chiffre d'affaires total</dt>
+                  <dd className="mt-1 text-sm font-bold text-slate-900">
                     {tech.stats.chiffreAffaireTotal.toFixed(2)} $
                   </dd>
                 </div>
@@ -183,7 +183,7 @@ const TechnicienDetailsPage = () => {
             <CardBody>
               <div className="space-y-4">
                 {tech.interventions.map((intervention) => (
-                  <div key={intervention.id} className="border border-stroke rounded-lg p-4">
+                  <div key={intervention.id} className="border border-slate-200 rounded-xl p-4">
                     <div className="flex justify-between items-start mb-2">
                       <Link
                         to={`/responsable/interventions/${intervention.id}`}
@@ -193,7 +193,7 @@ const TechnicienDetailsPage = () => {
                       </Link>
                       <StatusBadge status={intervention.statut} />
                     </div>
-                    <p className="text-sm text-bodydark2">
+                    <p className="text-sm text-slate-500">
                       Date: {formatDate(intervention.dateIntervention)}
                     </p>
                   </div>

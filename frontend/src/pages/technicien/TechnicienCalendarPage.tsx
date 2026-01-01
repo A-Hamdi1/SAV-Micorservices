@@ -79,11 +79,11 @@ const TechnicienCalendarPage = () => {
             <div className="flex flex-col items-center justify-center py-12">
               <div className="w-20 h-20 rounded-full bg-red-100 flex items-center justify-center mb-6">
                 <svg className="w-10 h-10 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                 </svg>
               </div>
-              <h2 className="text-xl font-semibold text-black mb-2">Profil non configuré</h2>
-              <p className="text-bodydark2 text-center max-w-md">
+              <h2 className="text-xl font-semibold text-slate-900 mb-2">Profil non configuré</h2>
+              <p className="text-slate-500 text-center max-w-md">
                 Votre profil technicien n'est pas encore configuré.
               </p>
             </div>
@@ -109,7 +109,7 @@ const TechnicienCalendarPage = () => {
           <CardBody>
             <div className="text-center">
               <p className="text-3xl font-bold text-primary-600">{interventions.length}</p>
-              <p className="text-sm text-bodydark2">Total interventions</p>
+              <p className="text-sm text-slate-500">Total interventions</p>
             </div>
           </CardBody>
         </Card>
@@ -119,7 +119,7 @@ const TechnicienCalendarPage = () => {
               <p className="text-3xl font-bold text-primary-600">
                 {interventions.filter(i => i.statut === 'Planifiee').length}
               </p>
-              <p className="text-sm text-bodydark2">Planifiées</p>
+              <p className="text-sm text-slate-500">Planifiées</p>
             </div>
           </CardBody>
         </Card>
@@ -129,7 +129,7 @@ const TechnicienCalendarPage = () => {
               <p className="text-3xl font-bold text-warning">
                 {interventions.filter(i => i.statut === 'EnCours').length}
               </p>
-              <p className="text-sm text-bodydark2">En cours</p>
+              <p className="text-sm text-slate-500">En cours</p>
             </div>
           </CardBody>
         </Card>
@@ -139,7 +139,7 @@ const TechnicienCalendarPage = () => {
               <p className="text-3xl font-bold text-success">
                 {interventions.filter(i => i.statut === 'Terminee').length}
               </p>
-              <p className="text-sm text-bodydark2">Terminées</p>
+              <p className="text-sm text-slate-500">Terminées</p>
             </div>
           </CardBody>
         </Card>
@@ -158,7 +158,7 @@ const TechnicienCalendarPage = () => {
         <div className="space-y-4">
           {selectedDateEvents.length > 0 ? (
             <>
-              <p className="text-sm text-bodydark2">
+              <p className="text-sm text-slate-500">
                 {selectedDateEvents.length} intervention{selectedDateEvents.length > 1 ? 's' : ''} pour cette date
               </p>
               <div className="space-y-3 max-h-96 overflow-y-auto">
@@ -192,14 +192,14 @@ const TechnicienCalendarPage = () => {
             </>
           ) : (
             <div className="text-center py-8">
-              <svg className="w-16 h-16 mx-auto text-bodydark2 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <svg className="w-16 h-16 mx-auto text-slate-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
               </svg>
-              <p className="text-bodydark2">Aucune intervention pour cette date</p>
+              <p className="text-slate-500">Aucune intervention pour cette date</p>
             </div>
           )}
 
-          <div className="flex justify-end pt-4 border-t border-stroke">
+          <div className="flex justify-end pt-4 border-t border-slate-200">
             <button
               onClick={handleCloseModal}
               className="btn btn-outline btn-sm"

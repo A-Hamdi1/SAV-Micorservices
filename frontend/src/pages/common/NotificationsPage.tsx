@@ -104,7 +104,7 @@ const NotificationsPage = () => {
       orange: 'bg-orange-100 text-orange-800 border-orange-200',
       indigo: 'bg-indigo-100 text-indigo-800 border-indigo-200',
       purple: 'bg-purple-100 text-purple-800 border-purple-200',
-      gray: 'bg-gray-100 text-gray-800 border-gray-200',
+      gray: 'bg-slate-100 text-slate-800 border-slate-200',
     };
     return colorMap[color] || colorMap.gray;
   };
@@ -124,30 +124,30 @@ const NotificationsPage = () => {
             <div className="flex items-center gap-2">
               <button
                 onClick={() => setFilter('all')}
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                className={`px-4 py-2 rounded-xl text-sm font-medium transition-colors ${
                   filter === 'all'
                     ? 'bg-primary-600 text-white'
-                    : 'bg-gray-2 text-bodydark2 hover:bg-gray-100'
+                    : 'bg-slate-100 text-slate-500 hover:bg-slate-200'
                 }`}
               >
                 Toutes ({notifications?.length || 0})
               </button>
               <button
                 onClick={() => setFilter('unread')}
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                className={`px-4 py-2 rounded-xl text-sm font-medium transition-colors ${
                   filter === 'unread'
                     ? 'bg-primary-600 text-white'
-                    : 'bg-gray-2 text-bodydark2 hover:bg-gray-100'
+                    : 'bg-slate-100 text-slate-500 hover:bg-slate-200'
                 }`}
               >
                 Non lues ({unreadCount})
               </button>
               <button
                 onClick={() => setFilter('read')}
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                className={`px-4 py-2 rounded-xl text-sm font-medium transition-colors ${
                   filter === 'read'
                     ? 'bg-primary-600 text-white'
-                    : 'bg-gray-2 text-bodydark2 hover:bg-gray-100'
+                    : 'bg-slate-100 text-slate-500 hover:bg-slate-200'
                 }`}
               >
                 Lues ({readCount})
@@ -201,7 +201,7 @@ const NotificationsPage = () => {
             icon="🔔"
           />
         ) : (
-          <div className="divide-y divide-stroke">
+          <div className="divide-y divide-slate-200">
             {filteredNotifications.map((notification) => {
               const color = getNotificationColor(notification.type);
               const icon = getNotificationIcon(notification.type);
@@ -209,7 +209,7 @@ const NotificationsPage = () => {
               return (
                 <div
                   key={notification.id}
-                  className={`p-4 hover:bg-gray-2 transition-colors cursor-pointer ${
+                  className={`p-4 hover:bg-slate-50 transition-colors cursor-pointer ${
                     !notification.estLue ? 'bg-blue-50' : ''
                   }`}
                   onClick={() => handleNotificationClick(notification)}
@@ -224,10 +224,10 @@ const NotificationsPage = () => {
                     <div className="flex-1 min-w-0">
                       <div className="flex items-start justify-between gap-2">
                         <div>
-                          <h3 className={`text-sm font-medium ${!notification.estLue ? 'text-black' : 'text-bodydark2'}`}>
+                          <h3 className={`text-sm font-medium ${!notification.estLue ? 'text-slate-900' : 'text-slate-500'}`}>
                             {notification.titre}
                           </h3>
-                          <p className={`text-sm mt-1 ${!notification.estLue ? 'text-bodydark' : 'text-bodydark2'}`}>
+                          <p className={`text-sm mt-1 ${!notification.estLue ? 'text-slate-700' : 'text-slate-500'}`}>
                             {notification.message}
                           </p>
                         </div>
@@ -246,18 +246,18 @@ const NotificationsPage = () => {
                                 deleteNotificationMutation.mutate(notification.id);
                               }
                             }}
-                            className="p-1 text-gray-400 hover:text-red-600 transition-colors"
+                            className="p-1 text-slate-400 hover:text-red-600 transition-colors"
                             title="Supprimer"
                           >
                             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                             </svg>
                           </button>
                         </div>
                       </div>
                       
                       {/* Métadonnées */}
-                      <div className="flex items-center gap-4 mt-2 text-xs text-bodydark2">
+                      <div className="flex items-center gap-4 mt-2 text-xs text-slate-500">
                         <span>
                           {formatDistanceToNow(new Date(notification.dateCreation), { addSuffix: true, locale: fr })}
                         </span>

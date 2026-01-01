@@ -14,10 +14,10 @@ const Navbar = () => {
     navigate('/login');
   };
 
-  const navLinkClass = "border-transparent text-bodydark2 hover:border-primary hover:text-primary inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium transition-colors";
+  const navLinkClass = "border-transparent text-slate-500 hover:border-primary-600 hover:text-primary-600 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium transition-colors";
 
   return (
-    <nav className="bg-white shadow-lg border-b border-stroke">
+    <nav className="bg-white shadow-lg border-b border-slate-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
           <div className="flex">
@@ -52,7 +52,7 @@ const Navbar = () => {
           <div className="flex items-center">
             {isAuthenticated ? (
               <div className="flex items-center space-x-4">
-                <span className="text-bodydark2 text-sm">{role}</span>
+                <span className="text-slate-500 text-sm">{role}</span>
                 <button
                   onClick={handleLogout}
                   className="bg-danger hover:bg-danger/90 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"

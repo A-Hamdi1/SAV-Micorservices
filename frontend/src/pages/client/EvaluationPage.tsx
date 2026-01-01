@@ -120,17 +120,17 @@ const EvaluationPage = () => {
             <CardBody className="text-center py-8">
               <div className="mx-auto flex items-center justify-center h-20 w-20 rounded-full bg-success/10 mb-6">
                 <svg className="h-12 w-12 text-success" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M5 13l4 4L19 7" />
                 </svg>
               </div>
-              <h1 className="text-2xl font-bold text-black mb-4">Évaluation déjà soumise</h1>
-              <p className="text-bodydark2 mb-6">
+              <h1 className="text-2xl font-bold text-slate-900 mb-4">Évaluation déjà soumise</h1>
+              <p className="text-slate-500 mb-6">
                 Vous avez déjà évalué cette intervention le {new Date(existingEvaluation.createdAt).toLocaleDateString('fr-FR')}.
               </p>
               
-              <div className="bg-gray-2 dark:bg-meta-4 rounded-xl p-6 text-left">
+              <div className="bg-slate-100 rounded-xl p-6 text-left">
                 <div className="mb-4">
-                  <div className="text-sm text-bodydark2 mb-1">Votre note</div>
+                  <div className="text-sm text-slate-500 mb-1">Votre note</div>
                   <div className="text-3xl text-warning">
                     {'★'.repeat(existingEvaluation.note)}{'☆'.repeat(5 - existingEvaluation.note)}
                   </div>
@@ -138,13 +138,13 @@ const EvaluationPage = () => {
                 
                 {existingEvaluation.commentaire && (
                   <div className="mb-4">
-                    <div className="text-sm text-bodydark2 mb-1">Votre commentaire</div>
-                    <p className="text-black">{existingEvaluation.commentaire}</p>
+                    <div className="text-sm text-slate-500 mb-1">Votre commentaire</div>
+                    <p className="text-slate-900">{existingEvaluation.commentaire}</p>
                   </div>
                 )}
                 
                 <div>
-                  <div className="text-sm text-bodydark2 mb-1">Recommandation</div>
+                  <div className="text-sm text-slate-500 mb-1">Recommandation</div>
                   <p className={existingEvaluation.recommandeTechnicien ? 'text-success' : 'text-danger'}>
                     {existingEvaluation.recommandeTechnicien ? '👍 Recommande le technicien' : '👎 Ne recommande pas'}
                   </p>
@@ -180,12 +180,12 @@ const EvaluationPage = () => {
             <CardBody className="text-center py-12">
               <div className="mx-auto flex items-center justify-center h-20 w-20 rounded-full bg-success/10 mb-6">
                 <svg className="h-12 w-12 text-success" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M5 13l4 4L19 7" />
                 </svg>
               </div>
               <h1 className="text-2xl font-bold text-success mb-4">Merci pour votre évaluation !</h1>
-              <p className="text-bodydark2">Votre retour nous aide à améliorer notre service.</p>
-              <p className="text-bodydark2 text-sm mt-4">Redirection en cours...</p>
+              <p className="text-slate-500">Votre retour nous aide à améliorer notre service.</p>
+              <p className="text-slate-500 text-sm mt-4">Redirection en cours...</p>
             </CardBody>
           </Card>
         </div>
@@ -228,12 +228,12 @@ const EvaluationPage = () => {
                       {star <= (hoveredStar || note) ? (
                         <span className="text-warning">★</span>
                       ) : (
-                        <span className="text-bodydark2/30">☆</span>
+                        <span className="text-slate-300">☆</span>
                       )}
                     </button>
                   ))}
                 </div>
-                <p className="text-center text-bodydark2 mt-2">
+                <p className="text-center text-slate-500 mt-2">
                   {note === 1 && '😞 Très insatisfait'}
                   {note === 2 && '😕 Insatisfait'}
                   {note === 3 && '😐 Neutre'}
@@ -255,7 +255,7 @@ const EvaluationPage = () => {
                   placeholder="Partagez votre expérience..."
                   maxLength={1000}
                 />
-                <p className="text-xs text-bodydark2 mt-1 text-right">
+                <p className="text-xs text-slate-500 mt-1 text-right">
                   {commentaire.length}/1000 caractères
                 </p>
               </div>
@@ -272,7 +272,7 @@ const EvaluationPage = () => {
                     className={`flex-1 py-4 rounded-xl border-2 transition-all ${
                       recommande
                         ? 'border-success bg-success/10 text-success'
-                        : 'border-stroke hover:border-success/50'
+                        : 'border-slate-200 hover:border-success/50'
                     }`}
                   >
                     <span className="text-2xl block mb-1">👍</span>
@@ -284,7 +284,7 @@ const EvaluationPage = () => {
                     className={`flex-1 py-4 rounded-xl border-2 transition-all ${
                       !recommande
                         ? 'border-danger bg-danger/10 text-danger'
-                        : 'border-stroke hover:border-danger/50'
+                        : 'border-slate-200 hover:border-danger/50'
                     }`}
                   >
                     <span className="text-2xl block mb-1">👎</span>

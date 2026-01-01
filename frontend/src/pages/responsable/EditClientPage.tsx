@@ -85,7 +85,7 @@ const EditClientPage = () => {
   };
 
   return (
-    <>
+    <div className="space-y-6">
       <PageHeader
         title="Modifier le client"
         subtitle={`Modification de ${client.data.prenom} ${client.data.nom}`}
@@ -99,6 +99,17 @@ const EditClientPage = () => {
 
       <Card>
         <CardBody>
+          <div className="flex items-center gap-3 mb-6 pb-6 border-b border-slate-200">
+            <div className="p-3 rounded-xl bg-gradient-to-br from-green-500 to-green-600 shadow-sm">
+              <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+              </svg>
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold text-slate-900">Modifier les informations</h3>
+              <p className="text-sm text-slate-500">Mettez à jour les coordonnées du client</p>
+            </div>
+          </div>
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
               <div>
@@ -177,7 +188,7 @@ const EditClientPage = () => {
           </form>
         </CardBody>
       </Card>
-    </>
+    </div>
   );
 };
 

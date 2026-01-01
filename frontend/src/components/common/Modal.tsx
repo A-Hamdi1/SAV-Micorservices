@@ -54,8 +54,8 @@ const Modal = ({ isOpen, onClose, title, children, size = 'md' }: ModalProps) =>
         className={`${sizeClasses[size]} w-full mx-4 bg-white rounded-xl shadow-2xl transform transition-all animate-fadeIn`}
       >
         {title && (
-          <div className="flex items-center justify-between px-6 py-4 border-b border-stroke">
-            <h3 className="text-lg font-semibold text-black">{title}</h3>
+          <div className="flex items-center justify-between px-6 py-4 border-b border-slate-200">
+            <h3 className="text-lg font-semibold text-slate-900">{title}</h3>
             <button
               onClick={onClose}
               className="p-1 rounded-lg hover:bg-gray-100 transition-colors"
@@ -69,7 +69,7 @@ const Modal = ({ isOpen, onClose, title, children, size = 'md' }: ModalProps) =>
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
-                  strokeWidth={2}
+                  strokeWidth={1.5}
                   d="M6 18L18 6M6 6l12 12"
                 />
               </svg>
