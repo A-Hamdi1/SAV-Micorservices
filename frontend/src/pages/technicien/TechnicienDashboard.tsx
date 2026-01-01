@@ -146,14 +146,14 @@ const TechnicienDashboard = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Interventions en cours */}
         <Card>
-          <CardHeader>
-            <div className="flex items-center justify-between">
-              <h3 className="text-lg font-semibold text-black">Interventions en cours</h3>
-              <span className="bg-amber-100 text-amber-800 text-sm font-medium px-2.5 py-0.5 rounded">
+          <CardHeader 
+            title="Interventions en cours"
+            action={
+              <span className="badge badge-warning">
                 {interventionsEnCours.length}
               </span>
-            </div>
-          </CardHeader>
+            }
+          />
           <CardBody>
             {interventionsLoading ? (
               <LoadingSpinner />
@@ -163,7 +163,7 @@ const TechnicienDashboard = () => {
                   <Link
                     key={intervention.id}
                     to={`/technicien/interventions/${intervention.id}`}
-                    className="block p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
+                    className="block p-3 bg-gray-2 rounded-lg hover:bg-gray-100 transition-colors"
                   >
                     <div className="flex items-center justify-between">
                       <div>
@@ -187,14 +187,14 @@ const TechnicienDashboard = () => {
 
         {/* Interventions planifiées */}
         <Card>
-          <CardHeader>
-            <div className="flex items-center justify-between">
-              <h3 className="text-lg font-semibold text-black">Interventions planifiées</h3>
-              <span className="bg-blue-100 text-blue-800 text-sm font-medium px-2.5 py-0.5 rounded">
+          <CardHeader 
+            title="Interventions planifiées"
+            action={
+              <span className="badge badge-info">
                 {interventionsPlanifiees.length}
               </span>
-            </div>
-          </CardHeader>
+            }
+          />
           <CardBody>
             {interventionsLoading ? (
               <LoadingSpinner />
@@ -204,7 +204,7 @@ const TechnicienDashboard = () => {
                   <Link
                     key={intervention.id}
                     to={`/technicien/interventions/${intervention.id}`}
-                    className="block p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
+                    className="block p-3 bg-gray-2 rounded-lg hover:bg-gray-100 transition-colors"
                   >
                     <div className="flex items-center justify-between">
                       <div>
@@ -229,17 +229,17 @@ const TechnicienDashboard = () => {
 
       {/* Recent Interventions */}
       <Card>
-        <CardHeader>
-          <div className="flex items-center justify-between">
-            <h3 className="text-lg font-semibold text-black">Dernières interventions</h3>
+        <CardHeader 
+          title="Dernières interventions"
+          action={
             <Link
               to="/technicien/interventions"
               className="text-primary-600 hover:text-primary-700 text-sm font-medium"
             >
               Voir tout →
             </Link>
-          </div>
-        </CardHeader>
+          }
+        />
         <CardBody>
           {interventionsLoading ? (
             <LoadingSpinner />

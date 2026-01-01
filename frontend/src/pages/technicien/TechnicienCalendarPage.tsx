@@ -109,37 +109,37 @@ const TechnicienCalendarPage = () => {
           <CardBody>
             <div className="text-center">
               <p className="text-3xl font-bold text-primary-600">{interventions.length}</p>
-              <p className="text-sm text-gray-500">Total interventions</p>
+              <p className="text-sm text-bodydark2">Total interventions</p>
             </div>
           </CardBody>
         </Card>
         <Card>
           <CardBody>
             <div className="text-center">
-              <p className="text-3xl font-bold text-blue-600">
+              <p className="text-3xl font-bold text-primary-600">
                 {interventions.filter(i => i.statut === 'Planifiee').length}
               </p>
-              <p className="text-sm text-gray-500">Planifiées</p>
+              <p className="text-sm text-bodydark2">Planifiées</p>
             </div>
           </CardBody>
         </Card>
         <Card>
           <CardBody>
             <div className="text-center">
-              <p className="text-3xl font-bold text-amber-600">
+              <p className="text-3xl font-bold text-warning">
                 {interventions.filter(i => i.statut === 'EnCours').length}
               </p>
-              <p className="text-sm text-gray-500">En cours</p>
+              <p className="text-sm text-bodydark2">En cours</p>
             </div>
           </CardBody>
         </Card>
         <Card>
           <CardBody>
             <div className="text-center">
-              <p className="text-3xl font-bold text-green-600">
+              <p className="text-3xl font-bold text-success">
                 {interventions.filter(i => i.statut === 'Terminee').length}
               </p>
-              <p className="text-sm text-gray-500">Terminées</p>
+              <p className="text-sm text-bodydark2">Terminées</p>
             </div>
           </CardBody>
         </Card>
@@ -158,22 +158,22 @@ const TechnicienCalendarPage = () => {
         <div className="space-y-4">
           {selectedDateEvents.length > 0 ? (
             <>
-              <p className="text-sm text-gray-500">
+              <p className="text-sm text-bodydark2">
                 {selectedDateEvents.length} intervention{selectedDateEvents.length > 1 ? 's' : ''} pour cette date
               </p>
               <div className="space-y-3 max-h-96 overflow-y-auto">
                 {selectedDateEvents.map((event) => (
                   <div
                     key={event.id}
-                    className="p-4 border border-blue-200 bg-blue-50 rounded-lg hover:shadow-md transition-shadow cursor-pointer"
+                    className="p-4 border border-primary-200 bg-primary-50 rounded-lg hover:shadow-md transition-shadow cursor-pointer"
                     onClick={() => handleViewDetails(event)}
                   >
                     <div className="flex items-center justify-between mb-2">
-                      <h4 className="font-semibold text-blue-800">{event.title}</h4>
+                      <h4 className="font-semibold text-primary-800">{event.title}</h4>
                       <StatusBadge status={event.status || ''} type="intervention" />
                     </div>
                     {event.description && (
-                      <p className="text-sm text-blue-700">{event.description}</p>
+                      <p className="text-sm text-primary-700">{event.description}</p>
                     )}
                     <div className="mt-2 flex justify-end">
                       <button
@@ -192,17 +192,17 @@ const TechnicienCalendarPage = () => {
             </>
           ) : (
             <div className="text-center py-8">
-              <svg className="w-16 h-16 mx-auto text-gray-300 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <svg className="w-16 h-16 mx-auto text-bodydark2 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
               </svg>
-              <p className="text-gray-500">Aucune intervention pour cette date</p>
+              <p className="text-bodydark2">Aucune intervention pour cette date</p>
             </div>
           )}
 
           <div className="flex justify-end pt-4 border-t border-stroke">
             <button
               onClick={handleCloseModal}
-              className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+              className="btn btn-outline btn-sm"
             >
               Fermer
             </button>

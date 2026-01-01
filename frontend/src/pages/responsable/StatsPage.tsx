@@ -35,21 +35,19 @@ const StatsPage = () => {
   }
 
   return (
-    <div className="mx-auto max-w-screen-2xl p-4 md:p-6 2xl:p-10">
+    <div className="space-y-6">
       <PageHeader
         title="Statistiques"
         subtitle="Vue d'ensemble des performances"
         breadcrumb={[
-          { label: 'Responsable', path: '/responsable' },
+          { label: 'Dashboard', path: '/responsable' },
           { label: 'Statistiques' },
         ]}
       />
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <Card>
-          <CardHeader>
-            <h3 className="text-lg font-semibold text-black">Interventions</h3>
-          </CardHeader>
+          <CardHeader title="Interventions" />
           <CardBody>
             <dl className="space-y-3">
               <div className="flex justify-between items-center">
@@ -77,9 +75,7 @@ const StatsPage = () => {
         </Card>
 
         <Card>
-          <CardHeader>
-            <h3 className="text-lg font-semibold text-black">Techniciens</h3>
-          </CardHeader>
+          <CardHeader title="Techniciens" />
           <CardBody>
             <dl className="space-y-3">
               <div className="flex justify-between items-center">
@@ -105,9 +101,7 @@ const StatsPage = () => {
         </Card>
 
         <Card>
-          <CardHeader>
-            <h3 className="text-lg font-semibold text-black">Articles</h3>
-          </CardHeader>
+          <CardHeader title="Articles" />
           <CardBody>
             <dl className="space-y-3">
               <div className="flex justify-between items-center">
@@ -129,9 +123,7 @@ const StatsPage = () => {
         </Card>
 
         <Card>
-          <CardHeader>
-            <h3 className="text-lg font-semibold text-black">Garanties</h3>
-          </CardHeader>
+          <CardHeader title="Garanties" />
           <CardBody>
             <dl className="space-y-3">
               <div className="flex justify-between items-center">
@@ -165,11 +157,7 @@ const StatsPage = () => {
       {garantieStats?.data?.garantiesExpirantProchainement && garantieStats.data.garantiesExpirantProchainement.length > 0 && (
         <div className="mt-8">
           <Card>
-            <CardHeader>
-              <h3 className="text-lg font-semibold text-black">
-                Garanties expirant prochainement
-              </h3>
-            </CardHeader>
+            <CardHeader title="Garanties expirant prochainement" />
             <CardBody className="p-0">
               <div className="overflow-x-auto">
                 <table className="w-full">

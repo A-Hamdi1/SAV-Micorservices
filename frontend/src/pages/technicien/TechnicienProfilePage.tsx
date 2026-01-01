@@ -84,27 +84,27 @@ const TechnicienProfilePage = () => {
             </div>
             <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="text-sm text-gray-500">Nom complet</label>
+                <label className="text-sm text-bodydark2">Nom complet</label>
                 <p className="font-medium text-black">{profile.nomComplet}</p>
               </div>
               <div>
-                <label className="text-sm text-gray-500">Email</label>
+                <label className="text-sm text-bodydark2">Email</label>
                 <p className="font-medium text-black">{profile.email}</p>
               </div>
               <div>
-                <label className="text-sm text-gray-500">Téléphone</label>
+                <label className="text-sm text-bodydark2">Téléphone</label>
                 <p className="font-medium text-black">{profile.telephone}</p>
               </div>
               <div>
-                <label className="text-sm text-gray-500">Spécialité</label>
+                <label className="text-sm text-bodydark2">Spécialité</label>
                 <p className="font-medium text-black">{profile.specialite}</p>
               </div>
               <div>
-                <label className="text-sm text-gray-500">Date d'embauche</label>
+                <label className="text-sm text-bodydark2">Date d'embauche</label>
                 <p className="font-medium text-black">{formatDate(profile.dateEmbauche)}</p>
               </div>
               <div>
-                <label className="text-sm text-gray-500">Inscrit depuis</label>
+                <label className="text-sm text-bodydark2">Inscrit depuis</label>
                 <p className="font-medium text-black">{formatDate(profile.createdAt)}</p>
               </div>
             </div>
@@ -114,56 +114,52 @@ const TechnicienProfilePage = () => {
 
       {/* Stats */}
       <Card>
-        <CardHeader>
-          <h3 className="text-lg font-semibold text-black">Statistiques</h3>
-        </CardHeader>
+        <CardHeader title="Statistiques" />
         <CardBody>
           {statsLoading ? (
             <LoadingSpinner />
           ) : stats ? (
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-              <div className="text-center p-4 bg-gray-50 rounded-lg">
+              <div className="text-center p-4 bg-gray-2 rounded-lg">
                 <p className="text-2xl font-bold text-primary-600">{stats.nombreInterventionsTotal}</p>
-                <p className="text-sm text-gray-500">Total interventions</p>
+                <p className="text-sm text-bodydark2">Total interventions</p>
               </div>
-              <div className="text-center p-4 bg-gray-50 rounded-lg">
-                <p className="text-2xl font-bold text-green-600">{stats.nombreInterventionsTerminees}</p>
-                <p className="text-sm text-gray-500">Terminées</p>
+              <div className="text-center p-4 bg-gray-2 rounded-lg">
+                <p className="text-2xl font-bold text-success">{stats.nombreInterventionsTerminees}</p>
+                <p className="text-sm text-bodydark2">Terminées</p>
               </div>
-              <div className="text-center p-4 bg-gray-50 rounded-lg">
-                <p className="text-2xl font-bold text-amber-600">{stats.nombreInterventionsEnCours}</p>
-                <p className="text-sm text-gray-500">En cours</p>
+              <div className="text-center p-4 bg-gray-2 rounded-lg">
+                <p className="text-2xl font-bold text-warning">{stats.nombreInterventionsEnCours}</p>
+                <p className="text-sm text-bodydark2">En cours</p>
               </div>
-              <div className="text-center p-4 bg-gray-50 rounded-lg">
+              <div className="text-center p-4 bg-gray-2 rounded-lg">
                 <p className="text-2xl font-bold text-primary-600">{stats.tauxReussite}%</p>
-                <p className="text-sm text-gray-500">Taux de réussite</p>
+                <p className="text-sm text-bodydark2">Taux de réussite</p>
               </div>
-              <div className="text-center p-4 bg-gray-50 rounded-lg">
+              <div className="text-center p-4 bg-gray-2 rounded-lg">
                 <p className="text-2xl font-bold text-primary-600">{stats.chiffreAffaireTotal.toFixed(2)} €</p>
-                <p className="text-sm text-gray-500">CA Total</p>
+                <p className="text-sm text-bodydark2">CA Total</p>
               </div>
-              <div className="text-center p-4 bg-gray-50 rounded-lg">
+              <div className="text-center p-4 bg-gray-2 rounded-lg">
                 <p className="text-2xl font-bold text-primary-600">{stats.chiffreAffaireMoyen.toFixed(2)} €</p>
-                <p className="text-sm text-gray-500">CA Moyen</p>
+                <p className="text-sm text-bodydark2">CA Moyen</p>
               </div>
             </div>
           ) : (
-            <p className="text-gray-500 text-center py-4">Statistiques non disponibles</p>
+            <p className="text-bodydark2 text-center py-4">Statistiques non disponibles</p>
           )}
         </CardBody>
       </Card>
 
       {/* Recent Interventions */}
       <Card>
-        <CardHeader>
-          <h3 className="text-lg font-semibold text-black">Dernières interventions</h3>
-        </CardHeader>
+        <CardHeader title="Dernières interventions" />
         <CardBody>
           {profile.interventions && profile.interventions.length > 0 ? (
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="text-left text-gray-500 border-b">
+                  <tr className="text-left text-bodydark2 border-b">
                     <th className="pb-3 font-medium">ID</th>
                     <th className="pb-3 font-medium">Date</th>
                     <th className="pb-3 font-medium">Statut</th>
@@ -191,7 +187,7 @@ const TechnicienProfilePage = () => {
                       </td>
                       <td className="py-3">
                         {intervention.estGratuite ? (
-                          <span className="text-green-600">Gratuite</span>
+                          <span className="text-success">Gratuite</span>
                         ) : (
                           `${intervention.montantTotal.toFixed(2)} €`
                         )}
@@ -202,7 +198,7 @@ const TechnicienProfilePage = () => {
               </table>
             </div>
           ) : (
-            <p className="text-gray-500 text-center py-4">Aucune intervention récente</p>
+            <p className="text-bodydark2 text-center py-4">Aucune intervention récente</p>
           )}
         </CardBody>
       </Card>
