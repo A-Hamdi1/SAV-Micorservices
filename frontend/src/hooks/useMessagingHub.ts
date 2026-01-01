@@ -56,6 +56,8 @@ export const useMessagingHub = (options: UseMessagingHubOptions = {}): UseMessag
       
       // Update the cache to mark message as read
       queryClient.invalidateQueries({ queryKey: ['messages', data.conversationId] });
+      queryClient.invalidateQueries({ queryKey: ['conversations'] });
+      queryClient.invalidateQueries({ queryKey: ['unreadMessagesCount'] });
 
       options.onMessageRead?.(data);
     },
