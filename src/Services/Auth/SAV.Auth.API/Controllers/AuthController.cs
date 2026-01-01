@@ -455,6 +455,65 @@ public class AuthController : ControllerBase
     }
 
     /// <summary>
+    /// Internal endpoint pour récupérer un utilisateur par ID (communication inter-services)
+    /// </summary>
+    [HttpGet("internal/users/{userId}")]
+    [ApiExplorerSettings(IgnoreApi = true)]
+    public async Task<ActionResult<ApiResponse<UserDto>>> GetUserById(string userId)
+    {
+        try
+        {
+            // Vérifier l'API Key pour la communication inter-services
+            if (!Request.Headers.TryGetValue("X-API-Key", out var apiKey))
+            {
+                return Unauthorized(new ApiResponse<UserDto>
+                {
+                    Success = false,
+                    Message = "API Key requise pour les endpoints internes"
+                });
+            }
+
+            var configuredApiKey = _configuration["InterServiceApiKey"];
+            if (string.IsNullOrEmpty(configuredApiKey) || apiKey != configuredApiKey)
+            {
+                return Unauthorized(new ApiResponse<UserDto>
+                {
+                    Success = false,
+                    Message = "API Key invalide"
+                });
+            }
+
+            var user = await _authService.GetUserByIdAsync(userId);
+
+            if (user == null)
+            {
+                return NotFound(new ApiResponse<UserDto>
+                {
+                    Success = false,
+                    Message = "Utilisateur non trouvé"
+                });
+            }
+
+            return Ok(new ApiResponse<UserDto>
+            {
+                Success = true,
+                Data = user,
+                Message = "Utilisateur récupéré avec succès"
+            });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error getting user by ID: {UserId}", userId);
+            return StatusCode(500, new ApiResponse<UserDto>
+            {
+                Success = false,
+                Message = "Une erreur s'est produite",
+                Errors = new List<string> { ex.Message }
+            });
+        }
+    }
+
+    /// <summary>
     /// Internal endpoint pour récupérer les user IDs par rôle (communication inter-services)
     /// </summary>
     [HttpGet("internal/users-by-role/{role}")]
@@ -496,6 +555,56 @@ public class AuthController : ControllerBase
         {
             _logger.LogError(ex, "Error getting users by role");
             return StatusCode(500, new ApiResponse<List<string>>
+            {
+                Success = false,
+                Message = "Une erreur s'est produite",
+                Errors = new List<string> { ex.Message }
+            });
+        }
+    }
+
+    /// <summary>
+    /// Internal endpoint pour récupérer les utilisateurs complets par rôle (communication inter-services)
+    /// </summary>
+    [HttpGet("internal/users-by-role/{role}/full")]
+    [ApiExplorerSettings(IgnoreApi = true)]
+    public async Task<ActionResult<ApiResponse<List<UserDto>>>> GetUsersByRole(string role)
+    {
+        try
+        {
+            // Vérifier l'API Key pour la communication inter-services
+            if (!Request.Headers.TryGetValue("X-API-Key", out var apiKey))
+            {
+                return Unauthorized(new ApiResponse<List<UserDto>>
+                {
+                    Success = false,
+                    Message = "API Key requise pour les endpoints internes"
+                });
+            }
+
+            var configuredApiKey = _configuration["InterServiceApiKey"];
+            if (string.IsNullOrEmpty(configuredApiKey) || apiKey != configuredApiKey)
+            {
+                return Unauthorized(new ApiResponse<List<UserDto>>
+                {
+                    Success = false,
+                    Message = "API Key invalide"
+                });
+            }
+
+            var users = await _authService.GetUsersByRoleAsync(role);
+
+            return Ok(new ApiResponse<List<UserDto>>
+            {
+                Success = true,
+                Data = users,
+                Message = $"Récupération des utilisateurs avec le rôle {role}"
+            });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error getting users by role");
+            return StatusCode(500, new ApiResponse<List<UserDto>>
             {
                 Success = false,
                 Message = "Une erreur s'est produite",

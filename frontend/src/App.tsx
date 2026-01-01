@@ -68,6 +68,7 @@ import ResponsableCalendarPage from './pages/responsable/ResponsableCalendarPage
 
 // Common Pages
 import NotificationsPage from './pages/common/NotificationsPage';
+import MessagingPage from './pages/common/MessagingPage';
 
 // Composant pour la redirection par défaut
 const DefaultRedirect = () => {
@@ -116,6 +117,7 @@ function App() {
                   <Route path="payment/:interventionId/success" element={<PaymentSuccessPage />} />
                   <Route path="payment/:interventionId/cancel" element={<PaymentCancelPage />} />
                   <Route path="notifications" element={<NotificationsPage />} />
+                  <Route path="messages" element={<MessagingPage />} />
                   <Route path="*" element={<Navigate to="/client/dashboard" replace />} />
                 </Routes>
               </ClientProfileCheck>
@@ -133,9 +135,7 @@ function App() {
               <Routes>
                 <Route path="dashboard" element={<ResponsableDashboard />} />
                 <Route path="clients" element={<ClientsListPage />} />
-                <Route path="clients/new" element={<CreateClientPage />} />
                 <Route path="clients/:id" element={<ClientDetailsPage />} />
-                <Route path="clients/:id/edit" element={<EditClientPage />} />
                 <Route path="reclamations" element={<ReclamationsListPage />} />
                 <Route path="reclamations/:id" element={<ReclamationDetailsPageResponsable />} />
                 <Route path="articles" element={<ArticlesListPage />} />
@@ -164,6 +164,7 @@ function App() {
                 <Route path="payments" element={<PaymentsManagementPage />} />
                 <Route path="evaluations" element={<EvaluationsListPage />} />
                 <Route path="notifications" element={<NotificationsPage />} />
+                <Route path="messages" element={<MessagingPage />} />
                 <Route path="*" element={<Navigate to="/responsable/dashboard" replace />} />
               </Routes>
             </Layout>
@@ -183,6 +184,7 @@ function App() {
                 <Route path="calendrier" element={<TechnicienCalendarPage />} />
                 <Route path="profile" element={<TechnicienProfilePage />} />
                 <Route path="notifications" element={<NotificationsPage />} />
+                <Route path="messages" element={<MessagingPage />} />
                 <Route path="*" element={<Navigate to="/technicien/dashboard" replace />} />
               </Routes>
             </Layout>

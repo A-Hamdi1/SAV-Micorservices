@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { useAuthStore } from '../../store/authStore';
 import { authApi } from '../../api/auth';
 import { clientsApi } from '../../api/clients';
+import { techniciensApi } from '../../api/techniciens';
 import { User } from '../../types';
 
 /**
@@ -20,18 +21,37 @@ const AuthInitializer = ({ children }: { children: React.ReactNode }) => {
           if (response.success && response.data) {
             let userData: User = response.data;
             
-            // Si l'utilisateur est un client, récupérer son clientId
+            // Si l'utilisateur est un client, récupérer son clientId et nom/prénom
             if (userData.role === 'Client') {
               try {
                 const clientResponse = await clientsApi.getMyProfile();
                 if (clientResponse.success && clientResponse.data) {
                   userData = {
                     ...userData,
-                    clientId: clientResponse.data.id
+                    clientId: clientResponse.data.id,
+                    nom: clientResponse.data.nom,
+                    prenom: clientResponse.data.prenom
                   };
                 }
               } catch (err) {
                 console.warn('Could not fetch client profile:', err);
+              }
+            }
+
+            // Si l'utilisateur est un technicien, récupérer son technicienId et nom/prénom
+            if (userData.role === 'Technicien') {
+              try {
+                const technicienResponse = await techniciensApi.getMyProfile();
+                if (technicienResponse.success && technicienResponse.data) {
+                  userData = {
+                    ...userData,
+                    technicienId: technicienResponse.data.id,
+                    nom: technicienResponse.data.nom,
+                    prenom: technicienResponse.data.prenom
+                  };
+                }
+              } catch (err) {
+                console.warn('Could not fetch technicien profile:', err);
               }
             }
             
@@ -48,25 +68,43 @@ const AuthInitializer = ({ children }: { children: React.ReactNode }) => {
     initializeAuth();
   }, [token, isAuthenticated, setUser, logout]);
 
-  // Si l'utilisateur est un client et n'a pas de clientId, récupérer le profil
+  // Si l'utilisateur est un client/technicien et n'a pas de nom/prénom, récupérer le profil
   useEffect(() => {
-    const fetchClientId = async () => {
-      if (user && user.role === 'Client' && !user.clientId && token && isAuthenticated) {
-        try {
-          const clientResponse = await clientsApi.getMyProfile();
-          if (clientResponse.success && clientResponse.data) {
-            setUser({
-              ...user,
-              clientId: clientResponse.data.id
-            });
+    const fetchUserProfile = async () => {
+      if (user && token && isAuthenticated && !user.nom && !user.prenom) {
+        if (user.role === 'Client') {
+          try {
+            const clientResponse = await clientsApi.getMyProfile();
+            if (clientResponse.success && clientResponse.data) {
+              setUser({
+                ...user,
+                clientId: clientResponse.data.id,
+                nom: clientResponse.data.nom,
+                prenom: clientResponse.data.prenom
+              });
+            }
+          } catch (err) {
+            console.warn('Could not fetch client profile:', err);
           }
-        } catch (err) {
-          console.warn('Could not fetch client profile:', err);
+        } else if (user.role === 'Technicien') {
+          try {
+            const technicienResponse = await techniciensApi.getMyProfile();
+            if (technicienResponse.success && technicienResponse.data) {
+              setUser({
+                ...user,
+                technicienId: technicienResponse.data.id,
+                nom: technicienResponse.data.nom,
+                prenom: technicienResponse.data.prenom
+              });
+            }
+          } catch (err) {
+            console.warn('Could not fetch technicien profile:', err);
+          }
         }
       }
     };
 
-    fetchClientId();
+    fetchUserProfile();
   }, [user, token, isAuthenticated, setUser]);
 
   return <>{children}</>;

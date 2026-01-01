@@ -53,22 +53,11 @@ const ClientsListPage = () => {
     <div className="space-y-6">
       <PageHeader
         title="Clients"
-        subtitle="Gestion des clients"
+        subtitle="Liste des clients"
         breadcrumb={[
           { label: 'Dashboard', path: '/responsable' },
           { label: 'Clients' },
         ]}
-        actions={
-          <Button
-            variant="primary"
-            onClick={() => navigate('/responsable/clients/new')}
-          >
-            <svg className="w-4 h-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-            </svg>
-            Nouveau client
-          </Button>
-        }
       />
 
       {/* Clients List */}
@@ -77,16 +66,11 @@ const ClientsListPage = () => {
           {clients.length === 0 ? (
             <EmptyState
               title="Aucun client"
-              description="Commencez par ajouter votre premier client."
+              description="Aucun client inscrit pour le moment."
               icon={
                 <svg className="w-12 h-12 text-bodydark2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                 </svg>
-              }
-              action={
-                <Button variant="primary" onClick={() => navigate('/responsable/clients/new')}>
-                  Ajouter un client
-                </Button>
               }
             />
           ) : (
@@ -130,15 +114,6 @@ const ClientsListPage = () => {
                     </div>
                   </Link>
                   <div className="flex items-center gap-2 ml-4">
-                    <button
-                      onClick={() => navigate(`/responsable/clients/${client.id}/edit`)}
-                      className="p-2 rounded-lg text-primary-600 hover:bg-primary-50 transition-colors"
-                      title="Modifier"
-                    >
-                      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                      </svg>
-                    </button>
                     <button
                       onClick={(e) => handleDelete(client.id, e)}
                       className="p-2 rounded-lg text-red-600 hover:bg-red-50 transition-colors"

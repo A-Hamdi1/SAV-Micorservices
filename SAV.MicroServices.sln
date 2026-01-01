@@ -58,6 +58,16 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SAV.Notifications.Infrastructure", "src\Services\Notifications\SAV.Notifications.Infrastructure\SAV.Notifications.Infrastructure.csproj", "{N4444444-4444-4444-4444-444444444444}"
 EndProject
 
+# Messaging Service
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SAV.Messaging.API", "src\Services\Messaging\SAV.Messaging.API\SAV.Messaging.API.csproj", "{M1111111-1111-1111-1111-111111111111}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SAV.Messaging.Domain", "src\Services\Messaging\SAV.Messaging.Domain\SAV.Messaging.Domain.csproj", "{M2222222-2222-2222-2222-222222222222}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SAV.Messaging.Application", "src\Services\Messaging\SAV.Messaging.Application\SAV.Messaging.Application.csproj", "{M3333333-3333-3333-3333-333333333333}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SAV.Messaging.Infrastructure", "src\Services\Messaging\SAV.Messaging.Infrastructure\SAV.Messaging.Infrastructure.csproj", "{M4444444-4444-4444-4444-444444444444}"
+EndProject
+
 # Shared
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SAV.Shared.DTOs", "src\Shared\SAV.Shared.DTOs\SAV.Shared.DTOs.csproj", "{G1111111-1111-1111-1111-111111111111}"
 EndProject
@@ -166,5 +176,21 @@ Global
 		{N4444444-4444-4444-4444-444444444444}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{N4444444-4444-4444-4444-444444444444}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{N4444444-4444-4444-4444-444444444444}.Release|Any CPU.Build.0 = Release|Any CPU
+		{M1111111-1111-1111-1111-111111111111}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{M1111111-1111-1111-1111-111111111111}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{M1111111-1111-1111-1111-111111111111}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{M1111111-1111-1111-1111-111111111111}.Release|Any CPU.Build.0 = Release|Any CPU
+		{M2222222-2222-2222-2222-222222222222}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{M2222222-2222-2222-2222-222222222222}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{M2222222-2222-2222-2222-222222222222}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{M2222222-2222-2222-2222-222222222222}.Release|Any CPU.Build.0 = Release|Any CPU
+		{M3333333-3333-3333-3333-333333333333}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{M3333333-3333-3333-3333-333333333333}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{M3333333-3333-3333-3333-333333333333}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{M3333333-3333-3333-3333-333333333333}.Release|Any CPU.Build.0 = Release|Any CPU
+		{M4444444-4444-4444-4444-444444444444}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{M4444444-4444-4444-4444-444444444444}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{M4444444-4444-4444-4444-444444444444}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{M4444444-4444-4444-4444-444444444444}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

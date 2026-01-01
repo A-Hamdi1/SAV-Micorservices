@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../../store/authStore';
 import NotificationDropdown from '../common/NotificationDropdown';
+import MessagingBadge from '../messaging/MessagingBadge';
 
 interface HeaderProps {
   sidebarOpen: boolean;
@@ -10,7 +11,7 @@ interface HeaderProps {
 
 const Header = ({ sidebarOpen, setSidebarOpen }: HeaderProps) => {
   const navigate = useNavigate();
-  const { logout, role } = useAuthStore();
+  const { logout, role, user } = useAuthStore();
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -101,6 +102,9 @@ const Header = ({ sidebarOpen, setSidebarOpen }: HeaderProps) => {
         </div>
 
         <div className="flex items-center gap-3 2xsm:gap-7">
+          {/* Messaging Badge */}
+          <MessagingBadge />
+
           {/* Notification Dropdown */}
           <NotificationDropdown />
 
@@ -112,16 +116,16 @@ const Header = ({ sidebarOpen, setSidebarOpen }: HeaderProps) => {
             >
               <span className="hidden text-right lg:block">
                 <span className="block text-sm font-medium text-black">
-                  {role === 'Client' ? 'Client' : role === 'Technicien' ? 'Technicien' : 'Responsable SAV'}
+                  {user?.prenom && user?.nom ? `${user.prenom} ${user.nom}` : (role === 'Client' ? 'Client' : role === 'Technicien' ? 'Technicien' : 'Responsable SAV')}
                 </span>
                 <span className="block text-xs text-bodydark2">
-                  {role}
+                  {role === 'Client' ? 'Client' : role === 'Technicien' ? 'Technicien' : 'Responsable'}
                 </span>
               </span>
 
               <span className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-r from-primary-500 to-primary-600">
                 <span className="text-sm font-medium text-white">
-                  {role === 'Client' ? 'CL' : role === 'Technicien' ? 'TC' : 'RS'}
+                  {user?.prenom && user?.nom ? `${user.prenom.charAt(0)}${user.nom.charAt(0)}`.toUpperCase() : (role === 'Client' ? 'CL' : role === 'Technicien' ? 'TC' : 'RS')}
                 </span>
               </span>
 
@@ -148,15 +152,15 @@ const Header = ({ sidebarOpen, setSidebarOpen }: HeaderProps) => {
                 <div className="flex items-center gap-3 px-6 py-4 border-b border-stroke">
                   <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-r from-primary-500 to-primary-600">
                     <span className="text-lg font-medium text-white">
-                      {role === 'Client' ? 'CL' : role === 'Technicien' ? 'TC' : 'RS'}
+                      {user?.prenom && user?.nom ? `${user.prenom.charAt(0)}${user.nom.charAt(0)}`.toUpperCase() : (role === 'Client' ? 'CL' : role === 'Technicien' ? 'TC' : 'RS')}
                     </span>
                   </div>
                   <div>
                     <span className="block text-sm font-semibold text-black">
-                      {role === 'Client' ? 'Client' : role === 'Technicien' ? 'Technicien' : 'Responsable SAV'}
+                      {user?.prenom && user?.nom ? `${user.prenom} ${user.nom}` : (role === 'Client' ? 'Client' : role === 'Technicien' ? 'Technicien' : 'Responsable SAV')}
                     </span>
                     <span className="block text-xs text-bodydark2">
-                      Compte actif
+                      {role === 'Client' ? 'Client' : role === 'Technicien' ? 'Technicien' : 'Responsable'}
                     </span>
                   </div>
                 </div>
