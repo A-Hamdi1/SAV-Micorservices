@@ -102,6 +102,42 @@ public class AuthController : ControllerBase
         }
     }
 
+    [HttpPost("google")]
+    public async Task<ActionResult<ApiResponse<AuthResponseDto>>> GoogleLogin([FromBody] GoogleAuthDto googleAuthDto)
+    {
+        try
+        {
+            var result = await _authService.GoogleLoginAsync(googleAuthDto);
+
+            if (result == null)
+            {
+                return Unauthorized(new ApiResponse<AuthResponseDto>
+                {
+                    Success = false,
+                    Message = "Échec de l'authentification Google",
+                    Errors = new List<string> { "Invalid Google token or authentication failed" }
+                });
+            }
+
+            return Ok(new ApiResponse<AuthResponseDto>
+            {
+                Success = true,
+                Data = result,
+                Message = "Connexion avec Google réussie"
+            });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error during Google login");
+            return StatusCode(500, new ApiResponse<AuthResponseDto>
+            {
+                Success = false,
+                Message = "Une erreur s'est produite",
+                Errors = new List<string> { ex.Message }
+            });
+        }
+    }
+
     [HttpPost("refresh-token")]
     public async Task<ActionResult<ApiResponse<AuthResponseDto>>> RefreshToken([FromBody] RefreshTokenDto refreshTokenDto)
     {

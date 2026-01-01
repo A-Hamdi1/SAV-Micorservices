@@ -71,6 +71,7 @@ builder.Services.AddAuthentication(options =>
 
 builder.Services.AddHttpClient<IClientsApiClient, ClientsApiClient>();
 builder.Services.AddHttpClient<IArticlesApiClient, ArticlesApiClient>();
+builder.Services.AddHttpClient<INotificationsApiClient, NotificationsApiClient>();
 builder.Services.AddScoped<IInterventionService, InterventionService>();
 builder.Services.AddScoped<IFacturationService, FacturationService>();
 builder.Services.AddScoped<ITechnicienService, TechnicienService>();

@@ -23,6 +23,10 @@ export interface ChangePasswordDto {
   confirmPassword: string;
 }
 
+export interface GoogleAuthDto {
+  idToken: string;
+}
+
 export const authApi = {
   register: async (data: RegisterDto): Promise<ApiResponse<AuthResponse>> => {
     const response = await axiosInstance.post<ApiResponse<AuthResponse>>('/api/auth/register', data);
@@ -71,6 +75,12 @@ export const authApi = {
 
   changePassword: async (data: ChangePasswordDto): Promise<ApiResponse<void>> => {
     const response = await axiosInstance.post<ApiResponse<void>>('/api/auth/change-password', data);
+    return response.data;
+  },
+
+  // Google Authentication
+  googleLogin: async (data: GoogleAuthDto): Promise<ApiResponse<AuthResponse>> => {
+    const response = await axiosInstance.post<ApiResponse<AuthResponse>>('/api/auth/google', data);
     return response.data;
   },
 };

@@ -3,11 +3,13 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { useAuthStore } from '../../store/authStore';
 import { LoginDto } from '../../types';
+import GoogleSignInButton from '../../components/common/GoogleSignInButton';
 
 const LoginPage = () => {
   const navigate = useNavigate();
   const { login, isAuthenticated, role } = useAuthStore();
   const [isLoading, setIsLoading] = useState(false);
+  const [googleError, setGoogleError] = useState<string | null>(null);
   const {
     register,
     handleSubmit,
@@ -210,6 +212,26 @@ const LoginPage = () => {
                 'Se connecter'
               )}
             </button>
+
+            {/* Google Sign-In Error */}
+            {googleError && (
+              <div className="p-3 bg-red-50 border border-red-200 rounded-lg">
+                <p className="text-sm text-red-600 flex items-center gap-2">
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  {googleError}
+                </p>
+              </div>
+            )}
+
+            {/* Google Sign-In Button */}
+            <div className="mt-2">
+              <GoogleSignInButton
+                onError={(error) => setGoogleError(error)}
+                onLoading={setIsLoading}
+              />
+            </div>
           </form>
 
           <div className="mt-6">
