@@ -112,7 +112,7 @@ const GoogleSignInButton = ({ onError, onLoading }: GoogleSignInButtonProps) => 
           text: 'continue_with',
           shape: 'rectangular',
           logo_alignment: 'left',
-          width: 350,
+          width: '350',
           locale: 'fr',
         });
       }

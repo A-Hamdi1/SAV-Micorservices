@@ -65,6 +65,9 @@ import TechnicienProfilePage from './pages/technicien/TechnicienProfilePage';
 // Responsable Calendar
 import ResponsableCalendarPage from './pages/responsable/ResponsableCalendarPage';
 
+// Common Pages
+import NotificationsPage from './pages/common/NotificationsPage';
+
 // Composant pour la redirection par défaut
 const DefaultRedirect = () => {
   const { isAuthenticated, role } = useAuthStore();
@@ -110,6 +113,7 @@ function App() {
                   <Route path="payment/:interventionId" element={<PaymentPage />} />
                   <Route path="payment/:interventionId/success" element={<PaymentSuccessPage />} />
                   <Route path="payment/:interventionId/cancel" element={<PaymentCancelPage />} />
+                  <Route path="notifications" element={<NotificationsPage />} />
                   <Route path="*" element={<Navigate to="/client/dashboard" replace />} />
                 </Routes>
               </ClientProfileCheck>
@@ -157,6 +161,7 @@ function App() {
                 <Route path="calendrier" element={<ResponsableCalendarPage />} />
                 <Route path="payments" element={<PaymentsManagementPage />} />
                 <Route path="evaluations" element={<EvaluationsListPage />} />
+                <Route path="notifications" element={<NotificationsPage />} />
                 <Route path="*" element={<Navigate to="/responsable/dashboard" replace />} />
               </Routes>
             </Layout>
@@ -175,6 +180,7 @@ function App() {
                 <Route path="interventions" element={<TechnicienInterventionsPage />} />
                 <Route path="calendrier" element={<TechnicienCalendarPage />} />
                 <Route path="profile" element={<TechnicienProfilePage />} />
+                <Route path="notifications" element={<NotificationsPage />} />
                 <Route path="*" element={<Navigate to="/technicien/dashboard" replace />} />
               </Routes>
             </Layout>
