@@ -26,7 +26,7 @@ const RegisterPage = () => {
     if (isAuthenticated) {
       if (role === 'Client') {
         navigate('/client/dashboard', { replace: true });
-      } else if (role === 'ResponsableSAV' || role === 'Admin') {
+      } else if (role === 'ResponsableSAV') {
         navigate('/responsable/dashboard', { replace: true });
       }
     }

@@ -450,20 +450,20 @@ SAV-Microservices/
 
 ## 👥 Rôles et permissions
 
-| Fonctionnalité | Client | Technicien | ResponsableSAV | Admin |
-|---------------|:------:|:----------:|:--------------:|:-----:|
-| Voir son profil | ✅ | ✅ | ✅ | ✅ |
-| Créer réclamation | ✅ | ❌ | ✅ | ✅ |
-| Voir ses réclamations | ✅ | ❌ | ✅ | ✅ |
-| Évaluer intervention | ✅ | ❌ | ❌ | ❌ |
-| Voir ses interventions | ❌ | ✅ | ✅ | ✅ |
-| Modifier statut intervention | ❌ | ✅ | ✅ | ✅ |
-| Gérer clients | ❌ | ❌ | ✅ | ✅ |
-| Gérer techniciens | ❌ | ❌ | ✅ | ✅ |
-| Gérer articles | ❌ | ❌ | ✅ | ✅ |
-| Créer interventions | ❌ | ❌ | ✅ | ✅ |
-| Voir statistiques | ❌ | ❌ | ✅ | ✅ |
-| Export données | ❌ | ❌ | ✅ | ✅ |
+| Fonctionnalité | Client | Technicien | ResponsableSAV |
+|---------------|:------:|:----------:|:--------------:|
+| Voir son profil | ✅ | ✅ | ✅ |
+| Créer réclamation | ✅ | ❌ | ✅ |
+| Voir ses réclamations | ✅ | ❌ | ✅ |
+| Évaluer intervention | ✅ | ❌ | ❌ |
+| Voir ses interventions | ❌ | ✅ | ✅ |
+| Modifier statut intervention | ❌ | ✅ | ✅ |
+| Gérer clients | ❌ | ❌ | ✅ |
+| Gérer techniciens | ❌ | ❌ | ✅ |
+| Gérer articles | ❌ | ❌ | ✅ |
+| Créer interventions | ❌ | ❌ | ✅ |
+| Voir statistiques | ❌ | ❌ | ✅ |
+| Export données | ❌ | ❌ | ✅ |
 
 ---
 

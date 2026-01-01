@@ -483,16 +483,12 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                   ? "CL"
                   : role === "Technicien"
                   ? "TC"
-                  : role === "Admin"
-                  ? "AD"
                   : "RS"}
               </span>
             </div>
             <div>
               <p className="text-sm font-medium text-white">
-                {role === "Admin"
-                  ? "Administrateur"
-                  : role === "Client"
+                {role === "Client"
                   ? "Client"
                   : role === "Technicien"
                   ? "Technicien"

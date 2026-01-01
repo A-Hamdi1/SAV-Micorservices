@@ -34,7 +34,7 @@ public class AuthService : IAuthService
         }
 
         // Validation du rôle
-        var validRoles = new[] { "Client", "Technicien", "ResponsableSAV", "Admin" };
+        var validRoles = new[] { "Client", "Technicien", "ResponsableSAV" };
         if (!validRoles.Contains(registerDto.Role))
         {
             return null;
