@@ -38,9 +38,9 @@ Thumbs.db
 # Secret / env
 .env
 .env.*.local
+appsettings.Local.json
+**/appsettings.Secrets.json
+secrets-to-remove.txt
 
 # Lockfiles
 package-lock.json
-
-NOTIFICATIONS_ET_GOOGLE_AUTH.md
-TOASTS_DOCUMENTATION.md

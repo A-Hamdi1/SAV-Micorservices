@@ -29,7 +29,7 @@ public class AuthApiClient : IAuthApiClient
             _logger.LogInformation("AuthApiClient: Using pre-configured BaseAddress {BaseUrl}", _httpClient.BaseAddress);
         }
         
-        _apiKey = configuration["ApiKeys:Internal"] ?? "***REMOVED***";
+        _apiKey = configuration["ApiKeys:Internal"] ?? "f1c4a9e2d7b3f8c6e0a2d5c1b7e9f3a0";
     }
 
     public async Task<List<string>> GetUserIdsByRoleAsync(string role)
